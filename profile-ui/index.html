@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile</title>
+    <!-- Include your mission handling logic -->
+    <script src="./js/missionHandler.js" defer></script>
+    <!-- Import Alpine.js -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js"
+      defer
+    ></script>
+    <!-- Import the custom components -->
+    <script src="./js/missionCard.js" defer></script>
+    <script src="./js/management/managementContainer.js" defer></script>
+    <script src="./js/breaking/newsContainer.js" defer></script>
+    <script src="./js/services/serviceContainer.js" defer></script>
+    <script src="./js/location/locationContainer.js" defer></script>
+    <script src="./js/attachment/attachmentContainer.js" defer></script>
+    <script src="./js/license/licenseContainer.js" defer></script>
+     <script src="./js/about/aboutContainer.js" defer></script>
+    <!-- Import the custom css -->
+    <link rel="stylesheet" href="./styles/mission.css" />
+    <link rel="stylesheet" href="./styles/management.css" />
+    <link rel="stylesheet" href="./styles/breaking.css" />
+    <link rel="stylesheet" href="./styles/services.css" />
+    <link rel="stylesheet" href="./styles/location.css" />
+    <link rel="stylesheet" href="./styles/attachment.css" />
+    <link rel="stylesheet" href="./styles/license.css" />
+    <link rel="stylesheet" href="./styles/about.css" />
+    <style>
+      .main-div{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-div">
+      <about-section></about-section>
+      <mission-card my-prop="Hello from React-like prop!"></mission-card>
+      <management-section></management-section>
+      <breaking-section></breaking-section>
+      <service-section></service-section>
+      <location-section></location-section>
+      <attachment-section></attachment-section>
+      <license-section></license-section>   
+    </div>
+  </body>
+</html>
