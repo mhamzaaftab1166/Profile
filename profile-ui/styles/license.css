@@ -14,7 +14,7 @@ body {
     background-color: #f5f5f5;
 }
 
-.license-card {
+.attachment-card {
     margin-top: 20px;
     border-radius: 10px;
     background-color: #fff;
@@ -29,6 +29,241 @@ body {
 }
 
 license-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+body {
+    font-family:
+        "Open Sans",
+        -apple-system,
+        Roboto,
+        Helvetica,
+        sans-serif;
+    background-color: #f5f5f5;
+    padding: 20px;
+}
+
+.license-permissions-container {
+    max-width: 730px;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+.license-permissions-card {
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    padding: 30px 15px 30px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.license-permissions-title {
+    color: #000;
+    font-family:
+        "Poppins",
+        -apple-system,
+        Roboto,
+        Helvetica,
+        sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    margin-left: 21px;
+}
+
+.license-separator-line {
+    background-color: #efefef;
+    display: block;
+    margin-top: 10px;
+    width: 369px;
+    height: 1px;
+    max-width: 100%;
+    border: none;
+}
+
+.license-license-entry {
+    align-self: center;
+    display: flex;
+    margin-top: 17px;
+    width: 100%;
+    max-width: 647px;
+    align-items: stretch;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.license-license-info {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    font-family:
+        "Open Sans",
+        -apple-system,
+        Roboto,
+        Helvetica,
+        sans-serif;
+}
+
+.license-license-name {
+    color: #202020;
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.license-license-date {
+    color: rgba(146, 146, 157, 1);
+    font-size: 13px;
+    font-weight: 400;
+    align-self: flex-start;
+}
+
+.license-action-buttons {
+    align-self: flex-start;
+    display: flex;
+    margin-top: 11px;
+    align-items: flex-start;
+    gap: 26px;
+    font-family:
+        "Poppins",
+        -apple-system,
+        Roboto,
+        Helvetica,
+        sans-serif;
+    font-size: 13px;
+    color: #fff;
+    font-weight: 700;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.license-btn {
+    align-self: stretch;
+    border-radius: 8px;
+    background-color: #000;
+    min-height: 30px;
+    padding: 6px 15px;
+    gap: 8px;
+    border: none;
+    color: #fff;
+    font-family:
+        "Poppins",
+        -apple-system,
+        Roboto,
+        Helvetica,
+        sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100px;
+    text-align: center;
+}
+
+.license-btn-download {
+    padding: 6px 12px;
+}
+
+.license-divider {
+    background-color: rgba(217, 217, 217, 1);
+    display: block;
+    margin-top: 19px;
+    margin-left: 18px;
+    width: 697px;
+    height: 1px;
+    max-width: 100%;
+    border: none;
+}
+
+.license-upload-section {
+    align-self: center;
+    display: flex;
+    margin-top: 14px;
+    margin-bottom: -20px;
+    width: 100%;
+    max-width: 647px;
+    align-items: flex-start;
+    gap: 40px 100px;
+    font-weight: 700;
+    flex-wrap: wrap;
+}
+
+.license-file-name-input {
+    color: rgba(110, 85, 255, 1);
+    font-size: 19px;
+    font-family:
+        "Open Sans",
+        -apple-system,
+        Roboto,
+        Helvetica,
+        sans-serif;
+    flex-grow: 1;
+    flex-shrink: 1;
+    width: 158px;
+    font-weight: 700;
+    border: none;
+}
+
+.license-file-name-input::placeholder {
+    color: rgba(110, 85, 255, 1);
+    font-size: 19px;
+    font-family: "Open Sans", -apple-system, Roboto, Helvetica, sans-serif;
+    font-weight: 700;
+}
+
+.license-file-name-input:focus {
+    color: rgba(110, 85, 255, 1);
+    font-size: 19px;
+    font-family: "Open Sans", -apple-system, Roboto, Helvetica, sans-serif;
+    font-weight: 700;
+    outline: none;
+    /* optional: remove default focus outline */
+}
+
+
+.license-btn-add-more {
+    padding: 6px 9px 6px 8px;
+}
+
+@media (max-width: 991px) {
+    .license-permissions-card {
+        max-width: 100%;
+        padding-bottom: 100px;
+        padding: 20px;
+    }
+
+    .license-permissions-container {
+        max-width: 100%;
+    }
+
+    .license-permissions-title {
+        margin-left: 10px;
+    }
+
+    .license-license-entry {
+        max-width: 100%;
+    }
+
+    .license-action-buttons {
+        white-space: initial;
+    }
+
+    .license-btn {
+        white-space: initial;
+    }
+
+    .license-upload-section {
+        max-width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+.license-license-section {
     width: 100%;
     display: flex;
     justify-content: center;
