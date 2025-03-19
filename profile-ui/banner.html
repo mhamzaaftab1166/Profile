@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Banner</title>
+    <script
+      src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js"
+      defer
+    ></script>
+    <link rel="stylesheet" href="./styles/banner.css" />
+  </head>
+  <body>
+    <div class="profile-wrapper">
+      <div class="profile-banner">
+        <div class="position-relative">
+          <img
+            class="banner-image"
+            src="assets/profile/coverImage.png"
+            alt="Banner"
+          />
+          <!-- <profile-common-privacy-toggle
+            v-if="isPrivacy"
+            :checked="userInfo.settings.cover_photo === true ? 1 : 0"
+            class="privacy-cover-batch"
+            :fieldName="'cover_photo'"
+          ></profile-common-privacy-toggle>
+          <profile-common-button-upload
+            v-if="isEdit"
+            @image-selected="updateBannerImage"
+            :handleUploadFile="coverPicture"
+            :isFileExists="coverExists"
+          ></profile-common-button-upload> -->
+        </div>
+        <div class="profile-details h100">
+          <div class="profile-image">
+            <!-- <profile-common-button-upload
+              v-if="isEdit"
+              @image-selected="updateProfileImage"
+              :buttonName="'Add Profile Picture'"
+              :isProfile="true"
+              :isFileExists="profileExists"
+              :handleUploadFile="profilePicture"
+            ></profile-common-button-upload> -->
+            <img
+              class="avatar position-relative"
+              src="assets/profile/profile.png"
+              alt="Profile"
+            />
+            <!-- <profile-common-privacy-toggle
+              v-if="isPrivacy"
+              class="privacy-profile-batch"
+              :checked="userInfo.settings.profile_picture === true ? 1 : 0"
+              :fieldName="'profile_picture'"
+            ></profile-common-privacy-toggle> -->
+          </div>
+          <div class="profile-info">
+            <h2 class="profile-name">Gir Gir Auction</h2>
+            <div class="tags">
+              <span class="main-tag">
+                <img
+                  class="addMail"
+                  src="assets/icons/addMail.png"
+                  alt="Add Mail"
+                />
+                GIRA UCTION
+              </span>
+              <span class="sub-tag">Admin</span>
+            </div>
+            <div class="social-icons">
+              <a href="#" target="_blank">
+                <img
+                  class="socialIcons"
+                  src="assets/icons/whatsApp.png"
+                  alt="WhatsApp"
+                />
+              </a>
+              <a href="#" target="_blank">
+                <img
+                  class="socialIcons"
+                  src="assets/icons/instagram.png"
+                  alt="Instagram"
+                />
+              </a>
+              <a href="#" target="_blank">
+                <img
+                  class="socialIcons"
+                  src="assets/icons/facebook.png"
+                  alt="Facebook"
+                />
+              </a>
+              <a href="#" target="_blank">
+                <img class="socialIcons" src="assets/icons/x.png" alt="X" />
+              </a>
+              <a href="#" target="_blank">
+                <img
+                  class="socialIcons"
+                  src="assets/icons/youtube.png"
+                  alt="YouTube"
+                />
+              </a>
+              <a href="#" target="_blank">
+                <img
+                  class="socialIcons"
+                  src="assets/icons/weChat.png"
+                  alt="WeChat"
+                />
+              </a>
+              <a href="#" target="_blank">
+                <img
+                  class="socialIcons"
+                  src="assets/icons/telegram.png"
+                  alt="Telegram"
+                />
+              </a>
+              <a class="add-mail-icon" href="#">
+                <img
+                  class="socialIcons"
+                  src="assets/icons/addMail.png"
+                  alt="Add Mail"
+                />
+              </a>
+            </div>
+            <!-- <profile-social-media-form
+              v-if="isEdit"
+              :socialMedia="socailInfo"
+            ></profile-social-media-form>
+            <profile-social-media-privacy
+              v-if="isPrivacy"
+              :isPrivacy="isPrivacy"
+              :isEdit="isEdit"
+              :userInfo="userInfo"
+            ></profile-social-media-privacy> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

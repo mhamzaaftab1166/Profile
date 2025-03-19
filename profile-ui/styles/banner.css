@@ -1,0 +1,207 @@
+.profile-wrapper{
+  margin-top: 26px;
+  padding-bottom: 16px;
+}
+
+.addMail {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.socialIcons {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  cursor: pointer;
+}
+
+.primary-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-banner {
+  overflow: hidden;
+}
+
+.banner-container {
+  width: 100%;
+  height: 200px;
+  position: relative;
+}
+
+.banner-image {
+  width: 730.26px;
+  height: 300.42px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  object-fit: cover;
+}
+
+.position-relative {
+  position: relative;
+}
+
+.profile-details {
+  display: flex;
+  align-items: flex-start;
+  padding: 10px;
+  height: 160px;
+}
+
+.h100 {
+  height: 100%;
+}
+
+.profile-image {
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  margin-right: 32px;
+  position: relative;
+  top: -118px;
+  left: 48px;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 97.33px;
+  object-fit: cover;
+}
+
+.profile-info {
+  display: flex;
+  margin-left: 32px;
+  flex-direction: column;
+}
+
+.profile-name {
+  font-size: 33.83px;
+  line-height: 50.75px;
+  font-weight: bold;
+  letter-spacing: 0.14px;
+  font-family: "Poppins";
+  margin: 0;
+}
+
+.privacy-cover-batch {
+  position: absolute;
+  right: 0;
+  padding: 15px 12px;
+}
+
+.privacy-profile-batch {
+  position: absolute;
+  top: 50%;
+  transform: translate(-55%, -50%);
+  left: 50%;
+  z-index: 99;
+}
+
+.tags {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.main-tag {
+  background: #ffffff;
+  padding: 5px 10px;
+  font-size: 23px;
+  font-weight: 600;
+  line-height: 50.75px;
+  letter-spacing: 0.14px;
+  border: 1px solid #e5e5ea;
+  width: 181.81px;
+  height: 34.15px;
+  border-radius: 8.59px;
+  display: flex;
+  justify-content: space-between;
+  font-family: "Poppins";
+  align-items: center;
+}
+
+.sub-tag {
+  color: #6e55ff;
+  font-family: "Poppins";
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 20px;
+  text-transform: uppercase;
+}
+
+.social-icons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.phone-number {
+  font-size: 14px;
+  margin-left: 5px;
+  align-self: center;
+}
+
+.uploadButton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.profileUploadButton {
+  position: absolute;
+  bottom: -75px;
+  z-index: 99;
+  left: 50%;
+  overflow: visible;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-button {
+  width: 158.64px;
+  height: 36.95px;
+  background: #6e55ff;
+  color: #fff;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  border: none;
+  text-align: center;
+}
+
+.disabled-button {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.file-upload {
+  width: 84.41px;
+  height: 22.89px;
+  background: #000000;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 15px;
+  margin-bottom: 0px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}

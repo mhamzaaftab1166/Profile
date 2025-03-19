@@ -1,0 +1,57 @@
+.action-button-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: 8px;
+}
+.discard-sm-button {
+  border: 1px solid #8c8c8c;
+  border-radius: 5.13px;
+  text-align: center;
+  padding: 3px 18px;
+  font-size: 9.11px;
+  font-family: "Poppins";
+  font-weight: 600;
+  line-height: 13.66px;
+  color: #000000;
+  background-color: #ffffff;
+}
+
+.discard-button {
+  border: 1px solid #8c8c8c;
+  border-radius: 7.51px;
+  text-align: center;
+  padding: 3px 26px;
+  font-size: 13.34px;
+  font-family: "Poppins";
+  font-weight: 600;
+  line-height: 20.01px;
+  color: #000000;
+  background-color: #ffffff;
+}
+
+.save-sm-button {
+  border: 1px solid #6e55ff;
+  border-radius: 5.13px;
+  text-align: center;
+  padding: 3px 30px;
+  font-size: 9.11px;
+  font-family: "Poppins";
+  font-weight: 600;
+  line-height: 13.66px;
+  color: #ffffff;
+  background-color: #6e55ff;
+}
+
+.save-button {
+  border: 1px solid #6e55ff;
+  border-radius: 7.51px;
+  text-align: center;
+  padding: 3px 39px;
+  font-size: 13.34px;
+  font-family: "Poppins";
+  font-weight: 600;
+  line-height: 20.01px;
+  color: #ffffff;
+  background-color: #6e55ff;
+}
