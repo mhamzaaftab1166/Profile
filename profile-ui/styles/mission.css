@@ -41,7 +41,7 @@ mission-card {
 }
 
 .misson-separator {
-    background-color: #efefef;
+    background-color: #EFEFEF;
     display: flex;
     margin-top: 11px;
     width: 368px;
@@ -70,7 +70,7 @@ mission-card {
 
 .misson-content-section {
     color: #3a3a3c;
-    line-height: 20px;
+    line-height: 10px;
     letter-spacing: 0.13px;
     text-decoration-skip-ink: none;
     width: 100%;
@@ -96,6 +96,18 @@ mission-card {
     text-decoration: underline;
     color: #6e55ff;
     width: 100%;
+}
+
+.misson-section-text-view{
+    font-family:
+            "Poppins",
+            -apple-system,
+            Roboto,
+            Helvetica,
+            sans-serif;
+        width: 100%;
+        line-height: 20px;
+        color: #000000;
 }
 
 input.misson-section-text {

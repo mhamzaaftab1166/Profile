@@ -51,7 +51,10 @@ body {
     max-width: 730px;
     margin: 0 auto;
     margin-top: 20px;
+    position: relative;
+    margin-bottom: 50px;
 }
+
 
 .license-permissions-card {
     border-radius: 10px;
@@ -78,7 +81,7 @@ body {
 }
 
 .license-separator-line {
-    background-color: #efefef;
+    background-color: #EFEFEF;
     display: block;
     margin-top: 10px;
     width: 369px;
@@ -222,7 +225,6 @@ body {
     font-family: "Open Sans", -apple-system, Roboto, Helvetica, sans-serif;
     font-weight: 700;
     outline: none;
-    /* optional: remove default focus outline */
 }
 
 
@@ -263,9 +265,59 @@ body {
     }
 }
 
+.privacy-profile-batch {
+    position: absolute;
+    top: 50%;
+    transform: translate(-55%, -50%);
+    left: 50%;
+    z-index: 99;
+}
+
 .license-license-section {
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.browse-button {
+    border-radius: 10px;
+    background-color: #000;
+    display: flex;
+    padding: 16px 17px;
+    align-items: center;
+    gap: 10px;
+    font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif;
+    font-size: 14px;
+    color: #fff;
+    font-weight: 700;
+    text-align: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    width: 228px;
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.browse-text {
+    align-self: stretch;
+    margin: auto 0;
+}
+
+.separator-line {
+    background-color: #fff;
+    align-self: stretch;
+    display: flex;
+    width: 1px;
+    flex-shrink: 0;
+    height: 21px;
+}
+
+.arrow-icon {
+    aspect-ratio: 2;
+    width: 18px;
+    height: 8px;
 }

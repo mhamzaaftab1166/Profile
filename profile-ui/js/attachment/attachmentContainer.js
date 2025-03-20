@@ -3,9 +3,10 @@ class AttachmentSection extends HTMLElement {
     this.innerHTML = `
       <section class="license-permissions-container" x-data="{ uploads: [{ title: '', file: null }] }">
       <article class="license-permissions-card">
-        <div class="d-flex justify-content-between align-items-center gap-3">
+        <div class="d-flex justify-content-between align-items-center">
+         <privacy-button class="isAttachmentPrivacy"></privacy-button>
           <h2 class="license-permissions-title mb-0">Attachments</h2>
-          <button class="license-btn btn btn-secondary" style="width: 120px;" @click="uploads.push({ title: '', file: null })">+ Add More</button>
+          <button class="ms-3 license-btn license-btn-download license-btn-secondary isAttachmentEdit" style="width: 120px;" @click="uploads.push({ title: '', file: null })">+ Add More</button>
         </div>
         <hr class="license-separator-line" />
 
@@ -15,15 +16,15 @@ class AttachmentSection extends HTMLElement {
             <time class="license-license-date">12 April at 09.28 PM</time>
           </div>
           <div class="license-action-buttons">
-            <button class="license-btn license-btn-secondary">Delete</button>
+            <privacy-button class="isAttachmentPrivacy"></privacy-button>
+            <button class="isAttachmentEdit license-btn">Delete</button>
             <button class="license-btn license-btn-secondary">View</button>
             <button class="license-btn license-btn-download license-btn-secondary">Download</button>
           </div>
         </div>
-
         <hr class="license-divider" />
         <template x-for="(upload, index) in uploads" :key="index">
-          <div class="license-upload-section mb-3">
+        <div class="license-upload-section mb-3 isAttachmentEdit">
             <input 
               type="text" 
               class="license-file-name-input" 
@@ -49,9 +50,50 @@ class AttachmentSection extends HTMLElement {
             </div>
           </div>
         </template>
+           <button class="browse-button">
+            <span class="browse-text">Browse All</span>
+            <span class="separator-line"></span>
+            <img
+                src="assets/profile/rightArrow.png"
+                class="arrow-icon"
+                alt="Arrow"
+            />
+            </button>
       </article>
     </section>
     `;
+    this.attachmentEdits = this.querySelectorAll(".isAttachmentEdit");
+    this.attachmentPrivacies = this.querySelectorAll(".isAttachmentPrivacy");
+
+    this.attachmentEdits.forEach((button) => (button.style.display = "none"));
+    this.attachmentPrivacies.forEach(
+      (button) => (button.style.display = "none")
+    );
+
+    window.addEventListener("actionChange", (event) =>
+      this.updateSection(event.detail)
+    );
+  }
+
+  updateSection({ isEdit, isPrivacy }) {
+    if (isEdit) {
+      this.attachmentEdits.forEach(
+        (button) => (button.style.display = "block")
+      );
+      this.attachmentPrivacies.forEach(
+        (button) => (button.style.display = "none")
+      );
+    } else if (isPrivacy) {
+      this.attachmentEdits.forEach((button) => (button.style.display = "none"));
+      this.attachmentPrivacies.forEach(
+        (button) => (button.style.display = "block")
+      );
+    } else {
+      this.attachmentEdits.forEach((button) => (button.style.display = "none"));
+      this.attachmentPrivacies.forEach(
+        (button) => (button.style.display = "none")
+      );
+    }
   }
 }
 
