@@ -1,10 +1,24 @@
 class LicenseSection extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
-    <section class="license-permissions-container" x-data="{ uploads: [{ title: '', file: null }] }">
+   <section class="license-permissions-container" x-data="{ uploads: [{ title: '', file: null }], checked: false, togglePrivacy() {
+        console.log('Privacy checked value:', this.checked);
+      }}">
       <article class="license-permissions-card">
         <div class="d-flex justify-content-between align-items-center">
-          <privacy-button class="isLicensePrivacy"></privacy-button>
+         <div class="ms-2 toggle-container isLicensePrivacy">
+              <div
+                class="toggle-track"
+                role="switch"
+                tabindex="0"
+                :aria-checked="checked.toString()"
+                aria-label="Privacy toggle switch"
+                :data-checked="checked ? '1' : '0'"
+                @click="checked = !checked; togglePrivacy()"
+              >
+                <div class="toggle-handle"></div>
+              </div>
+            </div>
           <h2 class="license-permissions-title mb-0">Licenses & Permissions</h2>
           <button class="ms-3 isLicenseEdit license-btn license-btn-download license-btn-secondary" style="width: 120px;" @click="uploads.push({ title: '', file: null })">+ Add More</button>
         </div>
@@ -16,7 +30,19 @@ class LicenseSection extends HTMLElement {
             <time class="license-license-date">12 April at 09.28 PM</time>
           </div>
           <div class="license-action-buttons">
-             <privacy-button class="isLicensePrivacy"></privacy-button>
+             <div class="toggle-container isLicensePrivacy">
+                <div
+                  class="toggle-track"
+                  role="switch"
+                  tabindex="0"
+                  :aria-checked="checked.toString()"
+                  aria-label="Privacy toggle switch"
+                  :data-checked="checked ? '1' : '0'"
+                  @click="checked = !checked; togglePrivacy()"
+                >
+                  <div class="toggle-handle"></div>
+                </div>
+              </div>
             <button class="isLicenseEdit license-btn license-btn-secondary">Delete</button>
             <button class="license-btn license-btn-secondary">View</button>
             <button class="license-btn license-btn-download license-btn-secondary">Download</button>

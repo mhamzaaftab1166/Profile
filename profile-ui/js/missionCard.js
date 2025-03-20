@@ -21,6 +21,10 @@ class MissionCard extends HTMLElement {
         values: '',
         id: false,
         myProp: '${myProp}',
+        checked: false,
+         togglePrivacy() {
+        console.log('Privacy checked value:', this.checked);
+      },
         updateMissionData(data) {
           console.log('Mission received:', data);
           // Update reactive properties
@@ -43,7 +47,19 @@ class MissionCard extends HTMLElement {
       }" x-init="MissionHandler.fetchMission(updateMissionData.bind($data))">
       
       <div class="d-flex justify-content-between align-items-center gap-2">
-        <privacy-button class="isMissionPrivacy"></privacy-button>
+        <div class="ms-2 toggle-container isMissionPrivacy">
+              <div
+                class="toggle-track"
+                role="switch"
+                tabindex="0"
+                :aria-checked="checked.toString()"
+                aria-label="Privacy toggle switch"
+                :data-checked="checked ? '1' : '0'"
+                @click="checked = !checked; togglePrivacy()"
+              >
+                <div class="toggle-handle"></div>
+              </div>
+            </div>
         <header class="misson-card-title">Mission & Vision & Values</header>
       </div>
       <div class="misson-separator"></div>
@@ -51,7 +67,19 @@ class MissionCard extends HTMLElement {
       
         <div class="misson-mission-section misson-content-section">
           <div class="d-flex justify-content-start align-items-center gap-2">
-            <privacy-button class="isMissionPrivacy"></privacy-button>
+            <div class="ms-2 toggle-container isMissionPrivacy">
+              <div
+                class="toggle-track"
+                role="switch"
+                tabindex="0"
+                :aria-checked="checked.toString()"
+                aria-label="Privacy toggle switch"
+                :data-checked="checked ? '1' : '0'"
+                @click="checked = !checked; togglePrivacy()"
+              >
+                <div class="toggle-handle"></div>
+              </div>
+            </div>
             <span class="misson-section-title">Mission</span>
           </div>
           <br />
@@ -62,7 +90,19 @@ class MissionCard extends HTMLElement {
         
         <div class="misson-vision-section misson-content-section">
           <div class="d-flex justify-content-start align-items-center gap-2">
-            <privacy-button class="isMissionPrivacy"></privacy-button>
+          <div class="ms-2 toggle-container isMissionPrivacy">
+              <div
+                class="toggle-track"
+                role="switch"
+                tabindex="0"
+                :aria-checked="checked.toString()"
+                aria-label="Privacy toggle switch"
+                :data-checked="checked ? '1' : '0'"
+                @click="checked = !checked; togglePrivacy()"
+              >
+                <div class="toggle-handle"></div>
+              </div>
+            </div>
             <span class="misson-section-title">Vision</span>
           </div>
           <br />
@@ -72,7 +112,19 @@ class MissionCard extends HTMLElement {
         
         <div class="misson-values-section misson-content-section">
           <div class="d-flex justify-content-start align-items-center gap-2">
-            <privacy-button class="isMissionPrivacy"></privacy-button>
+           <div class="ms-2 toggle-container isMissionPrivacy">
+              <div
+                class="toggle-track"
+                role="switch"
+                tabindex="0"
+                :aria-checked="checked.toString()"
+                aria-label="Privacy toggle switch"
+                :data-checked="checked ? '1' : '0'"
+                @click="checked = !checked; togglePrivacy()"
+              >
+                <div class="toggle-handle"></div>
+              </div>
+            </div>
             <span class="misson-section-title">Values</span>
           </div>
           <br />
