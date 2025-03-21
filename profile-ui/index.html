@@ -29,6 +29,7 @@
     <script src="./js/breaking/newsContainer.js" defer></script>
     <script src="./js/services/serviceContainer.js" defer></script>
     <script src="./js/location/locationContainer.js" defer></script>
+    <script src="./js/location/locationEditContainer.js" defer></script>
     <script src="./js/attachment/attachmentContainer.js" defer></script>
     <script src="./js/license/licenseContainer.js" defer></script>
     <script src="./js/about/aboutContainer.js" defer></script>
@@ -37,13 +38,22 @@
     <script src="./js/banner/bannerContainer.js" defer></script>
     <script src="./js/privacyButton/privacyButtonContainer.js" defer></script>
     <script src="./js/navigation/navigationContainer.js" defer></script>
-    <!-- <script src="./js/buttonUpload/buttonUploadContainer.js" defer></script> -->
     <script
       src="./js/socialMediaForm/socialMediaFormContainer.js"
       defer
     ></script>
     <script src="./js/actionButton/actionButtonContainer.js" defer></script>
-    <!-- Import the custom css -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+       <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
     <link rel="stylesheet" href="./styles/mission.css" />
     <link rel="stylesheet" href="./styles/management.css" />
     <link rel="stylesheet" href="./styles/breaking.css" />
@@ -59,6 +69,8 @@
     <link rel="stylesheet" href="./styles/navigation.css" />
     <link rel="stylesheet" href="./styles/actionButton.css" />
     <link rel="stylesheet" href="./styles/general.css" />
+    <link rel="stylesheet" href="./styles/locationEdit.css" />
+    <link rel="stylesheet" href="./styles/locationView.css" />
     <style>
       .main-div {
         width: 100%;
@@ -83,9 +95,28 @@
       <management-section></management-section>
       <breaking-section></breaking-section>
       <service-section></service-section>
-      <location-section></location-section>
+      <location-section class="isComponentView"></location-section>
+       <location-edit class="isComponentEdit"></location-edit>
       <license-section></license-section>
       <attachment-section></attachment-section>
     </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const componentEdits = document.querySelectorAll(".isComponentEdit");
+        const componentView = document.querySelectorAll(".isComponentView");
+        componentEdits.forEach(el => el.style.display = "none");
+         componentView.forEach(el => el.style.display = "flex");
+        window.addEventListener("actionChange", function (event) {
+          const { isEdit } = event.detail;
+          if (isEdit) {
+            componentEdits.forEach(el => el.style.display = "flex");
+            componentView.forEach(el => el.style.display = "none");
+          } else {
+            componentEdits.forEach(el => el.style.display = "none");
+            componentView.forEach(el => el.style.display = "flex");
+          }
+        });
+      });
+    </script>
   </body>
 </html>

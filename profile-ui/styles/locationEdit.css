@@ -1,0 +1,416 @@
+.locedit-locations-container {
+    border-radius: 0;
+    max-width: 730px;
+    margin-top: 20px;
+}
+
+.locedit-locations-card {
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.08);
+    display: flex;
+    width: 100%;
+    padding: 13px 0;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+@media (max-width: 991px) {
+    .locedit-locations-card {
+        max-width: 100%;
+    }
+}
+
+.locedit-locations-header {
+    width: 100%;
+}
+
+.locedit-locations-title {
+    color: #1c1c1e;
+    font-family:
+        Poppins,
+        -apple-system,
+        Roboto,
+        Helvetica,
+        sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 0 20px;
+}
+
+@media (max-width: 991px) {
+    .locedit-locations-title {
+        margin-left: 10px;
+    }
+}
+
+.locedit-header-separator {
+    background-color: #efefef;
+    display: flex;
+    margin-top: 11px;
+    width: 368px;
+    flex-shrink: 0;
+    max-width: 100%;
+    height: 1px;
+}
+
+.locedit-locations-content {
+    align-self: stretch;
+    display: flex;
+    margin-top: 23px;
+    width: 100%;
+    padding: 0 35px;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+@media (max-width: 991px) {
+    .locedit-locations-content {
+        max-width: 100%;
+        padding: 0 20px;
+    }
+}
+
+.locedit-locations-grid {
+    display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+}
+
+@media (max-width: 991px) {
+    .locedit-locations-grid {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+    }
+}
+
+
+
+.locedit-location-item {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    line-height: normal;
+    width: 48%;
+    /* Ensure each card takes up almost half the width for 2 per row */
+    margin-left: 0;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 1);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    padding-bottom: 28px;
+}
+
+
+@media (max-width: 991px) {
+    .locedit-locations-grid {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .locedit-location-item {
+        width: 100%;
+        /* Full width for smaller screens */
+        margin-top: 40px;
+    }
+
+}
+
+.locedit-location-header {
+    display: flex;
+    margin: 0 19px 0 20px;
+    align-items: flex-start;
+}
+
+@media (max-width: 991px) {
+    .locedit-location-header {
+        margin: 0 10px;
+    }
+}
+
+.locedit-location-name {
+    color: rgba(110, 85, 255, 1);
+    font-size: 14px;
+    font-family:
+        Poppins,
+        -apple-system,
+        Roboto,
+        Helvetica,
+        sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+    text-decoration: underline;
+    margin: 15px 0 0 0;
+    flex-grow: 1;
+    flex-shrink: 1;
+    width: 135px;
+    border: none;
+    outline: none;
+    background: transparent;
+}
+
+.locedit-location-name::placeholder {
+    color: rgba(110, 85, 255, 1);
+    font-size: 14px;
+    font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+    text-decoration: underline;
+    opacity: 1;
+}
+
+.locedit-location-name:focus {
+    color: rgba(110, 85, 255, 1);
+    text-decoration: underline;
+    outline: none;
+    box-shadow: none;
+    border: none;
+}
+
+.locedit-default-badge {
+    border-radius: 0 0 6px 6px;
+    background-color: rgba(0, 0, 0, 1);
+    display: flex;
+    min-height: 22px;
+    padding: 4px 6px 4px 3px;
+    align-items: center;
+    gap: 2px;
+    font-family:
+        Open Sans,
+        -apple-system,
+        Roboto,
+        Helvetica,
+        sans-serif;
+    font-size: 11px;
+    color: #fefefe;
+    font-weight: 700;
+    white-space: nowrap;
+    justify-content: center;
+}
+
+@media (max-width: 991px) {
+    .locedit-default-badge {
+        white-space: initial;
+    }
+}
+
+.locedit-badge-separator {
+    background-color: #fff;
+    align-self: stretch;
+    display: flex;
+    margin: auto 0;
+    width: 1px;
+    flex-shrink: 0;
+    height: 11px;
+}
+
+.locedit-badge-text {
+    align-self: stretch;
+    margin: auto 0;
+}
+
+.locedit-badge-icon {
+    aspect-ratio: 1;
+    object-fit: contain;
+    object-position: center;
+    width: 8px;
+    align-self: stretch;
+    margin: auto 0;
+    flex-shrink: 0;
+}
+
+.locedit-location-separator {
+    background-color: rgba(180, 180, 180, 1);
+    display: flex;
+    margin-top: 6px;
+    width: 307px;
+    flex-shrink: 0;
+    max-width: 100%;
+    height: 1px;
+}
+
+@media (max-width: 991px) {
+    .locedit-location-separator {
+        margin: 6px 2px 0 3px;
+    }
+}
+
+.locedit-location-details {
+    display: flex;
+    margin-top: 9px;
+    width: 100%;
+    padding: 0 22px;
+    flex-direction: column;
+    align-items: flex-start;
+    font-family:
+        Poppins,
+        -apple-system,
+        Roboto,
+        Helvetica,
+        sans-serif;
+    font-size: 7px;
+}
+
+
+@media (max-width: 991px) {
+    .locedit-location-details {
+        padding: 0 20px;
+    }
+}
+
+.locedit-details-text {
+    color: rgba(110, 85, 255, 1);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 2;
+    letter-spacing: 0.11px;
+    text-decoration: underline;
+    margin: 0;
+    border: none;
+}
+.locedit-details-text::placeholder {
+    color: rgba(110, 85, 255, 1);
+    font-size: 14px;
+    font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+    text-decoration: underline;
+    opacity: 1;
+}
+
+.locedit-details-text:focus {
+    color: rgba(110, 85, 255, 1);
+    text-decoration: underline;
+    outline: none;
+    box-shadow: none;
+    border: none;
+}
+
+.locedit-view-location-label {
+    color: #1c1c1e;
+    font-weight: 600;
+    margin: 89px 0 0 0;
+}
+
+@media (max-width: 991px) {
+    .locedit-view-location-label {
+        margin-top: 40px;
+    }
+}
+
+.locedit-location-link-input {
+    align-items: flex-start;
+    border-radius: 4.919px;
+    border: 0.492px solid var(--Input, #e5e5ea);
+    background-color: #fff;
+    align-self: stretch;
+    display: flex;
+    margin-top: 5px;
+    padding: 7px 8px;
+    gap: 9px;
+    color: #3a3a3c;
+    font-weight: 400;
+}
+
+.locedit-link-icon {
+    aspect-ratio: 0.6;
+    object-fit: contain;
+    object-position: center;
+    width: 9px;
+    align-self: flex-start;
+    flex-shrink: 0;
+}
+
+.locedit-link-placeholder {
+    margin: auto 0;
+    flex-grow: 1;
+    flex-shrink: 1;
+    width: 226px;
+}
+
+.locedit-action-buttons {
+    align-self: flex-end;
+    display: flex;
+    margin-top: 87px;
+    align-items: stretch;
+    gap: 11px;
+    font-family:
+        Poppins,
+        -apple-system,
+        Roboto,
+        Helvetica,
+        sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    text-align: center;
+}
+
+@media (max-width: 991px) {
+    .locedit-action-buttons {
+        margin-top: 40px;
+        white-space: initial;
+    }
+}
+
+.locedit-discard-button {
+    border-radius: 8px;
+    border: 1px solid rgba(140, 140, 140, 1);
+    background-color: transparent;
+    padding: 4px 39px;
+    color: rgba(32, 32, 32, 1);
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    cursor: pointer;
+}
+
+@media (max-width: 991px) {
+    .locedit-discard-button {
+        padding: 4px 20px;
+        white-space: initial;
+    }
+}
+
+.locedit-save-button {
+    border-radius: 8px;
+    background-color: rgba(110, 85, 255, 1);
+    border: none;
+    padding: 4px 47px;
+    color: rgba(255, 255, 255, 1);
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    cursor: pointer;
+}
+
+@media (max-width: 991px) {
+    .locedit-save-button {
+        padding: 4px 20px;
+        white-space: initial;
+    }
+}
+
+.loc-add-more-button {
+    max-width: 126px;
+    border-radius: 8px;
+    background-color: rgba(110, 85, 255, 1);
+    padding: 4px 24px;
+    font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 1);
+    font-weight: 600;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.loc-add-more-button:hover {
+    background-color: rgba(90, 65, 235, 1);
+}
+
+.loc-add-more-button:focus {
+    outline: 2px solid rgba(110, 85, 255, 0.5);
+    outline-offset: 2px;
+}

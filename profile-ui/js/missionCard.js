@@ -47,7 +47,7 @@ class MissionCard extends HTMLElement {
       }" x-init="MissionHandler.fetchMission(updateMissionData.bind($data))">
       
       <div class="d-flex justify-content-between align-items-center gap-2">
-        <div class="ms-2 toggle-container isMissionPrivacy">
+            <div class="ms-2 toggle-container isMissionPrivacy">
               <div
                 class="toggle-track"
                 role="switch"

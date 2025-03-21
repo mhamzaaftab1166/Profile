@@ -36,3 +36,81 @@
     transform: translate(20px, -50%);
     background-color: #ffffff !important;
 }
+
+.browse-button {
+    border-radius: 10px;
+    background-color: #000;
+    display: flex;
+    padding: 16px 17px;
+    align-items: center;
+    gap: 10px;
+    font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif;
+    font-size: 14px;
+    color: #fff;
+    font-weight: 700;
+    text-align: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    width: 228px;
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.browse-text {
+    align-self: stretch;
+    margin: auto 0;
+}
+
+.separator-line {
+    background-color: #fff;
+    align-self: stretch;
+    display: flex;
+    width: 1px;
+    flex-shrink: 0;
+    height: 21px;
+}
+
+.arrow-icon {
+    aspect-ratio: 2;
+    width: 18px;
+    height: 8px;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    position: relative;
+}
+
+#map {
+    height: 300px;
+    margin-bottom: 15px;
+}
+
+.modal-close {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+}
