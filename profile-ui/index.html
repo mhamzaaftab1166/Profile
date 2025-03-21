@@ -38,6 +38,7 @@
     <script src="./js/banner/bannerContainer.js" defer></script>
     <script src="./js/privacyButton/privacyButtonContainer.js" defer></script>
     <script src="./js/navigation/navigationContainer.js" defer></script>
+    <script src="./js/breaking/editContainer.js" defer></script>
     <script
       src="./js/socialMediaForm/socialMediaFormContainer.js"
       defer
@@ -48,7 +49,7 @@
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
       crossorigin=""
     ></script>
-       <link
+    <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
@@ -71,6 +72,7 @@
     <link rel="stylesheet" href="./styles/general.css" />
     <link rel="stylesheet" href="./styles/locationEdit.css" />
     <link rel="stylesheet" href="./styles/locationView.css" />
+    <link rel="stylesheet" href="./styles/breakingEdit.css" />
     <style>
       .main-div {
         width: 100%;
@@ -93,10 +95,11 @@
       <about-section class="section-wrapper"></about-section>
       <mission-card my-prop="Hello from React-like prop!"></mission-card>
       <management-section></management-section>
-      <breaking-section></breaking-section>
+      <!-- <breaking-section class="isComponentEdit"></breaking-section>
+      <breaking-edit  class="isComponentView"></breaking-edit> -->
       <service-section></service-section>
       <location-section class="isComponentView"></location-section>
-       <location-edit class="isComponentEdit"></location-edit>
+      <location-edit class="isComponentEdit"></location-edit>
       <license-section></license-section>
       <attachment-section></attachment-section>
     </div>

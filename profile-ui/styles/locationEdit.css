@@ -1,6 +1,13 @@
+location-edit {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .locedit-locations-container {
     border-radius: 0;
     max-width: 730px;
+    width: 100%;
     margin-top: 20px;
 }
 
@@ -14,6 +21,7 @@
     flex-direction: column;
     align-items: flex-start;
 }
+
 
 @media (max-width: 991px) {
     .locedit-locations-card {
@@ -59,7 +67,7 @@
     display: flex;
     margin-top: 23px;
     width: 100%;
-    padding: 0 35px;
+    padding: 0 43px;
     flex-direction: column;
     align-items: stretch;
 }

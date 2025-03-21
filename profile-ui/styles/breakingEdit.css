@@ -1,0 +1,352 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family:
+        Poppins,
+        -apple-system,
+        Roboto,
+        Helvetica,
+        sans-serif;
+}
+
+breaking-edit{
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Card container */
+.breakedit-card-container {
+    border-radius: 0;
+    width: 730px;
+    margin-top: 20px;
+}
+
+/* Card */
+.breakedit-card {
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    padding: 22px 25px;
+}
+
+@media (max-width: 991px) {
+    .breakedit-card {
+        max-width: 100%;
+        padding: 20px;
+    }
+}
+
+/* Card content layout */
+.breakedit-card-content {
+    display: flex;
+    gap: 20px;
+}
+
+@media (max-width: 991px) {
+    .breakedit-card-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+    }
+        .breakedit-card-container{
+            max-width: 100%;
+            width: 100%;
+        }
+}
+
+/* Left column */
+.breakedit-info-column {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    line-height: normal;
+    width: 38%;
+    margin-left: 0;
+}
+
+@media (max-width: 991px) {
+    .breakedit-info-column {
+        width: 100%;
+    }
+}
+
+.breakedit-info-content {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+@media (max-width: 991px) {
+    .breakedit-info-content {
+        margin-top: 40px;
+    }
+}
+
+/* Profile section */
+.breakedit-profile-section {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.breakedit-profile-image {
+    aspect-ratio: 0.87;
+    object-fit: contain;
+    object-position: center;
+    width: 49px;
+    border-radius: 0;
+    flex-shrink: 0;
+}
+
+.breakedit-profile-details {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.breakedit-profile-title {
+    color: rgba(110, 85, 255, 1);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.13px;
+    text-decoration: underline;
+    align-self: flex-start;
+    border: none;
+}
+.breakedit-profile-title::placeholder {
+    color: rgba(110, 85, 255, 1);
+    font-size: 14px;
+    font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.1px;
+    text-decoration: underline;
+    opacity: 1;
+}
+
+.breakedit-profile-title:focus {
+    color: rgba(110, 85, 255, 1);
+    text-decoration: underline;
+    outline: none;
+    box-shadow: none;
+    border: none;
+}
+
+.breakedit-profile-timestamp {
+    color: rgba(146, 146, 157, 1);
+    font-size: 16px;
+    font-weight: 400;
+    margin-top: 4px;
+}
+
+.breakedit-description {
+    color: rgba(110, 85, 255, 1);
+    font-size: 21px;
+    font-weight: 400;
+    line-height: 2;
+    letter-spacing: 0.13px;
+    align-self: flex-start;
+    margin-top: 27px;
+    border: none ;
+}
+.breakedit-description::placeholder {
+    color: rgba(110, 85, 255, 1);
+    font-size: 14px;
+    font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+    opacity: 1;
+}
+
+.hidden-input {
+    display: none;
+}
+
+.breakedit-play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+}
+
+.breakedit-media-wrapper {
+    position: relative;
+    display: inline-block;
+}
+.breakedit-description:focus {
+    color: rgba(110, 85, 255, 1);
+    outline: none;
+    box-shadow: none;
+    border: none !important;
+}
+
+/* Right column */
+.breakedit-media-column {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    line-height: normal;
+    width: 62%;
+    margin-left: 20px;
+}
+
+@media (max-width: 991px) {
+    .breakedit-media-column {
+        width: 100%;
+    }
+}
+
+.breakedit-media-content {
+    display: flex;
+    margin-top: 65px;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+@media (max-width: 991px) {
+    .breakedit-media-content {
+        margin-top: 40px;
+    }
+}
+
+.breakedit-media-wrapper {
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    position: relative;
+    aspect-ratio: 0.764;
+    width: 100%;
+    padding: 187px 67px;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 991px) {
+    .breakedit-media-wrapper {
+        padding: 100px 20px;
+    }
+}
+
+.breakedit-background-image {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.breakedit-play-button {
+    aspect-ratio: 2.08;
+    object-fit: contain;
+    object-position: center;
+    width: 131px;
+    border-radius: 0;
+    margin-bottom: -37px;
+    max-width: 100%;
+    z-index: 1;
+}
+
+@media (max-width: 991px) {
+    .breakedit-play-button {
+        margin-bottom: 10px;
+    }
+}
+
+.breakedit-controls-section {
+    align-self: center;
+    display: flex;
+    width: 263px;
+    max-width: 100%;
+    align-items: stretch;
+    gap: 11px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    text-align: center;
+   
+}
+
+@media (max-width: 991px) {
+    .breakedit-controls-section {
+        white-space: initial;
+    }
+}
+
+.locedit-action-buttons {
+    align-self: flex-end;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 40px;
+    align-items: stretch;
+    gap: 11px;
+    font-family:
+        Poppins,
+        -apple-system,
+        Roboto,
+        Helvetica,
+        sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    text-align: center;
+    padding-right: 20px;
+}
+
+@media (max-width: 991px) {
+    .locedit-action-buttons {
+        margin-top: 40px;
+        white-space: initial;
+    }
+}
+
+.locedit-discard-button {
+    border-radius: 8px;
+    border: 1px solid rgba(140, 140, 140, 1);
+    background-color: transparent;
+    padding: 4px 39px;
+    color: rgba(32, 32, 32, 1);
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    cursor: pointer;
+}
+
+@media (max-width: 991px) {
+    .locedit-discard-button {
+        padding: 4px 20px;
+        white-space: initial;
+    }
+}
+
+.locedit-save-button {
+    border-radius: 8px;
+    background-color: rgba(110, 85, 255, 1);
+    border: none;
+    padding: 4px 47px;
+    color: rgba(255, 255, 255, 1);
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    cursor: pointer;
+}
+
+@media (max-width: 991px) {
+    .locedit-save-button {
+        padding: 4px 20px;
+        white-space: initial;
+    }
+}
+
+
+

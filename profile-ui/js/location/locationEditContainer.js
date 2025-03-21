@@ -3,8 +3,8 @@ class LocationEditSection extends HTMLElement {
     this.innerHTML = `<section
       x-data="{
       locations: [
-        { name: '', details: '', link: 'Enter Link Here', isDefault: true },
-        { name: '', details: '', link: 'Enter Link Here', isDefault: false }
+        { name: '', details: '', link: '', isDefault: true },
+        { name: '', details: '', link: '', isDefault: false }
       ],
       modalOpen: false,
       currentIndex: null,
