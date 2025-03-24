@@ -137,44 +137,38 @@ location-edit {
 }
 
 .locedit-location-name {
-    color: rgba(110, 85, 255, 1);
-    font-size: 14px;
-    font-family:
-        Poppins,
-        -apple-system,
-        Roboto,
-        Helvetica,
-        sans-serif;
-    font-weight: 500;
-    letter-spacing: 0.1px;
-    text-decoration: underline;
-    margin: 15px 0 0 0;
-    flex-grow: 1;
-    flex-shrink: 1;
-    width: 135px;
-    border: none;
-    outline: none;
-    background: transparent;
+    color: rgba(110, 85, 255, 1) !important;
+    font-size: 14px !important;
+    font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.1px !important;
+    text-decoration: underline !important;
+    margin: 15px 0 0 0 !important;
+    flex-grow: 1 !important;
+    flex-shrink: 1 !important;
+    width: 135px !important;
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
 }
 
 .locedit-location-name::placeholder {
-    color: rgba(110, 85, 255, 1);
-    font-size: 14px;
-    font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif;
-    font-weight: 500;
-    letter-spacing: 0.1px;
-    text-decoration: underline;
-    opacity: 1;
+    color: rgba(110, 85, 255, 1) !important;
+    font-size: 14px !important;
+    font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.1px !important;
+    text-decoration: underline !important;
+    opacity: 1 !important;
 }
 
 .locedit-location-name:focus {
-    color: rgba(110, 85, 255, 1);
-    text-decoration: underline;
-    outline: none;
-    box-shadow: none;
-    border: none;
+    color: rgba(110, 85, 255, 1) !important;
+    text-decoration: underline !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
 }
-
 .locedit-default-badge {
     border-radius: 0 0 6px 6px;
     background-color: rgba(0, 0, 0, 1);
@@ -267,31 +261,32 @@ location-edit {
 }
 
 .locedit-details-text {
-    color: rgba(110, 85, 255, 1);
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 2;
-    letter-spacing: 0.11px;
-    text-decoration: underline;
-    margin: 0;
-    border: none;
+    color: rgba(110, 85, 255, 1) !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    line-height: 2 !important;
+    letter-spacing: 0.11px !important;
+    text-decoration: underline !important;
+    margin: 0 !important;
+    border: none !important;
 }
+
 .locedit-details-text::placeholder {
-    color: rgba(110, 85, 255, 1);
-    font-size: 14px;
-    font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif;
-    font-weight: 500;
-    letter-spacing: 0.1px;
-    text-decoration: underline;
-    opacity: 1;
+    color: rgba(110, 85, 255, 1) !important;
+    font-size: 14px !important;
+    font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.1px !important;
+    text-decoration: underline !important;
+    opacity: 1 !important;
 }
 
 .locedit-details-text:focus {
-    color: rgba(110, 85, 255, 1);
-    text-decoration: underline;
-    outline: none;
-    box-shadow: none;
-    border: none;
+    color: rgba(110, 85, 255, 1) !important;
+    text-decoration: underline !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
 }
 
 .locedit-view-location-label {

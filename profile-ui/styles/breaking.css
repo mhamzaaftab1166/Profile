@@ -1,37 +1,217 @@
-body {
-    font-family:
-        "Poppins",
-        -apple-system,
-        Roboto,
-        Helvetica,
-        sans-serif;
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #ffffff;
-
-}
-
-.breaking-card {
-    margin-top: 20px;
-    border-radius: 10px;
-    background-color: #fff;
-    box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.08);
-    display: flex;
-    max-width: 730px;
-    height: 600px;
-    width: 100%;
-    padding: 14px 21px;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
 breaking-section {
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+body {
+    font-family:
+        SF Pro,
+        -apple-system,
+        Roboto,
+        Helvetica,
+        sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Card container */
+.breakview-card-container {
+    border-radius: 0px 0px 0px 0px;
+    max-width: 730px;
+    margin-top: 20px;
+}
+
+.breakview-card {
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.08);
+    display: flex;
+    width: 100%;
+    padding: 19px 40px 35px 20px;
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 20px;
+
+}
+
+@media (max-width: 991px) {
+    .breakview-card {
+        max-width: 100%;
+        padding-right: 20px;
+    }
+}
+
+/* Header section */
+.breakview-card-header {
+    align-self: start;
+    display: flex;
+    align-items: stretch;
+    gap: 12px;
+}
+
+.breakview-profile-image {
+    aspect-ratio: 0.89;
+    object-fit: cover;
+    object-position: center;
+    width: 49px;
+    flex-shrink: 0;
+    border-radius: 50%;
+}
+
+.breakview-header-content {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.breakview-location-title {
+    color: rgba(0, 0, 0, 1);
+    font-size: 18px;
+    font-weight: 590;
+    letter-spacing: 0.13px;
+    margin: 0;
+}
+
+.breakview-timestamp {
+    color: rgba(146, 146, 157, 1);
+    font-size: 16px;
+    font-weight: 400;
+    margin-top: 10px;
+    display: block;
+}
+
+/* Main content section */
+.breakview-content-section {
+    margin-top: 14px;
+}
+
+@media (max-width: 991px) {
+    .breakview-content-section {
+        max-width: 100%;
+    }
+}
+
+.breakview-content-columns {
+    gap: 20px;
+    display: flex;
+}
+
+@media (max-width: 991px) {
+    .breakview-content-columns {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0px;
+    }
+}
+
+.breakview-text-column {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    line-height: normal;
+    width: 50%;
+    margin-left: 0px;
+}
+
+@media (max-width: 991px) {
+    .breakview-text-column {
+        width: 100%;
+    }
+}
+
+.breakview-description-text {
+    color: rgba(0, 0, 0, 1);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 32px;
+    letter-spacing: 0.13px;
+    margin-top: auto;
+    margin-bottom: auto;
+    align-self: stretch;
+}
+
+@media (max-width: 991px) {
+    .breakview-description-text {
+        margin-top: 40px;
+    }
+}
+
+.breakview-image-column {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    line-height: normal;
+    width: 50%;
+    margin-left: 20px;
+}
+
+@media (max-width: 991px) {
+    .breakview-image-column {
+        width: 100%;
+    }
+}
+
+.breakview-content-image {
+    aspect-ratio: 0.76;
+    object-fit: contain;
+    object-position: center;
+    width: 100%;
+    border-radius: 20px;
+    flex-grow: 1;
+}
+
+@media (max-width: 991px) {
+    .breakview-content-image {
+        margin-top: 40px;
+    }
+}
+
+.edit-news-container {
+    border-radius: 8px;
+    display: flex;
+    align-items: stretch;
+    gap: 37px;
+    font-family:
+        Poppins,
+        -apple-system,
+        Roboto,
+        Helvetica,
+        sans-serif;
+    font-weight: 600;
+}
+
+.edit-news-heading {
+    color: #1c1c1e;
+    font-size: 18px;
+    flex-basis: auto;
+    margin: 0;
+    font-weight: 600;
+}
+
+.edit-add-button {
+    border-radius: 8px;
+    background-color: rgba(110, 85, 255, 1);
+    padding: 4px 23px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 1);
+    text-align: center;
+    font-family:
+        Poppins,
+        -apple-system,
+        Roboto,
+        Helvetica,
+        sans-serif;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    width: 125px;
+}
+
+.edit-add-button:hover {
+    background-color: rgba(90, 65, 235, 1);
+}
+
+.edit-add-button:focus {
+    outline: 2px solid rgba(110, 85, 255, 0.5);
+    outline-offset: 2px;
 }
