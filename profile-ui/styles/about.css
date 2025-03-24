@@ -1,36 +1,283 @@
 body {
-    font-family:
-        "Poppins",
-        -apple-system,
-        Roboto,
-        Helvetica,
-        sans-serif;
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #ffffff;
+  font-family: "Poppins", -apple-system, Roboto, Helvetica, sans-serif;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #ffffff;
 }
 
 .about-card {
-    margin-top: 20px;
-    border-radius: 10px;
-    background-color: #fff;
-    box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.08);
-    display: flex;
-    max-width: 730px;
-    height: 710px;
-    width: 100%;
-    padding: 14px 21px;
-    flex-direction: column;
-    align-items: flex-start;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.08);
+  display: flex;
+  max-width: 730px;
+  width: 100%;
+  padding: 14px 21px;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 about-section {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.about-card-title {
+  color: #1c1c1e;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.about-separator {
+  background-color: #efefef;
+  display: flex;
+  margin-top: 11px;
+  width: 368px;
+  flex-shrink: 0;
+  max-width: 100%;
+  height: 1px;
+}
+
+.about-container {
+  padding: 12px 0px 20px 0px;
+}
+
+.about-description {
+  font-size: 14px;
+  font-family: "Poppins";
+  font-weight: 400;
+  line-height: 21px;
+  color: #3a3a3c;
+  background-color: #ffffff;
+  text-align: justify;
+}
+
+.separator-full-line {
+  background-color: #efefef;
+  align-self: stretch;
+  display: flex;
+  margin-top: 11px;
+  flex-shrink: 0;
+  height: 1px;
+  width: 100%;
+}
+
+.about-form-container {
+  width: 690px;
+  height: 515px;
+  padding: 20px 26px;
+  background-color: #f4f4f4;
+  border-radius: 10px;
+  margin-top: 15px;
+}
+
+.about-inner-wrapper {
+  display: flex;
+  align-items: flex-start;
+  width: 65%;
+  margin-bottom: 9px;
+}
+.about-inner-wrapper-privacy {
+  display: flex;
+  align-items: flex-start;
+  width: 65%;
+  margin-bottom: 4px !important;
+
+}
+.about-label {
+  font-size: 14px;
+  font-family: "Poppins";
+  font-weight: 600;
+  line-height: 21px;
+  color: #3a3a3c;
+  padding: 0 !important;
+}
+
+.about-content {
+  font-size: 14px;
+  font-family: "Poppins";
+  font-weight: 400;
+  line-height: 21px;
+  color: #3a3a3c;
+  margin: 0px !important;
+  padding: 0 !important;
+}
+
+.about-privacy {
+  margin-left: 5px;
+}
+
+.blurred-text {
+  filter: blur(5px);
+  user-select: none;
+  pointer-events: none;
+}
+
+.about-input-description {
+  font-size: 14px;
+  font-family: "Poppins";
+  font-weight: 400;
+  line-height: 21px;
+  width: 100%;
+  color: #6e55ff;
+  text-decoration: underline;
+  background-color: #ffffff;
+  resize: none;
+  border: none;
+}
+
+.about-input-description::placeholder {
+  font-size: 14px;
+  font-family: "Poppins";
+  font-weight: 400;
+  line-height: 21px;
+  width: 100%;
+  color: #6e55ff;
+  text-decoration: underline;
+  resize: none;
+  border: none !important;
+}
+
+.about-input-description:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.about-input-content {
+  font-size: 14px;
+  font-family: "Poppins";
+  font-weight: 400;
+  line-height: 21px;
+  color: #6e55ff;
+  margin: 0px !important;
+  padding: 0 !important;
+  border: none;
+  background: transparent;
+}
+
+.about-select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.select-width {
+  width: 100%;
+  max-width: 180px;
+}
+
+.about-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 25px !important;
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  font-family: "Poppins";
+  font-weight: 400;
+  line-height: 21px;
+  color: #6e55ff;
+  margin-left: 18px;
+  text-decoration: underline;
+  border: none;
+  width: fit-content; /* allows width to adjust to the content */
+  display: inline-block; /* ensures the width fits the content */
+  cursor: pointer;
+}
+
+.dropdown-arrow {
+  position: absolute;
+  right: 8px;
+  pointer-events: none;
+  width: 10px;
+  height: 5px;
+}
+
+.about-input-content::placeholder {
+  font-size: 14px;
+  font-family: "Poppins";
+  font-weight: 400;
+  line-height: 21px;
+  width: 100%;
+  color: #6e55ff;
+  text-decoration: underline;
+  resize: none;
+  border: none;
+}
+
+.hide-date-icon::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+.about-input-content:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+
+.action-button-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 8px;
+  }
+  .discard-sm-button {
+    border: 1px solid #8c8c8c;
+    border-radius: 5.13px;
+    text-align: center;
+    padding: 3px 18px;
+    font-size: 9.11px;
+    font-family: "Poppins";
+    font-weight: 600;
+    line-height: 13.66px;
+    color: #000000;
+    background-color: #ffffff;
+  }
+  
+  .discard-button {
+    border: 1px solid #8c8c8c;
+    border-radius: 7.51px;
+    text-align: center;
+    padding: 3px 26px;
+    font-size: 13.34px;
+    font-family: "Poppins";
+    font-weight: 600;
+    line-height: 20.01px;
+    color: #000000;
+    background-color: #ffffff;
+  }
+  
+  .save-sm-button {
+    border: 1px solid #6e55ff;
+    border-radius: 5.13px;
+    text-align: center;
+    padding: 3px 30px;
+    font-size: 9.11px;
+    font-family: "Poppins";
+    font-weight: 600;
+    line-height: 13.66px;
+    color: #ffffff;
+    background-color: #6e55ff;
+  }
+  
+  .save-button {
+    border: 1px solid #6e55ff;
+    border-radius: 7.51px;
+    text-align: center;
+    padding: 3px 39px;
+    font-size: 13.34px;
+    font-family: "Poppins";
+    font-weight: 600;
+    line-height: 20.01px;
+    color: #ffffff;
+    background-color: #6e55ff;
+  }
+  
