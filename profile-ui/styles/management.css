@@ -1,36 +1,348 @@
-body {
+management-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+.aamanagement-card {
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.08);
+    display: flex;
+    max-width: 730px;
+    width: 100%;
+    padding-right: 19px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-top: 20px;
+    flex-direction: column;
+    align-items: stretch;
+    font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif;
+}
+
+.aacard-content {
+    width: 100%;
+}
+
+@media (max-width: 991px) {
+    .aacard-content {
+        max-width: 100%;
+    }
+}
+
+.aamain-layout {
+    gap: 20px;
+    display: flex;
+}
+
+@media (max-width: 991px) {
+    .aamain-layout {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0px;
+    }
+}
+
+.aamanagement-section {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 991px) {
+    .aamanagement-section {
+        max-width: 100%;
+        margin-top: 40px;
+    }
+}
+
+.aamanagement-layout {
+    gap: 20px;
+    display: flex;
+    justify-content: center;
+    width: 61%;
+}
+
+@media (max-width: 991px) {
+    .aamanagement-layout {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0px;
+    }
+}
+
+.aamanagement-info-column {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    line-height: normal;
+    width: 70%;
+    margin-left: 0px;
+}
+
+@media (max-width: 991px) {
+    .aamanagement-info-column {
+        width: 100%;
+    }
+}
+
+.aamanagement-info {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+@media (max-width: 991px) {
+    .aamanagement-info {
+        margin-top: 14px;
+    }
+}
+
+.aasection-title {
+    color: #1c1c1e;
+    font-size: 18px;
+    font-weight: 600;
+    align-self: start;
+    margin-left: 21px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+@media (max-width: 991px) {
+    .aasection-title {
+        margin-left: 10px;
+    }
+}
+
+.aadivider {
+    background-color: #efefef;
+    display: flex;
+    margin-top: 11px;
+    flex-shrink: 0;
+    height: 1px;
+    border: none;
+}
+
+.aacontact-info {
+    align-self: end;
+    display: flex;
+    margin-top: 17px;
+    width: 159px;
+    max-width: 100%;
+    flex-direction: column;
+    align-items: start;
+}
+
+@media (max-width: 991px) {
+    .aacontact-info {
+        margin-right: 10px;
+    }
+}
+
+.aaprofile-image-container {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    position: relative;
+    aspect-ratio: 1;
+    width: 100%;
+}
+
+.aaprofile-background {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.aaprofile-image {
+    aspect-ratio: 1;
+    object-fit: contain;
+    object-position: center;
+    width: 100%;
+}
+
+.aacontact-name {
+    color: rgba(110, 85, 255, 1);
+    font-size: 17px;
+    font-weight: 600;
+    text-decoration: underline;
+    margin-top: 5px;
+    border: none;
+}
+
+.aacontact-name::placeholder {
+    color: rgba(110, 85, 255, 1) !important;
+    font-size: 14px !important;
+    font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.1px !important;
+    text-decoration: underline !important;
+    opacity: 1 !important;
+}
+
+.aacontact-name:focus {
+    color: rgba(110, 85, 255, 1) !important;
+    text-decoration: underline !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.aacontact-phone {
+    color: rgba(110, 85, 255, 1);
+    font-size: 10px;
+    font-weight: 400;
+    text-decoration: underline;
+    margin-top: 5px;
+    border: none;
+}
+
+.aacontact-phone::placeholder {
+    color: rgba(110, 85, 255, 1) !important;
+    font-size: 14px !important;
+    font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.1px !important;
+    text-decoration: underline !important;
+    opacity: 1 !important;
+}
+
+.aacontact-phone:focus {
+    color: rgba(110, 85, 255, 1) !important;
+    text-decoration: underline !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.aasecondary-contact-column {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    line-height: normal;
+    width: 160px;
+}
+
+@media (max-width: 991px) {
+    .aasecondary-contact-column {
+        width: 100%;
+    }
+}
+
+.aasecondary-contact {
+    display: flex;
+    margin-top: 10px;
+    flex-grow: 1;
+    flex-direction: column;
+    align-items: start;
+    color: rgba(110, 85, 255, 1);
+    text-decoration: underline;
+}
+
+@media (max-width: 991px) {
+    .aasecondary-contact {
+        margin-top: 40px;
+    }
+}
+
+.aaadd-more-button {
+    border-radius: 8px;
+    background-color: rgba(110, 85, 255, 1);
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: 4px 24px;
+    align-self: stretch;
+    font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 1);
+    font-weight: 600;
+    text-align: center;
+    width: 125px;
+    border: none;
+    position: absolute;
+    top: 100px;
+    right: 10px;
+    cursor: pointer;
+}
+.aalicense-permissions-title {
+    color: #000;
     font-family:
         "Poppins",
         -apple-system,
         Roboto,
         Helvetica,
         sans-serif;
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #ffffff;
+    font-size: 18px;
+    font-weight: 600;
+    margin-left: 21px;
 }
 
-.management-card {
-    margin-top: 20px;
-    border-radius: 10px;
-    background-color: #fff;
-    box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.08);
-    display: flex;
-    max-width: 730px;
-    height: 370px;
-    width: 100%;
-    padding: 14px 21px;
-    flex-direction: column;
-    align-items: flex-start;
+@media (max-width: 991px) {
+    .aaadd-more-button {
+        margin-top: 40px;
+        padding: 4px 20px;
+    }
 }
 
-management-section {
-    width: 100%;
+.aacard-actions {
+    align-self: end;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    margin-top: 26px;
+    align-items: stretch;
+    gap: 11px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    text-align: center;
+}
+
+@media (max-width: 991px) {
+    .aacard-actions {
+        white-space: initial;
+    }
+}
+
+.aadiscard-button {
+    border-radius: 8px;
+    border: 1px solid rgba(140, 140, 140, 1);
+    background-color: transparent;
+    padding: 4px 38px;
+    color: rgba(32, 32, 32, 1);
+    font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+@media (max-width: 991px) {
+    .aadiscard-button {
+        padding: 4px 20px;
+        white-space: initial;
+    }
+}
+
+.aasave-button {
+    border-radius: 8px;
+    background-color: rgba(110, 85, 255, 1);
+    padding: 4px 47px;
+    color: rgba(255, 255, 255, 1);
+    border: none;
+    font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+@media (max-width: 991px) {
+    .aasave-button {
+        padding: 4px 20px;
+        white-space: initial;
+    }
 }
