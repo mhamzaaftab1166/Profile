@@ -11,8 +11,56 @@
     <link rel="stylesheet" href="./styles/services.css" />
   </head>
   <body>
-    <div class="service-card" >
+      <div class="service-card">
+        <header class="service-card-title">Services</header>
+        <div class="service-separator"></div>
 
-    </div>
+        <!-- View Mode -->
+        <div class="services-wrapper isServiceView">
+          <div class="services-grid">
+            ${this.services
+              .map(
+                (service, index) => `
+                  <div class="service-card-wrapper" key=${index}>
+                    <div class="service-inner-card">
+                      <img class="service-card-img" src="${service.image}" alt="${service.title}" />
+                      <div>
+                        <h5 class="service-card-title">${service.title}</h5>
+                        <div class="service-separator-line"></div>
+                        <p class="service-card-description">${service.description}</p>
+                      </div>
+                    </div>
+                  </div>
+                `
+              )
+              .join("")}
+          </div>
+        </div>
+
+        <!-- Edit Mode (Initially Hidden) -->
+        <div class="services-wrapper isServiceEdit" style="display: none">
+        <div class="services-grid">
+        <div class="service-card-wrapper">
+          <div class="service-inner-card">
+            <div class="position-relative">
+              <img class="service-card-img" src="assets/profile/coverImage.png" alt="services one" />
+              <div class="uploadButton">
+                <button class="add-button">Add Profile Picture</button>
+                <input type="file" accept="image/*" style="display: none" />
+                <p class="file-upload">Choose file</p>
+              </div>
+            </div>
+            <div>
+              <input class="service-card-input-title" placeholder="Service Name Here" />
+              <div class="service-separator-line"></div>
+              <textarea class="service-card-input-description" placeholder="Type Service Description .." rows="4" cols="3"></textarea>
+            </div>
+          </div>
+
+        </div>
+        </div>
+      </div>
+        <button onclick="addForm" class="service-add-button isServiceEdit" type="button" style="display: none;">+ Add More</button>
+      </div>
   </body>
 </html>
