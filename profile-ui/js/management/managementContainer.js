@@ -69,30 +69,7 @@ class ManagementSection extends HTMLElement {
                         src="assets/profile/chooseButton.png"
                         alt="Choose Button"
                         @click="$refs['fileInput' + index].click()"
-<<<<<<< HEAD
                         style="position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); width: 85px; height: 40px; cursor: pointer;"
-=======
-                        style="position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%); width: 98px; height: 40px; cursor: pointer; object-fit: contain"
-                      />
-                      <!-- Input Fields -->
-                      <input
-                        type="text"
-                        x-model="contact.name"
-                        placeholder="Enter Name"
-                        class="aacontact-name"
-                      />
-                      <input
-                        type="text"
-                        x-model="contact.role"
-                        placeholder="Enter Role"
-                        class="aacontact-phone"
-                      />
-                      <input
-                        type="tel"
-                        x-model="contact.phone"
-                        placeholder="Enter Number"
-                        class="aacontact-phone"
->>>>>>> b920b07400698ba88d26e98229b98c017b84e681
                       />
                       <input type="text" x-model="contact.name" placeholder="Enter Name" class="aacontact-name" />
                       <input type="text" x-model="contact.role" placeholder="Enter Role" class="aacontact-phone" />
