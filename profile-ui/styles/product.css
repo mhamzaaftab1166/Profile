@@ -19,6 +19,7 @@ body {
   flex-direction: column;
   width: 730px;
   height: 100%;
+  margin-top: 50px;
 }
 
 product-section {

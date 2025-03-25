@@ -117,7 +117,7 @@ class ProductSection extends HTMLElement {
                                                     } Menu/s available</p>
                                                  
                                                 </div>
-                                                <div class="separator-line"></div>
+                                                <div class="product-separator-line"></div>
                                                 <div class="addMail-wrapper">
                                                     <div class="addMail-inner-wrapper">
                                                         <img src="assets/icons/addMail.png" />
