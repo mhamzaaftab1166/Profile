@@ -68,7 +68,7 @@ class ManagementSection extends HTMLElement {
                         src="assets/profile/chooseButton.png"
                         alt="Choose Button"
                         @click="$refs['fileInput' + index].click()"
-                        style="position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); width: 98px; height: 40px; cursor: pointer;"
+                        style="position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%); width: 98px; height: 40px; cursor: pointer; object-fit: contain"
                       />
                       <!-- Input Fields -->
                       <input
