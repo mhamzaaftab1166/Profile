@@ -62,7 +62,6 @@ management-section {
 .aamanagement-layout {
     gap: 20px;
     display: flex;
-    justify-content: center;
     width: 61%;
 }
 
@@ -230,6 +229,7 @@ management-section {
     width: 160px;
 }
 
+
 @media (max-width: 991px) {
     .aasecondary-contact-column {
         width: 100%;
@@ -242,8 +242,7 @@ management-section {
     flex-grow: 1;
     flex-direction: column;
     align-items: start;
-    color: rgba(110, 85, 255, 1);
-    text-decoration: underline;
+    color: rgba(110, 85, 255, 1)
 }
 
 @media (max-width: 991px) {
