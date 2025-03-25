@@ -310,7 +310,7 @@ product-section {
   justify-content: center;
   align-items: center;
   margin-top: 28.58px;
-  margin-bottom: 20px;
+  margin-bottom: 50px;
 }
 .menu-divider {
   grid-column: span 2;

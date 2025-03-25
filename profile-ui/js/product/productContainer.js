@@ -130,16 +130,23 @@ class ProductSection extends HTMLElement {
                                         </div>
                                     </div>
                                      ${
-                                (index + 1) % 2 === 0 && index !== this.products.length - 1
-                                  ? `<img src="assets/icons/menu-divider.png" alt="Menu Divider" class="menu-divider" />`
-                                  : ""
-                              }
+                                       (index + 1) % 2 === 0 &&
+                                       index !== this.products.length - 1
+                                         ? `<img src="assets/icons/menu-divider.png" alt="Menu Divider" class="menu-divider" />`
+                                         : ""
+                                     }
                             `
                               )
                               .join("")}
                              
                         </div>
-                        <div class="menu-explore-button"></div>
+                        <div class="menu-explore-button">
+                            <button class="service-browse-button browseButton">
+                              <span class="service-browse-text">Browse All</span>
+                              <span class="separator-line"></span>
+                              <img src="assets/profile/rightArrow.png" class="service-browse-icon" alt="Arrow" />
+                             </button>
+                        </div>
                     </div>
                 </div>
             </div>
