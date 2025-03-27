@@ -1,77 +1,105 @@
 class LocationEditSection extends HTMLElement {
+  static get observedAttributes() {
+    return ["locationData"];
+  }
+
+  constructor() {
+    super();
+    this.locationData = {};
+  }
+
   connectedCallback() {
-    this.innerHTML = `<section
-      x-data="{
-      locations: [
-        { name: '', details: '', link: '', isDefault: true },
-        { name: '', details: '', link: '', isDefault: false }
-      ],
-      modalOpen: false,
-      currentIndex: null,
-      map: null,
-      marker: null,
-      selectedLat: null,
-      selectedLng: null,
+    this.addEventListener("locationDataReceived", (event) => {
+      this.locationData = event.detail;
+      console.log(this.locationData);
 
-      addLocation() {
-        this.locations.push({ name: '', details: '', link: 'Enter Link Here', isDefault: false });
+      this.render();
+    });
+  }
+
+  render() {
+    const locations = this.locationData || [];
+    const combinedLocations = [
+      ...locations,
+      {
+        location_name: "",
+        location_details: "",
+        link: "",
+        is_default: 1,
+        is_active: 0,
       },
+      {
+        location_name: "",
+        location_details: "",
+        link: "",
+        is_default: 1,
+        is_active: 0,
+      },
+    ];
+    const locationsJson = JSON.stringify(combinedLocations);
 
-      toggleDefault(index) {
-      this.locations[index].isDefault = !this.locations[index].isDefault;
-        }
-        ,
-
-    openMapModal(index) {
-    this.currentIndex = index;
-    this.modalOpen = true;
-    this.$nextTick(() => {
-        if (!this.map) {
-            this.map = L.map('map').setView([51.505, -0.09], 13);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: 'Map data &copy; <a href=\\\'https://openstreetmap.org\\\'>OpenStreetMap</a> contributors'
-            }).addTo(this.map);
-            
-            this.map.on('click', (e) => {
+    this.innerHTML = `
+    <section
+      class="locedit-locations-container"
+      x-data='{
+        locations: ${locationsJson},
+        modalOpen: false,
+        currentIndex: null,
+        map: null,
+        marker: null,
+        selectedLat: null,
+        selectedLng: null,
+        addLocation() {
+          this.locations.push({
+            location_name: "",
+            location_details: "",
+            link: "Enter Link Here",
+            is_default: 0,
+            is_active: 0
+          });
+        },
+        toggleDefault(index) {
+          this.locations[index].is_default = !this.locations[index].is_default;
+        },
+        openMapModal(index) {
+          this.currentIndex = index;
+          this.modalOpen = true;
+          this.$nextTick(() => {
+            if (!this.map) {
+              this.map = L.map("map").setView([51.505, -0.09], 13);
+              L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                attribution: "Map data © OpenStreetMap contributors"
+              }).addTo(this.map);
+              this.map.on("click", (e) => {
                 this.selectedLat = e.latlng.lat;
                 this.selectedLng = e.latlng.lng;
-                
                 if (this.marker) {
-                    this.marker.setLatLng(e.latlng);
+                  this.marker.setLatLng(e.latlng);
                 } else {
-                    this.marker = L.marker(e.latlng).addTo(this.map);
+                  this.marker = L.marker(e.latlng).addTo(this.map);
                 }
-                
-                // Use string concatenation instead of template literals
-                this.locations[this.currentIndex].link = 
-                    'https://www.openstreetmap.org/#map=18/' + 
-                    this.selectedLat + '/' + 
-                    this.selectedLng;
-                
+                this.locations[this.currentIndex].link = "https://www.openstreetmap.org/#map=18/" + this.selectedLat + "/" + this.selectedLng;
                 this.closeModal();
-            });
-        } else {
-            this.map.invalidateSize();
+              });
+            } else {
+              this.map.invalidateSize();
+            }
+          });
+        },
+        closeModal() {
+          this.modalOpen = false;
+          this.currentIndex = null;
+          this.selectedLat = null;
+          this.selectedLng = null;
+          if (this.marker) {
+            this.map.removeLayer(this.marker);
+            this.marker = null;
+          }
+        },
+        saveLocations() {
+          locationHandler.handleLocation(JSON.stringify(this.locations, null, 2));
         }
-    });
-},
-
-      closeModal() {
-        this.modalOpen = false;
-        this.currentIndex = null;
-        this.selectedLat = null;
-        this.selectedLng = null;
-
-        if (this.marker) {
-          this.map.removeLayer(this.marker);
-          this.marker = null;
-        }
-      },
-
-      saveLocations() {
-        console.log('Updated Locations:', JSON.stringify(this.locations, null, 2));
-      }
-}"
+      }'
     >
       <section class="locedit-locations-container">
         <div class="locedit-locations-card">
@@ -88,7 +116,7 @@ class LocationEditSection extends HTMLElement {
                       type="text"
                       class="locedit-location-name form-control"
                       placeholder="Enter Location Name"
-                      x-model="location.name"
+                      x-model="location.location_name"
                     />
                     <div
                       class="locedit-default-badge"
@@ -97,7 +125,7 @@ class LocationEditSection extends HTMLElement {
                     >
                       <span class="locedit-badge-text">Default</span>
                       <img
-                        :src="location.isDefault ? 'assets/profile/checked.png' : 'assets/profile/unchecked.png'"
+                        :src="location.is_default ? 'assets/profile/checked.png' : 'assets/profile/unchecked.png'"
                         class="locedit-badge-icon"
                         alt="Default icon"
                       />
@@ -108,7 +136,7 @@ class LocationEditSection extends HTMLElement {
                     <textarea
                       class="locedit-details-text form-control"
                       placeholder="Type Details Here"
-                      x-model="location.details"
+                      x-model="location.location_details"
                       rows="2"
                     ></textarea>
                     <p class="locedit-view-location-label">View Location</p>
@@ -132,7 +160,6 @@ class LocationEditSection extends HTMLElement {
                 </article>
               </template>
             </div>
-
             <div class="row mt-5" style="margin-left: 12%;">
               <div class="col-12">
                 <button class="loc-add-more-button" @click="addLocation()">
@@ -140,7 +167,6 @@ class LocationEditSection extends HTMLElement {
                 </button>
               </div>
             </div>
-
             <div class="locedit-action-buttons">
               <button class="locedit-discard-button">Discard</button>
               <button class="locedit-save-button" @click="saveLocations()">
@@ -150,7 +176,6 @@ class LocationEditSection extends HTMLElement {
           </div>
         </div>
       </section>
-
       <div
         class="modal-overlay"
         x-show="modalOpen"
@@ -163,7 +188,8 @@ class LocationEditSection extends HTMLElement {
           <div id="map"></div>
         </div>
       </div>
-    </section>`;
+    </section>
+  `;
   }
 }
 

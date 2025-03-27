@@ -1,26 +1,30 @@
 class MissionCard extends HTMLElement {
   static get observedAttributes() {
-    return ["my-prop"];
+    return ["missionData"];
   }
 
   constructor() {
     super();
+    this.missionData = {};
   }
 
-  // attributeChangedCallback(name, oldValue, newValue) {
-  //   console.log(`Attribute '${name}' changed from ${oldValue} to ${newValue}`);
-  // }
-
   connectedCallback() {
-    const myProp = this.getAttribute("my-prop");
-    console.log("Connected - myProp:", myProp);
+    this.addEventListener("missionDataReceived", (event) => {
+      this.missionData = event.detail;
+      this.render();
+    });
+  }
+
+  render() {
+    const missionValue = this.missionData.mission || "";
+    const visionValue = this.missionData.vision || "";
+    const valuesValue = this.missionData.values || "";
     this.innerHTML = `
       <section class="misson-description-card" x-data="{
-        mission: '',
-        vision: '',
-        values: '',
+       mission: '${missionValue}',
+        vision: '${visionValue}',
+        values: '${valuesValue}',
         id: false,
-        myProp: '${myProp}',
         checked: false,
          togglePrivacy() {
         console.log('Privacy checked value:', this.checked);
@@ -38,14 +42,13 @@ class MissionCard extends HTMLElement {
           MissionHandler.handleMission(
             this.mission,
             this.vision,
-            this.values,
+            this.values, 
             this.id,
             this.updateMissionData.bind(this),
-            this.myProp
           );
         }
-      }" x-init="MissionHandler.fetchMission(updateMissionData.bind($data))">
-      
+      }">
+
       <div class="d-flex justify-content-between align-items-center gap-2">
             <div class="ms-2 toggle-container isMissionPrivacy">
               <div
@@ -64,7 +67,7 @@ class MissionCard extends HTMLElement {
       </div>
       <div class="misson-separator"></div>
       <div class="misson-card-content">
-      
+
         <div class="misson-mission-section misson-content-section">
           <div class="d-flex justify-content-start align-items-center gap-2">
             <div class="ms-2 toggle-container isMissionPrivacy">
@@ -84,10 +87,10 @@ class MissionCard extends HTMLElement {
           </div>
           <br />
           <!-- Both the input and span are always in the DOM -->
-          <input type="text" x-model="mission" class="misson-section-text isMissionEdit" />
+          <input type="text" x-model="mission" placeholder="Enter Mission" class="misson-section-text isMissionEdit" />
           <span class="misson-section-text-view viewOnly mt-1" x-text="mission"></span>
         </div>
-        
+
         <div class="misson-vision-section misson-content-section">
           <div class="d-flex justify-content-start align-items-center gap-2">
           <div class="ms-2 toggle-container isMissionPrivacy">
@@ -106,10 +109,10 @@ class MissionCard extends HTMLElement {
             <span class="misson-section-title">Vision</span>
           </div>
           <br />
-          <input type="text" x-model="vision" class="misson-section-text isMissionEdit" />
+          <input type="text" x-model="vision" placeholder="Enter Vision" class="misson-section-text isMissionEdit" />
           <span class="misson-section-text-view viewOnly mt-1" x-text="vision"></span>
         </div>
-        
+
         <div class="misson-values-section misson-content-section">
           <div class="d-flex justify-content-start align-items-center gap-2">
            <div class="ms-2 toggle-container isMissionPrivacy">
@@ -128,10 +131,10 @@ class MissionCard extends HTMLElement {
             <span class="misson-section-title">Values</span>
           </div>
           <br />
-          <input type="text" x-model="values" class="misson-section-text isMissionEdit" />
+          <input type="text" x-model="values" placeholder="Enter Values" class="misson-section-text isMissionEdit" />
           <span class="misson-section-text-view viewOnly mt-1" x-text="values"></span>
         </div>
-        
+
         <div class="misson-button-group isMissionEdit">
           <button class="misson-discard-button" @click="mission=''; vision=''; values=''">
             Discard
