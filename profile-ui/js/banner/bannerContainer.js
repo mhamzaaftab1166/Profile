@@ -1,26 +1,44 @@
 class BannerSection extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
+     <section 
+       x-data="{ 
+          coverImage: 'assets/profile/coverImage.png', 
+          profileImage: 'assets/profile/profile.png', 
+          previewCoverImage(event) {
+           const file = event.target.files[0];
+           if (file) {
+             this.coverImage = URL.createObjectURL(file);
+           }
+         },
+         previewProfileImage(event) {
+           const file = event.target.files[0];
+           if (file) {
+             this.profileImage = URL.createObjectURL(file);
+           }
+         }
+        }"> 
+
         <div class="profile-wrapper">
           <div class="profile-banner">
             <div class="position-relative">
-              <img class="banner-image" src="assets/profile/coverImage.png" alt="Banner" />
+              <img class="banner-image" :src="coverImage" alt="Banner" />
               <privacy-button class="privacy-cover-batch isCoverPrivacy"></privacy-button>
               <div class="uploadButton isCoverEdit">
                 <button class="add-button">Add Profile Poster</button>
-                <input type="file" accept="image/*" style="display: none" />
-                <p class="file-upload">Choose file</p>
+                <input type="file" accept="image/*" class="coverFileInput" style="display: none" @change="previewCoverImage" />
+                <p class="file-upload coverFileUpload">Choose file</p>
               </div>
             </div>
             <div class="profile-details">
               <div class="profile-image">
               <div class="profileUploadButton isProfileEdit">
               <button class="add-button">Add Profile Picture</button>
-              <input type="file" accept="image/*" style="display: none" />
-              <p class="file-upload">Choose file</p>
+              <input type="file" accept="image/*" class="profileFileInput" style="display: none" @change="previewProfileImage"/>
+              <p class="file-upload profileFileUpload">Choose file</p>
               </div>
               <privacy-button class="privacy-profile-batch isProfilePrivacy"></privacy-button>
-                <img class="avatar position-relative" src="assets/profile/profile.png" alt="Profile" />
+                <img class="avatar position-relative" :src="profileImage" alt="Profile" />
               </div>
               <div class="profile-info">
                 <h2 class="profile-name">GIR GIR AUCTION</h2>
@@ -65,6 +83,7 @@ class BannerSection extends HTMLElement {
             </div>
           </div>
         </div>
+        </section>
       `;
 
     this.coverInput = this.querySelector(".isCoverEdit");
@@ -74,6 +93,15 @@ class BannerSection extends HTMLElement {
     this.socialMediaPrivacy = this.querySelector(".isSocialMediaPrivacy");
     this.socialFormEdit = this.querySelector(".isSocialFormEdit");
     this.socialIcon = this.querySelector(".issocialIcon");
+
+    this.querySelector(".coverFileUpload").addEventListener("click", () => {
+      this.querySelector(".coverFileInput").click();
+    });
+
+    this.querySelector(".profileFileUpload").addEventListener("click", () => {
+      this.querySelector(".profileFileInput").click();
+    });
+
 
     this.coverInput.style.display = "none";
     this.profileInput.style.display = "none";
@@ -87,6 +115,7 @@ class BannerSection extends HTMLElement {
       this.updateSection(event.detail)
     );
   }
+  
 
   updateSection({ isEdit, isPrivacy }) {
     const profileDetails = this.querySelector(".profile-details");
