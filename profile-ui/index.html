@@ -7,6 +7,7 @@
     <!-- Include your mission handling logic -->
     <script src="./js/missionHandler.js" defer></script>
     <script src="./js/location/locationHandler.js" defer></script>
+    <script src="./js/breaking/newsHandler.js" defer></script>
     <script src="./js/actionbar/actionBarHandler.js" defer></script>
     <!-- Import Alpine.js -->
     <link
@@ -136,6 +137,8 @@
       const missionCard = document.querySelector("mission-card");
       const locationEditCard = document.querySelector("location-edit");
       const locationViewCard = document.querySelector("location-section");
+      const BreakingEditCard = document.querySelector("breaking-edit")
+      const BreakingViewCard = document.querySelector("breaking-section")
       fetch("https://api.servehere.com/api/auth/user", {
         method: "GET",
         headers: {
@@ -153,6 +156,7 @@
           console.log("User data:", data);
           const missionData = data.data.user_mission || {};
           const locationData = data.data.userLocations || {};
+          const breakingData = data.data.breaking_news || {};
           missionCard.dispatchEvent(new CustomEvent("missionDataReceived", {
             detail: missionData
           }));
@@ -162,6 +166,12 @@
           locationEditCard.dispatchEvent(new CustomEvent("locationDataReceived", {
             detail: locationData
           }));
+          BreakingEditCard.dispatchEvent(new CustomEvent("breakingDataReceived", {
+            detail: breakingData
+          }));
+          BreakingViewCard.dispatchEvent(new CustomEvent("breakingDataReceived", {
+            detail: breakingData
+          }));
         })
         .catch(error => {
           console.error("Error fetching user data:", error);
@@ -170,7 +180,7 @@
 
     fetchUserData();
       document.addEventListener("profileDataSaved", () => {
-      console.log("Mission saved successfully, re-fetching user data...");
+      console.log("Data saved successfully, re-fetching user data...");
       fetchUserData();
     });
             });

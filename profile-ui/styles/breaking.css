@@ -105,12 +105,11 @@ body {
 }
 
 .breakview-text-column {
-    display: flex;
-    flex-direction: column;
     align-items: stretch;
     line-height: normal;
     width: 50%;
     margin-left: 0px;
+    margin-top: 20px;
 }
 
 @media (max-width: 991px) {

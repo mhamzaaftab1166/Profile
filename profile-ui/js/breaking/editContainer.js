@@ -1,39 +1,85 @@
 class BreakingEditSection extends HTMLElement {
+  static get observedAttributes() {
+    return ["breakingData"];
+  }
+
+  constructor() {
+    super();
+    this.breakingData = {};
+  }
+
   connectedCallback() {
+    this.addEventListener("breakingDataReceived", (event) => {
+      this.breakingData = event.detail;
+      this.render();
+    });
+  }
+
+  render() {
+    const baseUrl = "https://api.servehere.com/api/storage/image?path=";
+    const newsList = this.breakingData || [];
+
+    // Process newsList items: if the image property already contains the baseUrl,
+    // set image to null and keep the full URL in imagePreview.
+    const processedNewsList = newsList.map((news) => {
+      if (news.image) {
+        return {
+          ...news,
+          image: null,
+          imagePreview: "https://api.servehere.com/api/storage/image?path="+news.image, // already full URL
+        };
+      }
+      return news;
+    });
+
+    const combinedNewsList = [
+      {
+        title: "",
+        description: "",
+        imagePreview: "./assets/profile/breakBg.png",
+        image: null,
+        is_active: 0,
+      },
+      ...processedNewsList,
+    ];
+
     this.innerHTML = `
-    
-   <article
+    <article
       class="breakedit-card-container"
-      x-data="{
-        newsList: [
-          { title: '', description: '', imagePreview: './assets/profile/breakBg.png', selectedFile: null }
-        ],
+      x-data='{
+        newsList: ${JSON.stringify(combinedNewsList)},
 
         addNewsCard() {
-          this.newsList.push({ title: '', description: '', imagePreview: './assets/profile/breakBg.png', selectedFile: null });
+          this.newsList.push({ title: "", description: "", imagePreview: "./assets/profile/breakBg.png", image: null, is_active: 0 });
         },
 
         selectImage(event, index) {
           let file = event.target.files[0];
           if (file) {
-            this.newsList[index].selectedFile = file;
+            this.newsList[index].image = file;
             this.newsList[index].imagePreview = URL.createObjectURL(file);
           }
         },
 
         discardNews(index) {
-          this.newsList[index].title = '';
-          this.newsList[index].description = '';
-          this.newsList[index].imagePreview = './assets/profile/breakBg.png';
-          this.newsList[index].selectedFile = null;
+          this.newsList[index].title = "";
+          this.newsList[index].description = "";
+          this.newsList[index].imagePreview = "./assets/profile/breakBg.png";
+          this.newsList[index].image = null;
+          this.newsList[index].is_active = 0;
         },
 
         saveNews(index) {
-          console.log('Title:', this.newsList[index].title);
-          console.log('Description:', this.newsList[index].description);
-          console.log('Selected Image:', this.newsList[index].selectedFile ? this.newsList[index].selectedFile : 'No image selected');
+          const newsData = {
+            title: this.newsList[index].title,
+            description: this.newsList[index].description,
+            image: this.newsList[index].image || null,
+            is_active: this.newsList[index].is_active ? 1 : 0,
+            id: this.newsList[index].id || null,
+          };
+          newsHandler.handleNews(newsData);
         }
-      }"
+      }'
     >
       <section class="edit-news-container mb-3">
         <h2 class="edit-news-heading">Breaking News</h2>
@@ -73,11 +119,10 @@ class BreakingEditSection extends HTMLElement {
               <div class="breakedit-media-content">
                 <figure class="breakedit-media-wrapper">
                   <img
-                    :src="news.imagePreview"
+                    :src="(news.imagePreview || './assets/profile/breakBg.png')"
                     alt="Background"
                     class="breakedit-background-image"
                   />
-                  <!-- Use a label with a dynamic for attribute -->
                   <label :for="'fileInput' + index">
                     <img
                       src="./assets/profile/chooseButton.png"
@@ -103,7 +148,7 @@ class BreakingEditSection extends HTMLElement {
         </section>
       </template>
     </article>
-    `;
+  `;
   }
 }
 
