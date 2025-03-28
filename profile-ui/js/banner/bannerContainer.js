@@ -1,10 +1,40 @@
 class BannerSection extends HTMLElement {
+  static get observedAttributes() {
+    return ["userData"];
+  }
+
+  constructor() {
+    super();
+    this.userData = {};
+  }
+
   connectedCallback() {
+    this.addEventListener("bannerDataReceived", (event) => {
+      this.userData = event.detail;
+      this.render();
+    });
+  }
+
+  render() {
+    const coverImg =
+      `https://api.servehere.com/api/storage/image?path=${this.userData.business.cover_photo}` ||
+      "assets/profile/coverImage.png";
+    const profileImg =
+      `https://api.servehere.com/api/storage/image?path=${this.userData.business.logo}` ||
+      "assets/profile/profile.png";
+    const name = this.userData.business.name;
+    const userType = this.userData.user_type;
+    const code = this.userData.business.code;
+    const socialMedia = this.userData.socials;
+
     this.innerHTML = `
      <section 
        x-data="{ 
-          coverImage: 'assets/profile/coverImage.png', 
-          profileImage: 'assets/profile/profile.png', 
+          coverImage: '${coverImg}', 
+          profileImage: '${profileImg}',
+          profileName: '${name}',
+          profileType: '${userType}',
+          profileCode: '${code}',
           previewCoverImage(event) {
            const file = event.target.files[0];
            if (file) {
@@ -41,43 +71,55 @@ class BannerSection extends HTMLElement {
                 <img class="avatar position-relative" :src="profileImage" alt="Profile" />
               </div>
               <div class="profile-info">
-                <h2 class="profile-name">GIR GIR AUCTION</h2>
+                <h2 class="profile-name" x-text="profileName"></h2>
                 <div class="tags">
                   <span class="main-tag">
                     <img class="addMail" src="assets/icons/addMail.png" alt="Add Mail" />
-                    KARACBAR
+                    <p class="m-0" x-text="profileCode"></p>
                   </span>
-                  <span class="sub-tag">Admin</span>
+                  <span class="sub-tag" x-text="profileType"></span>
                 </div>
                 <div class="social-icons issocialIcon">
-                  <a href="#"><img class="socialIcons" src="assets/icons/whatsApp.png" alt="WhatsApp" /></a>
-                  <a href="#"><img class="socialIcons" src="assets/icons/instagram.png" alt="Instagram" /></a>
-                  <a href="#"><img class="socialIcons" src="assets/icons/facebook.png" alt="Facebook" /></a>
-                  <a href="#"><img class="socialIcons" src="assets/icons/x.png" alt="X" /></a>
-                  <a href="#"><img class="socialIcons" src="assets/icons/youtube.png" alt="YouTube" /></a>
-                  <a href="#"><img class="socialIcons" src="assets/icons/weChat.png" alt="WeChat" /></a>
-                  <a href="#"><img class="socialIcons" src="assets/icons/telegram.png" alt="Telegram" /></a>
-                  <a class="add-mail-icon" href="#"><img class="socialIcons" src="assets/icons/addMail.png" alt="Add Mail" /></a>
+                ${socialMedia
+                  .map(
+                    (social) => `
+                  <a href=${
+                    social?.platform_name === "WhatsApp"
+                      ? `https://wa.me/${
+                          social.country_code + social.phone_number
+                        }`
+                      : social?.platform_name === "Telegram"
+                      ? `https://t.me/${
+                          social.country_code + social.phone_number
+                        }`
+                      : social.platform_link
+                  } target="_blank"><img class="socialIcons" src="assets/icons/${
+                      social.platform_name
+                    }.png" alt=${social.platform_name} /></a>
+                  `
+                  )
+                  .join("")}
+                  <a class="add-mail-icon"><img class="socialIcons" src="assets/icons/addMail.png" alt="Add Mail" /></a>
                 </div>
                 <social-form class="isSocialFormEdit" social-data='[
                   {"platform_name": "AddMail", "icon": "assets/icons/addMail.png", "nonEditAble": true, "linkPlaceholder": "Default Generating"},
-                  {"platform_name": "WhatsApp", "icon": "assets/icons/whatsapp.png", "hasPhone": true},
-                  {"platform_name": "Facebook", "icon": "assets/icons/facebook.png", "nonEditAble": false, "linkPlaceholder": "Enter Facebook link"},
-                  {"platform_name": "Instagram", "icon": "assets/icons/instagram.png", "nonEditAble": false, "linkPlaceholder": "Enter Instagram link"},
-                  {"platform_name": "X", "icon": "assets/icons/x.png", "nonEditAble": false, "linkPlaceholder": "Enter X link"},
-                  {"platform_name": "YouTube", "icon": "assets/icons/youtube.png", "nonEditAble": false, "linkPlaceholder": "Enter Youtube link"},
-                  {"platform_name": "WeChat", "icon": "assets/icons/wechat.png", "nonEditAble": false, "linkPlaceholder": "Enter We Chat link"},
-                  {"platform_name": "Telegram", "icon": "assets/icons/telegram.png", "hasPhone": true}
+                  {"platform_name": "WhatsApp", "icon": "assets/icons/WhatsApp.png", "hasPhone": true},
+                  {"platform_name": "Facebook", "icon": "assets/icons/Facebook.png", "nonEditAble": false, "linkPlaceholder": "Enter Facebook link"},
+                  {"platform_name": "Instagram", "icon": "assets/icons/Instagram.png", "nonEditAble": false, "linkPlaceholder": "Enter Instagram link"},
+                  {"platform_name": "X", "icon": "assets/icons/X.png", "nonEditAble": false, "linkPlaceholder": "Enter X link"},
+                  {"platform_name": "YouTube", "icon": "assets/icons/YouTube.png", "nonEditAble": false, "linkPlaceholder": "Enter Youtube link"},
+                  {"platform_name": "WeChat", "icon": "assets/icons/WeChat.png", "nonEditAble": false, "linkPlaceholder": "Enter We Chat link"},
+                  {"platform_name": "Telegram", "icon": "assets/icons/Telegram.png", "hasPhone": true}
                 ]'></social-form>
                  <social-privacy class="isSocialMediaPrivacy" social-data='[
                   {"platform_name": "AddMail", "icon": "assets/icons/addMail.png", "nonEditAble": true, "linkPlaceholder": "Default Generating"},
-                  {"platform_name": "WhatsApp", "icon": "assets/icons/whatsapp.png", "hasPhone": true, "linkPlaceholder": "Enter WhatsApp Number"},
-                  {"platform_name": "Facebook", "icon": "assets/icons/facebook.png", "nonEditAble": false, "linkPlaceholder": "Enter Facebook link"},
-                  {"platform_name": "Instagram", "icon": "assets/icons/instagram.png", "nonEditAble": false, "linkPlaceholder": "Enter Instagram link"},
-                  {"platform_name": "X", "icon": "assets/icons/x.png", "nonEditAble": false, "linkPlaceholder": "Enter X link"},
-                  {"platform_name": "YouTube", "icon": "assets/icons/youtube.png", "nonEditAble": false, "linkPlaceholder": "Enter Youtube link"},
-                  {"platform_name": "WeChat", "icon": "assets/icons/wechat.png", "nonEditAble": false, "linkPlaceholder": "Enter We Chat link"},
-                  {"platform_name": "Telegram", "icon": "assets/icons/telegram.png", "hasPhone": true, "linkPlaceholder": "Enter Telegram Number"}
+                  {"platform_name": "WhatsApp", "icon": "assets/icons/WhatsApp.png", "hasPhone": true, "linkPlaceholder": "Enter WhatsApp Number"},
+                  {"platform_name": "Facebook", "icon": "assets/icons/Facebook.png", "nonEditAble": false, "linkPlaceholder": "Enter Facebook link"},
+                  {"platform_name": "Instagram", "icon": "assets/icons/Instagram.png", "nonEditAble": false, "linkPlaceholder": "Enter Instagram link"},
+                  {"platform_name": "X", "icon": "assets/icons/X.png", "nonEditAble": false, "linkPlaceholder": "Enter X link"},
+                  {"platform_name": "YouTube", "icon": "assets/icons/YouTube.png", "nonEditAble": false, "linkPlaceholder": "Enter Youtube link"},
+                  {"platform_name": "WeChat", "icon": "assets/icons/WeChat.png", "nonEditAble": false, "linkPlaceholder": "Enter We Chat link"},
+                  {"platform_name": "Telegram", "icon": "assets/icons/Telegram.png", "hasPhone": true, "linkPlaceholder": "Enter Telegram Number"}
                 ]'></social-privacy>
               </div>
             </div>
@@ -102,7 +144,6 @@ class BannerSection extends HTMLElement {
       this.querySelector(".profileFileInput").click();
     });
 
-
     this.coverInput.style.display = "none";
     this.profileInput.style.display = "none";
     this.coverPrivacy.style.visibility = "hidden";
@@ -115,15 +156,14 @@ class BannerSection extends HTMLElement {
       this.updateSection(event.detail)
     );
   }
-  
 
   updateSection({ isEdit, isPrivacy }) {
     const profileDetails = this.querySelector(".profile-details");
 
     if (isEdit || isPrivacy) {
-        profileDetails.classList.add("h100");
+      profileDetails.classList.add("h100");
     } else {
-        profileDetails.classList.remove("h100");
+      profileDetails.classList.remove("h100");
     }
 
     if (isEdit) {

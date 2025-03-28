@@ -116,75 +116,128 @@
       <attachment-section></attachment-section>
     </div>
     <script>
-            document.addEventListener("DOMContentLoaded", function () {
-              const componentEdits = document.querySelectorAll(".isComponentEdit");
-              const componentView = document.querySelectorAll(".isComponentView");
-              componentEdits.forEach(el => el.style.display = "none");
-              componentView.forEach(el => el.style.display = "flex");
+      document.addEventListener("DOMContentLoaded", function () {
+        const componentEdits = document.querySelectorAll(".isComponentEdit");
+        const componentView = document.querySelectorAll(".isComponentView");
+        componentEdits.forEach((el) => (el.style.display = "none"));
+        componentView.forEach((el) => (el.style.display = "flex"));
 
-              window.addEventListener("actionChange", function (event) {
-                const { isEdit } = event.detail;
-                if (isEdit) {
-                  componentEdits.forEach(el => el.style.display = "flex");
-                  componentView.forEach(el => el.style.display = "none");
-                } else {
-                  componentEdits.forEach(el => el.style.display = "none");
-                  componentView.forEach(el => el.style.display = "flex");
-                }
-              });
-
-    function fetchUserData() {
-      const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiN2YyYjExMmU0MWEwMTE0NzM1ODkzODY3NmE3YmJiMThjMjUyM2YwYmU1NDcyNjZiMDY4MzgyMWIxMDdjZDdhNzJhZmNhYjk0ODQxMDQ0OWEiLCJpYXQiOjE3NDI5NjkwMjAuNjYwNzMsIm5iZiI6MTc0Mjk2OTAyMC42NjA3MzMsImV4cCI6MTc3NDUwNTAyMC42NTI4MTEsInN1YiI6IjEiLCJzY29wZXMiOltdfQ.2HFXunKrOa_UqgXT4CeHnihASrbZUS_VGzghHlFvUne1GZJkeYM8Ct8DC9LxYJqZqvBlnx7MaV3X3zhZ8rU2_cCm8QuCl3p3bSti2Z30fMGhxr3YqTgLYgluBFWHJ65-7nwPqH7ycniDLs_0vhlgiNenia-6bd_mofT7iFZwjZHFVGD-v9BOoCgYgz0DiTbNZIQfrrlliatpIvmWUJ6bjWR8paJFe1sXrLSoSqmMw71fBfsp1yEH3HNyn4hwLNiqYNNIK3DUAblCI4pVzG8oTWl8yqn6bvhXQqqk912q66ZqG2-8E6apgdhZBRWs9baV1kRG7UoqrMGrJqX4-s78NNh-xpLH8bafdYGTGZJcwfZyzQnCY7gU2JeDhCAvL6N1aXtDzuovCogOvX1kx_fmf3wgSmmbXM71bdveyLNVldkMyYKAuu04-3WvIwlinlydjSMMYUibu9ZGZPpQPjg3KslGCrNwb6C4DN1rrr39XnGjkLsZz0CshWca7e9_HPYiOFi2m4_wx_A_Nckj_8OUlaftMxnLq7ktkg8vqWVc-8FB2YBGXvNUcYs-FQqdiuusDC_CwT0KS2EpxZP2Y-yDetFWMKBKlZ3YXuNtjPpTd7-9xQIsR2U6I6MhDhErCc-WE4Argg8qKrnApQDUUK-z5YqQ0k46KsbvNapEr3hrTf4";
-      const missionCard = document.querySelector("mission-card");
-      const locationEditCard = document.querySelector("location-edit");
-      const locationViewCard = document.querySelector("location-section");
-      const BreakingEditCard = document.querySelector("breaking-edit")
-      const BreakingViewCard = document.querySelector("breaking-section")
-      fetch("https://api.servehere.com/api/auth/user", {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok: " + response.statusText);
+        window.addEventListener("actionChange", function (event) {
+          const { isEdit } = event.detail;
+          if (isEdit) {
+            componentEdits.forEach((el) => (el.style.display = "flex"));
+            componentView.forEach((el) => (el.style.display = "none"));
+          } else {
+            componentEdits.forEach((el) => (el.style.display = "none"));
+            componentView.forEach((el) => (el.style.display = "flex"));
           }
-          return response.json();
-        })
-        .then(data => {
-          console.log("User data:", data);
-          const missionData = data.data.user_mission || {};
-          const locationData = data.data.userLocations || {};
-          const breakingData = data.data.breaking_news || {};
-          missionCard.dispatchEvent(new CustomEvent("missionDataReceived", {
-            detail: missionData
-          }));
-          locationViewCard.dispatchEvent(new CustomEvent("locationDataReceived", {
-            detail: locationData
-          }));
-          locationEditCard.dispatchEvent(new CustomEvent("locationDataReceived", {
-            detail: locationData
-          }));
-          BreakingEditCard.dispatchEvent(new CustomEvent("breakingDataReceived", {
-            detail: breakingData
-          }));
-          BreakingViewCard.dispatchEvent(new CustomEvent("breakingDataReceived", {
-            detail: breakingData
-          }));
-        })
-        .catch(error => {
-          console.error("Error fetching user data:", error);
         });
-    }
 
-    fetchUserData();
-      document.addEventListener("profileDataSaved", () => {
-      console.log("Data saved successfully, re-fetching user data...");
-      fetchUserData();
-    });
+        function fetchUserData() {
+          const token =
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiN2YyYjExMmU0MWEwMTE0NzM1ODkzODY3NmE3YmJiMThjMjUyM2YwYmU1NDcyNjZiMDY4MzgyMWIxMDdjZDdhNzJhZmNhYjk0ODQxMDQ0OWEiLCJpYXQiOjE3NDI5NjkwMjAuNjYwNzMsIm5iZiI6MTc0Mjk2OTAyMC42NjA3MzMsImV4cCI6MTc3NDUwNTAyMC42NTI4MTEsInN1YiI6IjEiLCJzY29wZXMiOltdfQ.2HFXunKrOa_UqgXT4CeHnihASrbZUS_VGzghHlFvUne1GZJkeYM8Ct8DC9LxYJqZqvBlnx7MaV3X3zhZ8rU2_cCm8QuCl3p3bSti2Z30fMGhxr3YqTgLYgluBFWHJ65-7nwPqH7ycniDLs_0vhlgiNenia-6bd_mofT7iFZwjZHFVGD-v9BOoCgYgz0DiTbNZIQfrrlliatpIvmWUJ6bjWR8paJFe1sXrLSoSqmMw71fBfsp1yEH3HNyn4hwLNiqYNNIK3DUAblCI4pVzG8oTWl8yqn6bvhXQqqk912q66ZqG2-8E6apgdhZBRWs9baV1kRG7UoqrMGrJqX4-s78NNh-xpLH8bafdYGTGZJcwfZyzQnCY7gU2JeDhCAvL6N1aXtDzuovCogOvX1kx_fmf3wgSmmbXM71bdveyLNVldkMyYKAuu04-3WvIwlinlydjSMMYUibu9ZGZPpQPjg3KslGCrNwb6C4DN1rrr39XnGjkLsZz0CshWca7e9_HPYiOFi2m4_wx_A_Nckj_8OUlaftMxnLq7ktkg8vqWVc-8FB2YBGXvNUcYs-FQqdiuusDC_CwT0KS2EpxZP2Y-yDetFWMKBKlZ3YXuNtjPpTd7-9xQIsR2U6I6MhDhErCc-WE4Argg8qKrnApQDUUK-z5YqQ0k46KsbvNapEr3hrTf4";
+
+          // DOM element selectors
+          const missionCard = document.querySelector("mission-card");
+          const locationEditCard = document.querySelector("location-edit");
+          const locationViewCard = document.querySelector("location-section");
+          const bannerSection = document.querySelector("banner-section");
+          const aboutSection = document.querySelector("about-section");
+          const BreakingEditCard = document.querySelector("breaking-edit");
+          const BreakingViewCard = document.querySelector("breaking-section");
+
+          // Prepare both fetch calls
+          const userDataPromise = fetch(
+            "https://api.servehere.com/api/auth/user",
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          ).then((response) => {
+            if (!response.ok) {
+              throw new Error("User request failed: " + response.statusText);
+            }
+            return response.json();
+          });
+
+          const businessDataPromise = fetch(
+            "https://api.servehere.com/api/business/1",
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          ).then((response) => {
+            if (!response.ok) {
+              throw new Error(
+                "Business request failed: " + response.statusText
+              );
+            }
+            return response.json();
+          });
+
+          // Execute both requests concurrently
+          Promise.all([userDataPromise, businessDataPromise])
+            .then(([userData, businessData]) => {
+              const missionData = userData.data.user_mission || {};
+              const locationData = userData.data.userLocations || {};
+              const breakingData = data.data.breaking_news || {};
+
+              // Dispatch events with the received data
+              missionCard.dispatchEvent(
+                new CustomEvent("missionDataReceived", {
+                  detail: missionData,
+                })
+              );
+              locationViewCard.dispatchEvent(
+                new CustomEvent("locationDataReceived", {
+                  detail: locationData,
+                })
+              );
+              locationEditCard.dispatchEvent(
+                new CustomEvent("locationDataReceived", {
+                  detail: locationData,
+                })
+              );
+
+              bannerSection.dispatchEvent(
+                new CustomEvent("bannerDataReceived", {
+                  detail: { ...userData.data, business: businessData.data },
+                })
+              );
+
+              aboutSection.dispatchEvent(
+                new CustomEvent("aboutDataReceived", {
+                  detail: { ...userData.data, business: businessData.data },
+                })
+              );
+              BreakingEditCard.dispatchEvent(
+                new CustomEvent("breakingDataReceived", {
+                  detail: breakingData,
+                })
+              );
+              BreakingViewCard.dispatchEvent(
+                new CustomEvent("breakingDataReceived", {
+                  detail: breakingData,
+                })
+              );
+            })
+            .catch((error) => {
+              console.error("Error fetching data:", error);
             });
+        }
+
+        fetchUserData();
+        document.addEventListener("profileDataSaved", () => {
+          console.log("User saved successfully, re-fetching user data...");
+          fetchUserData();
+        });
+      });
     </script>
   </body>
 </html>
