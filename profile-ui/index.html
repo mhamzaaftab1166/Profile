@@ -186,7 +186,7 @@
             .then(([userData, businessData]) => {
               const missionData = userData.data.user_mission || {};
               const locationData = userData.data.userLocations || {};
-              const breakingData = data.data.breaking_news || {};
+              const breakingData = userData.data.breaking_news || {};
 
               // Dispatch events with the received data
               missionCard.dispatchEvent(
