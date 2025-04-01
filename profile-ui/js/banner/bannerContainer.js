@@ -22,19 +22,30 @@ class BannerSection extends HTMLElement {
     const profileImg =
       `https://api.servehere.com/api/storage/image?path=${this.userData.business.logo}` ||
       "assets/profile/profile.png";
+    const id = this.userData.business.id;
     const name = this.userData.business.name;
     const userType = this.userData.user_type;
+    const description = this.userData.business.description;
+    const country = this.userData.business.country;
+    const latitude = this.userData.business.latitude;
+    const longitude = this.userData.business.longitude;
     const code = this.userData.business.code;
     const socialMedia = this.userData.socials;
 
     this.innerHTML = `
      <section 
        x-data="{ 
+          businessId: '${id}',
           coverImage: '${coverImg}', 
           profileImage: '${profileImg}',
           profileName: '${name}',
           profileType: '${userType}',
+          profileDescription: '${description}',
+          profileLatitude: '${latitude}',
+          profileLongitude: '${longitude}',
+          profileCountry: '${country}',
           profileCode: '${code}',
+
           previewCoverImage(event) {
            const file = event.target.files[0];
            if (file) {
@@ -46,7 +57,31 @@ class BannerSection extends HTMLElement {
            if (file) {
              this.profileImage = URL.createObjectURL(file);
            }
-         }
+         },
+          saveCover() {
+          // Use current reactive state values
+          BannerHandler.handleCoverPicture(
+            this.businessId,
+            this.coverImage,
+            this.profileName,
+            this.profileDescription, 
+            this.profileLatitude,
+            this.profileLongitude,
+            this.profileCountry
+          );
+        },
+        saveProfile() {
+          // Use current reactive state values
+          BannerHandler.handleProfilePicture(
+            this.businessId,
+            this.profileImage,
+            this.profileName,
+            this.profileDescription, 
+            this.profileLatitude,
+            this.profileLongitude,
+            this.profileCountry
+          );
+        }
         }"> 
 
         <div class="profile-wrapper">
@@ -55,7 +90,7 @@ class BannerSection extends HTMLElement {
               <img class="banner-image" :src="coverImage" alt="Banner" />
               <privacy-button class="privacy-cover-batch isCoverPrivacy"></privacy-button>
               <div class="uploadButton isCoverEdit">
-                <button class="add-button">Add Profile Poster</button>
+                <button class="add-button" @click="saveCover()">Add Profile Poster</button>
                 <input type="file" accept="image/*" class="coverFileInput" style="display: none" @change="previewCoverImage" />
                 <p class="file-upload coverFileUpload">Choose file</p>
               </div>
@@ -63,7 +98,7 @@ class BannerSection extends HTMLElement {
             <div class="profile-details">
               <div class="profile-image">
               <div class="profileUploadButton isProfileEdit">
-              <button class="add-button">Add Profile Picture</button>
+              <button class="add-button" @click="saveProfile()">Add Profile Picture</button>
               <input type="file" accept="image/*" class="profileFileInput" style="display: none" @change="previewProfileImage"/>
               <p class="file-upload profileFileUpload">Choose file</p>
               </div>
