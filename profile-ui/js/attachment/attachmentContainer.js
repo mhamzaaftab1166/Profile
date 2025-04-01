@@ -13,10 +13,9 @@ class AttachmentSection extends HTMLElement {
       this.attachmentData = event.detail;
       this.render();
     });
-  }
+  } 
 
   render() {
-    console.log(this.attachmentData, "Attachment Data");
 
     const safeData = Array.isArray(this.attachmentData)
       ? this.attachmentData.map((item) => ({
