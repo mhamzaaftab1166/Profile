@@ -6,11 +6,21 @@ class BreakingSection extends HTMLElement {
   constructor() {
     super();
     this.breakingData = {};
+    // Store the current mode: isEdit and isPrivacy.
+    this.currentMode = { isEdit: false, isPrivacy: false };
   }
 
   connectedCallback() {
     this.addEventListener("breakingDataReceived", (event) => {
       this.breakingData = event.detail;
+      this.render();
+    });
+
+    window.addEventListener("actionChange", (event) => {
+      this.updateSection(event.detail);
+    });
+
+    window.addEventListener("profileDataSaved", () => {
       this.render();
     });
   }
@@ -23,14 +33,18 @@ class BreakingSection extends HTMLElement {
       image: `${baseUrl}${item.image}`,
     }));
     console.log(transformedNews, "Transformed News");
-    
+
     const newsJson = JSON.stringify(transformedNews).replace(/"/g, "&quot;");
-   this.innerHTML = `
+    this.innerHTML = `
   <article class="breakview-card-container" x-data="{
     cards: ${newsJson}, 
-    checked: false,
-    togglePrivacy() {
-      console.log('Privacy checked value:', this.checked);
+    togglePrivacy(news) {
+        const newStatus = news.is_active ? 0 : 1;
+        console.log('Toggled:', newStatus);
+        newsHandler.changeNewsStatus({
+          id: news.id,
+          payload: { is_active: newStatus }
+        });
     }
   }">
     <section class="edit-news-container mb-3">
@@ -51,7 +65,7 @@ class BreakingSection extends HTMLElement {
           </div>
         </header>
 
-        <!-- Separate container for dot and toggle -->
+        <!-- Dot Menu and Toggle Switch -->
         <div class="toggle-container" style="position: absolute; top: 20px; right: 20px;">
           <img
             src="assets/profile/dots.png"
@@ -63,9 +77,9 @@ class BreakingSection extends HTMLElement {
             class="toggle-track isBreakingPrivacy"
             role="switch"
             tabindex="0"
-            :aria-checked="checked.toString()"
-            :data-checked="checked ? '1' : '0'"
-            @click="checked = !checked; togglePrivacy()"
+            :aria-checked="card.is_active.toString()"
+            :data-checked="card.is_active ? '1' : '0'"
+            @click="togglePrivacy(card)"
             aria-label="Privacy toggle switch"
             style="display: none;"
           >
@@ -73,13 +87,13 @@ class BreakingSection extends HTMLElement {
           </div>
         </div>
 
-        <section class="breakview-content-section" data-el="div-1">
+        <section class="breakview-content-section">
           <div class="breakview-content-columns">
             <div class="breakview-text-column">
               <p class="breakview-description-text" x-text="card.description"></p>
             </div>
             <figure class="breakview-image-column">
-              <img :src="card.image" alt="Dubai Lifestyle" class="breakview-content-image" />
+              <img :src="card.image" alt="News Image" class="breakview-content-image" />
             </figure>
           </div>
         </section>
@@ -88,16 +102,31 @@ class BreakingSection extends HTMLElement {
   </article>
 `;
 
-
-    // Allow Alpine to render dynamic elements before selecting them.
+    // Ensure elements are available before modifying them.
     setTimeout(() => {
-      // Get all toggle switch elements and dot icons
       this.toggleSwitches = this.querySelectorAll(".isBreakingPrivacy");
       this.dotIcons = this.querySelectorAll(".dot-icon");
 
-      // Default display: show dots, hide toggle switches
-      this.dotIcons.forEach((dot) => (dot.style.display = "block"));
-      this.toggleSwitches.forEach((toggle) => (toggle.style.display = "none"));
+      // Reapply the current mode.
+      if (this.currentMode.isEdit) {
+        this.dotIcons.forEach((dot) => (dot.style.display = "none"));
+        this.toggleSwitches.forEach(
+          (toggle) => (toggle.style.display = "none")
+        );
+        this._toggleNewsEntries(true);
+      } else if (this.currentMode.isPrivacy) {
+        this.dotIcons.forEach((dot) => (dot.style.display = "none"));
+        this.toggleSwitches.forEach(
+          (toggle) => (toggle.style.display = "block")
+        );
+        this._toggleNewsEntries(true);
+      } else {
+        this.dotIcons.forEach((dot) => (dot.style.display = "block"));
+        this.toggleSwitches.forEach(
+          (toggle) => (toggle.style.display = "none")
+        );
+        this._toggleNewsEntries(false);
+      }
     }, 0);
 
     window.addEventListener("actionChange", (event) =>
@@ -106,17 +135,36 @@ class BreakingSection extends HTMLElement {
   }
 
   updateSection({ isEdit, isPrivacy }) {
-    // Update all matching elements based on the state
+    // Save the current mode.
+    this.currentMode.isEdit = isEdit;
+    this.currentMode.isPrivacy = isPrivacy;
     if (isEdit) {
       this.dotIcons.forEach((dot) => (dot.style.display = "none"));
       this.toggleSwitches.forEach((toggle) => (toggle.style.display = "none"));
+      this._toggleNewsEntries(true);
     } else if (isPrivacy) {
       this.dotIcons.forEach((dot) => (dot.style.display = "none"));
       this.toggleSwitches.forEach((toggle) => (toggle.style.display = "block"));
+      this._toggleNewsEntries(true);
     } else {
       this.dotIcons.forEach((dot) => (dot.style.display = "block"));
       this.toggleSwitches.forEach((toggle) => (toggle.style.display = "none"));
+      this._toggleNewsEntries(false);
     }
+  }
+
+  _toggleNewsEntries(showAll) {
+    // Loop through each breaking news card.
+    const cards = this.querySelectorAll(".breakview-card");
+    cards.forEach((card) => {
+      const toggle = card.querySelector(".toggle-track.isBreakingPrivacy");
+      const isActive = toggle ? toggle.getAttribute("data-checked") : "0";
+      if (showAll || isActive === "0") {
+        card.style.display = "";
+      } else {
+        card.style.display = "none";
+      }
+    });
   }
 }
 

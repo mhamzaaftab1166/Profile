@@ -6,11 +6,24 @@ class LicenseSection extends HTMLElement {
   constructor() {
     super();
     this.licenseData = [];
+    // Store the current mode: isEdit and isPrivacy.
+    this.currentMode = { isEdit: false, isPrivacy: false };
   }
 
   connectedCallback() {
+    // Listen for new license data
     this.addEventListener("licenseDataReceived", (event) => {
       this.licenseData = event.detail;
+      this.render();
+    });
+
+    // Listen for action changes from the global event.
+    window.addEventListener("actionChange", (event) => {
+      this.updateSection(event.detail);
+    });
+
+    // Listen for profile data saves if needed (to re-render without losing mode)
+    window.addEventListener("profileDataSaved", () => {
       this.render();
     });
   }
@@ -23,7 +36,14 @@ class LicenseSection extends HTMLElement {
       uploads: [{ name: "", path: null, type: "license", is_active: 0 }],
       licenses: ${JSON.stringify(this.licenseData)},
       checked: false,
-      togglePrivacy() { console.log("Privacy checked value:", this.checked); }
+      togglePrivacy(license) {  
+        const newStatus = license.is_active ? 0 : 1;
+        console.log("newStatus", newStatus);
+        attachHandler.changeAttachmentStatus({
+          id: license.id,
+          payload: { is_active: newStatus }
+        });
+      }
     }'>
       <article class="license-permissions-card">
         <div class="d-flex justify-content-between align-items-center">
@@ -64,13 +84,13 @@ class LicenseSection extends HTMLElement {
                     <div class="toggle-track" role="switch" tabindex="0"
                       :aria-checked="checked.toString()"
                       aria-label="Privacy toggle switch"
-                      :data-checked="checked ? '1' : '0'"
-                      @click="checked = !checked; togglePrivacy()">
+                      :data-checked="license.is_active ? '1' : '0'"
+                      @click="togglePrivacy(license)">
                       <div class="toggle-handle"></div>
                     </div>
                   </div>
-                 <button class="isLicenseEdit license-btn license-btn-secondary" 
-                @click="window.licenseHandler.deleteLicense(license.id)">Delete</button>
+                  <button class="isLicenseEdit license-btn license-btn-secondary" 
+                    @click="window.licenseHandler.deleteLicense(license.id)">Delete</button>
                   <button class="license-btn license-btn-secondary">View</button>
                   <button class="license-btn license-btn-download license-btn-secondary">Download</button>
                 </div>
@@ -117,34 +137,73 @@ class LicenseSection extends HTMLElement {
         </button>
       </article>
     </section>
-  `;
+    `;
 
+    // Allow a brief timeout for the DOM update, then initialize mode-specific elements.
     setTimeout(() => {
       this.licenseEdit = this.querySelectorAll(".isLicenseEdit");
       this.licensePrivacy = this.querySelectorAll(".isLicensePrivacy");
 
+      // Hide both edit and privacy elements initially.
       this.licenseEdit.forEach((el) => (el.style.display = "none"));
       this.licensePrivacy.forEach((el) => (el.style.display = "none"));
 
-      window.addEventListener("actionChange", (event) =>
-        this.updateSection(event.detail)
-      );
+      // Reapply the current mode settings.
+      this.applyMode();
     }, 100);
   }
 
   updateSection({ isEdit, isPrivacy }) {
-    if (isEdit) {
-      this.licenseEdit.forEach((button) => (button.style.display = "flex"));
-      this.licensePrivacy.forEach((button) => (button.style.display = "none"));
-    } else if (isPrivacy) {
-      this.licenseEdit.forEach((button) => (button.style.display = "none"));
-      this.licensePrivacy.forEach((button) => (button.style.display = "block"));
+    // Update the stored mode.
+    this.currentMode.isEdit = isEdit;
+    this.currentMode.isPrivacy = isPrivacy;
+    // Reapply mode changes.
+    this.applyMode();
+  }
+
+  applyMode() {
+    if (!this.licenseEdit || !this.licensePrivacy) return;
+    if (this.currentMode.isEdit) {
+      // Show edit elements.
+      this.licenseEdit.forEach((el) => (el.style.display = "flex"));
+      this.licensePrivacy.forEach((el) => (el.style.display = "none"));
+      // In edit mode, show all license entries.
+      this._toggleLicenseEntries(true);
+    } else if (this.currentMode.isPrivacy) {
+      // Show privacy elements.
+      this.licenseEdit.forEach((el) => (el.style.display = "none"));
+      this.licensePrivacy.forEach((el) => (el.style.display = "block"));
+      // In privacy mode, show all license entries.
+      this._toggleLicenseEntries(true);
     } else {
-      this.licenseEdit.forEach((button) => (button.style.display = "none"));
-      this.licensePrivacy.forEach((button) => (button.style.display = "none"));
+      // View mode: hide both edit and privacy elements.
+      this.licenseEdit.forEach((el) => (el.style.display = "none"));
+      this.licensePrivacy.forEach((el) => (el.style.display = "none"));
+      // In view mode, only display license entries with is_active == 0.
+      this._toggleLicenseEntries(false);
     }
   }
 
+  _toggleLicenseEntries(showAll) {
+    const entries = this.querySelectorAll(".license-license-entry");
+    entries.forEach((entry) => {
+      const toggleTrack = entry.querySelector(".toggle-track");
+      const isActive = toggleTrack
+        ? toggleTrack.getAttribute("data-checked")
+        : "0";
+      let divider = null;
+      if (entry.parentElement) {
+        divider = entry.parentElement.querySelector(".license-divider");
+      }
+      if (showAll || isActive === "0") {
+        entry.style.display = "";
+        if (divider) divider.style.display = "";
+      } else {
+        entry.style.display = "none";
+        if (divider) divider.style.display = "none";
+      }
+    });
+  }
 }
 
 customElements.define("license-section", LicenseSection);

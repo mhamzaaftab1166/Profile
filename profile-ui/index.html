@@ -196,7 +196,7 @@
               const licenseData=userData.data.user_licenses_permissions||[]
               const attachmentData=userData.data.user_attachments||[]
               const managementData=userData.data.managments||[]
-   
+
               missionCard.dispatchEvent(
                 new CustomEvent("missionDataReceived", {
                   detail: missionData,
@@ -257,9 +257,21 @@
         }
 
         fetchUserData();
-        document.addEventListener("profileDataSaved", () => {
+        document.addEventListener("profileDataSaved", async () => {
           console.log("User saved successfully, re-fetching user data...");
-          fetchUserData();
+          await fetchUserData();
+          const activeBtn = document.querySelector(".action-button--active");
+          console.log(activeBtn, "activeBtn");
+          if (activeBtn) {
+          const action = activeBtn.dataset.action;
+          const isEdit = action === "edit";
+          const isPrivacy = action === "privacy";
+          console.log(isEdit, "isEdit",isPrivacy,"isPrivacy");
+
+          window.dispatchEvent(
+            new CustomEvent("actionChange", { detail: { isEdit, isPrivacy } })
+          );}
+
         });
       });
     </script>

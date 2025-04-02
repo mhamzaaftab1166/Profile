@@ -41,6 +41,33 @@ const attachHandler = {
       console.error("🚨 Error in handleLicense:", error);
     }
   },
+  async changeAttachmentStatus({ id, payload }) {
+    const url = `https://api.servehere.com/api/user-attachments/${id}/activate`;
+    console.log("🚀 Changing attachment status with payload:", payload,id);
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        document.dispatchEvent(new CustomEvent("profileDataSaved"));
+        console.log("✅ Attachment status updated successfully.");
+      } else {
+        console.error(
+          "❌ Failed to update attachment status:",
+          response.statusText
+        );
+      }
+    } catch (error) {
+      console.error("🚨 Error in changeAttachmentStatus:", error);
+    }
+  },
 };
 
 window.attachHandler = attachHandler;
