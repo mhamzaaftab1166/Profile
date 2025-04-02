@@ -1,0 +1,110 @@
+.social-form-wrapper {
+    width: 300px;
+    height: 312px;
+    border: 1px solid #6e55ff;
+    border-radius: 10px;
+    margin-top: 16.01px;
+    padding: 10.45px 15px;
+  }
+
+  .social-form-bottom {
+    margin-bottom: 19px;
+  }
+
+  .social-form-flex-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 13px;
+  }
+
+  .social-form-flex {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .social-icon {
+    width: 18.44px;
+    height: 18.44px;
+    object-fit: contain;
+    margin-right: 4.33px;
+  }
+
+  .social-form-name {
+    font-size: 13.24px;
+    line-height: 19.85px;
+    font-weight: 600;
+    font-family: "Poppins";
+  }
+
+  .social-input {
+    border: none;
+    font-size: 13.24px;
+    line-height: 19.85px;
+    font-weight: 400;
+    font-family: "Poppins";
+    color: #6e55ff;
+    text-decoration: underline;
+  }
+
+  .social-input::placeholder {
+    border: none;
+    font-size: 13.24px;
+    line-height: 19.85px;
+    font-weight: 400;
+    font-family: "Poppins";
+    color: #6e55ff;
+    text-decoration: underline;
+  }
+
+  .social-input:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .social-country-code-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .social-country-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 13.24px;
+    color: #6e55ff;
+    text-decoration: underline;
+  }
+
+  .social-dropdown-arrow {
+    position: absolute;
+    right: 8px;
+    pointer-events: none;
+    width: 10px;
+    height: 5px;
+  }
+
+  .social-add-mail-width {
+    width: 86%;
+  }
+
+  .social-addMail-placeholder {
+    margin: 0;
+    font-size: 12.24px;
+    line-height: 19.85px;
+    font-weight: 400;
+    font-family: "Poppins";
+  }
+
+  .social-action-buttons {
+    margin-right: 40px;
+  }
+
+  .social-width-label {
+  width: 55%
+  }

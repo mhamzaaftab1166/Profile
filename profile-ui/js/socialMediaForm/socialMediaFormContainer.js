@@ -136,7 +136,8 @@ class SocialMediaFormSection extends HTMLElement {
           width: 55%
           }
       </style>
-
+      <section 
+       x-data="{}"> 
       <div class="form-wrapper">
         <div class="space-y-3 form-bottom">
           ${socialMediaLinks
@@ -155,20 +156,36 @@ class SocialMediaFormSection extends HTMLElement {
                   ? `
                   <div class="fomr-flex">
                     <div class="country-code-wrapper">
-                      <select data-platform="${social.platform_name}" class="social-input country-select">
+                      <select 
+                        data-platform="${social.platform_name}" 
+                        class="social-input country-select" 
+                        value="${social.country_code}"
+                        >
                         <option value="+971">+971</option>
                         <option value="+1">+1</option>
                         <option value="+44">+44</option>
                         <option value="+91">+91</option>
                       </select>
                     </div>
-                    <input type="text" data-platform="${social.platform_name}" class="social-input phone-input" placeholder="050 635 9999" />
+                    <input 
+                       type="text" 
+                       data-platform="${social.platform_name}" 
+                       class="social-input phone-input" 
+                       placeholder="050 635 9999" 
+                       value="${social.phone_number}" 
+                       />
                   </div>
                 `
                   : social.nonEditAble
                   ? `<p class="addMail-placeholder">${social.linkPlaceholder}</p>`
                   : `
-                  <input type="text" data-platform="${social.platform_name}" class="social-input platform-link" placeholder="${social.linkPlaceholder}" />
+                  <input 
+                    type="text" 
+                    data-platform="${social.platform_name}" 
+                    class="social-input platform-link" 
+                    placeholder="${social.linkPlaceholder}" 
+                    value="${social.platform_link}" 
+                  />
                 `
               }
             </div>
@@ -178,18 +195,49 @@ class SocialMediaFormSection extends HTMLElement {
         </div>
         <action-button isSocialMediaForm="true"></action-button>
       </div>
+      </section>
     `;
 
     this.addEventListeners();
   }
 
   addEventListeners() {
+    const socialMediaData = JSON.parse(this.getAttribute("social-data") || "[]");
+  
     this.shadowRoot.querySelectorAll(".social-input").forEach((input) => {
       input.addEventListener("input", (event) => {
         const platform = event.target.dataset.platform;
-        console.log(`Updated ${platform}:`, event.target.value);
+        const socialIndex = socialMediaData.findIndex((s) => s.platform_name === platform);
+        
+        if (socialIndex !== -1) {
+          if (event.target.classList.contains("phone-input")) {
+            socialMediaData[socialIndex].phone_number = event.target.value || null;
+          } else if (event.target.classList.contains("platform-link")) {
+            socialMediaData[socialIndex].platform_link = event.target.value || null;
+          }
+        }
       });
     });
+  
+    const actionButton = this.shadowRoot.querySelector("action-button");
+    if (actionButton) {
+      actionButton.addEventListener("click", () => {
+        // Process and filter data
+        const modifiedData = socialMediaData
+          .filter(({ platform_name }) => platform_name !== "AddMail") // Remove AddMail
+          .map(({ icon, hasPhone, linkPlaceholder, nonEditAble, ...rest }) => ({
+            ...rest,
+            is_active: false, // Add is_active field
+            phone_number: rest.phone_number || null, // Ensure null if empty
+            platform_link: rest.platform_link || null, // Ensure null if empty
+          }));
+  
+        const payload = { social_media: modifiedData };
+  
+        // Send the modified payload to API
+        SocialMediaHandler.handleSocialMedia(JSON.stringify(payload));
+      });
+    }
   }
 }
 

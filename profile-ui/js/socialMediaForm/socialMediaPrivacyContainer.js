@@ -120,7 +120,11 @@ class SocialMediaPrivacySection extends HTMLElement {
                     <span class="social-form-name">${social.platform_name}</span>
                   </div>
                   <p class="addMail-placeholder p-0 width-placeholder">
-                    ${social.linkPlaceholder}
+                    ${social.nonEditAble ?  
+                       social.linkPlaceholder 
+                       : social.hasPhone ? 
+                       social.country_code + social.phone_number 
+                       : social.platform_link}
                   </p>
                 </div>
               `
