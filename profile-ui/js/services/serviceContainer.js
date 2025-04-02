@@ -1,57 +1,88 @@
 class ServiceSection extends HTMLElement {
+  static get observedAttributes() {
+    return ["services"];
+  }
+
   constructor() {
     super();
+    this.services = [];
     this.serviceFormLength = 4;
-    this.serviceForm = Array.from({ length: this.serviceFormLength }, () => ({
-      id: null,
-      service_image: "",
-      service_name: "",
-      service_description: "",
-      is_active: 0,
-    }));
-    this.services = [
-      {
-        image: "assets/profile/service1.png",
-        title: "Land Acquisition",
-        description:
-          "Developers identify and acquire suitable land for development projects. This involves conducting feasibility studies, assessing zoning regulations, and negotiating with property owners.",
-      },
-      {
-        image: "assets/profile/service2.png",
-        title: "Market Research",
-        description:
-          "Developers conduct market research to analyze the demand for specific types of properties in a given area. This helps in making informed decisions about the type of development that would be viable and successful.",
-      },
-      {
-        image: "assets/profile/service3.png",
-        title: "Feasibility Studies",
-        description:
-          "Before initiating a project, developers perform feasibility studies to assess the financial viability and potential risks. This includes analyzing construction costs, market conditions, and projected returns on investment.",
-      },
-      {
-        image: "assets/profile/service4.png",
-        title: "Design and Planning",
-        description:
-          "Real estate developers collaborate with architects, urban planners, and other professionals to design the project. This involves creating site plans, obtaining necessary approvals, and ensuring that the design aligns with market demand.",
-      },
-    ];
+    this.serviceForm = [];
+    this.isPrivacy = false;
+    this.currentIndex = 0;
   }
 
   connectedCallback() {
+    this.addEventListener("serviceDataReceived", (event) => {
+      this.services = event.detail;
+      console.log(this.services.length, "services");
+      this.serviceForm = this.services.map((service) => ({
+        id: service.id || null,
+        service_image: service.service_image
+          ? `https://api.servehere.com/api/storage/image?path=${service.service_image}`
+          : "",
+        service_name: service.service_name || "",
+        service_description: service.service_description || "",
+        is_active: service.is_active || 0,
+      }));
+      this.render();
+    });
+
+    this.addEventListener("click", (event) => {
+      if (event.target.matches(".save-button")) {
+        this.saveServiceChanges();
+      } else if (event.target.matches(".discard-button")) {
+        this.serviceForm = this.services.map((service) => ({
+          id: service.id || null,
+          service_image: service.service_image
+            ? `https://api.servehere.com/api/storage/image?path=${service.service_image}`
+            : "",
+          service_name: service.service_name || "",
+          service_description: service.service_description || "",
+          is_active: service.is_active || 0,
+        }));
+        this.updateSection({ isEdit: false, isPrivacy: false });
+        this.render();
+      }
+    });
+  }
+
+  updateServiceForm() {
+    const nextServices = this.services.slice(this.currentIndex, this.currentIndex + 4);
+    this.services = nextServices.map((service) => ({
+      id: service.id || null,
+      service_image: service.service_image
+        ? `https://api.servehere.com/api/storage/image?path=${service.service_image}`
+        : "",
+      service_name: service.service_name || "",
+      service_description: service.service_description || "",
+      is_active: service.is_active || 0,
+    }));
+  }
+
+  render() {
+    const remainingServices = this.services.length - this.currentIndex;
+    const loadMoreButton = remainingServices > 0 ? 
+    `<button class="service-browse-button browseButton">
+          <span class="service-browse-text">Load More</span>
+          <span class="separator-line"></span>
+          <img src="assets/profile/rightArrow.png" class="service-browse-icon" alt="Arrow" />
+     </button>`
+         : '';
     this.innerHTML = `
       <div class="position-relative service-card">
-       <div class="d-flex justify-content-between align-items-center">
-        <div class="ms-2 mt-2 toggle-container isServicePrivacy">
-          <privacy-button></privacy-button>
-        </div>
-        <header class="service-head-title">Services</header>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="ms-2 mt-2 toggle-container isServicePrivacy">
+            <privacy-button></privacy-button>
+          </div>
+          <header class="service-head-title">Services</header>
         </div>
         <div class="service-separator"></div>
 
         <!-- View Mode -->
         <div class="services-wrapper isServiceView">
           <div class="services-grid">
-            ${this.services
+            ${this.services.slice(0, 4)
               .map(
                 (service, index) => `
                   <div class="${
@@ -60,18 +91,20 @@ class ServiceSection extends HTMLElement {
                       : "service-card-wrapper"
                   }" key=${index}>
                     <div class="service-inner-card">
-                      <img class="service-card-img" src="${
-                        service.image
-                      }" alt="${service.title}" />
+                      <img class="service-card-img" src="https://api.servehere.com/api/storage/image?path=${
+                        service.service_image
+                      }" alt="${service.service_name}" />
                       <div>
-                        <h5 class="service-card-title">${service.title}</h5>
+                        <h5 class="service-card-title">${
+                          service.service_name
+                        }</h5>
                         <div class="service-separator-line"></div>
                         <p class="service-card-description">${
-                          service.description
+                          service.service_description
                         }</p>
                       </div>
                     </div>
-                     <div class="service-privacy-button isServicePrivacy">
+                    <div class="service-privacy-button isServicePrivacy">
                       <privacy-button></privacy-button>
                     </div>
                   </div>
@@ -87,14 +120,14 @@ class ServiceSection extends HTMLElement {
             ${this.serviceForm
               .map(
                 (form, index) => `
-                  <div class="service-card-wrapper" key="${index}" >
+                  <div class="service-card-wrapper" key="${index}">
                     <div class="service-inner-card">
                       <div class="position-relative">
                         <img class="service-card-img" src="${
                           form.service_image || "assets/profile/coverImage.png"
                         }" alt="services one" />
                         <div class="uploadButton">
-                          <button class="add-button">Add Profile Picture</button>
+                          <button class="add-button">Add Photo</button>
                           <input type="file" accept="image/*" style="display: none" />
                           <p class="file-upload">Choose file</p>
                         </div>
@@ -121,37 +154,87 @@ class ServiceSection extends HTMLElement {
           </div>
         </div>
 
-        <button class="service-browse-button browseButton">
-          <span class="service-browse-text">Load More</span>
-          <span class="separator-line"></span>
-          <img src="assets/profile/rightArrow.png" class="service-browse-icon" alt="Arrow" />
-        </button>
+          ${loadMoreButton}
       </div>
     `;
 
-    // Get references to view and edit sections
     this.serviceView = this.querySelector(".isServiceView");
     this.serviceEdit = this.querySelector(".isServiceEdit");
     this.servicePrivacy = this.querySelector(".isServicePrivacy");
     this.addMoreButton = this.querySelector(".service-add-button");
     this.browseButton = this.querySelector(".service-browse-button");
-    this.isPrivacy = false;
 
-    // Set initial visibility
     this.serviceView.style.display = "block";
     this.serviceEdit.style.display = "none";
     this.servicePrivacy.style.display = "none";
     this.addMoreButton.style.display = "none";
     this.browseButton.style.display = "flex";
 
+    this.querySelector(".load-more-button")?.addEventListener("click", () => {
+      this.currentIndex += 4;
+      this.updateServiceForm();
+      this.render();
+    });
+
     this.querySelectorAll(".isServicePrivacy").forEach((element) => {
       element.style.display = "none";
     });
 
-    // Listen for action changes
+    this.querySelectorAll(".service-card-input-title").forEach(
+      (input, index) => {
+        input.addEventListener("input", (event) => {
+          this.serviceForm[index].service_name = event.target.value;
+        });
+      }
+    );
+
+    this.querySelectorAll(".service-card-input-description").forEach(
+      (textarea, index) => {
+        textarea.addEventListener("input", (event) => {
+          this.serviceForm[index].service_description = event.target.value;
+        });
+      }
+    );
+
     window.addEventListener("actionChange", (event) =>
       this.updateSection(event.detail)
     );
+
+    if (this.addMoreButton) {
+      this.addMoreButton.addEventListener("click", () => {
+        this.serviceForm.push({
+          service_image: "",
+          service_name: "",
+          service_description: "",
+          is_active: 0,
+        });
+        this.render();
+      });
+    }
+
+    const uploadButtons = this.querySelectorAll(".uploadButton");
+    uploadButtons.forEach((uploadButton, idx) => {
+      const fileInput = uploadButton.querySelector('input[type="file"]');
+      const chooseFileText = uploadButton.querySelector(".file-upload");
+
+      chooseFileText.addEventListener("click", () => {
+        fileInput.click();
+      });
+
+      fileInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (file) {
+          this.serviceForm[idx].service_image = file;
+
+          const imgElement = uploadButton.parentElement.querySelector(
+            "img.service-card-img"
+          );
+          if (imgElement) {
+            imgElement.src = URL.createObjectURL(file);
+          }
+        }
+      });
+    });
   }
 
   updateSection({ isEdit, isPrivacy }) {
@@ -162,11 +245,6 @@ class ServiceSection extends HTMLElement {
       this.serviceEdit.style.display = "block";
       this.addMoreButton.style.display = "block";
       this.browseButton.style.display = "none";
-    } else if (isPrivacy) {
-      this.serviceView.style.display = "block";
-      this.serviceEdit.style.display = "none";
-      this.addMoreButton.style.display = "none";
-      this.browseButton.style.display = "flex";
     } else {
       this.serviceView.style.display = "block";
       this.serviceEdit.style.display = "none";
@@ -189,6 +267,36 @@ class ServiceSection extends HTMLElement {
     this.querySelectorAll(".isServicePrivacy").forEach((element) => {
       element.style.display = isPrivacy ? "block" : "none";
     });
+  }
+
+  saveServiceChanges() {
+    const formData = new FormData();
+
+    this.serviceForm.forEach((form, index) => {
+      if (form.id) {
+        formData.append(`services[${index}][id]`, form.id);
+      }
+      formData.append(`services[${index}][service_name]`, form.service_name);
+      formData.append(
+        `services[${index}][service_description]`,
+        form.service_description
+      );
+      formData.append(`services[${index}][is_active]`, form.is_active);
+
+      if (form.service_image instanceof File) {
+        formData.append(
+          `services[${index}][service_image]`,
+          form.service_image
+        );
+      } else if (form.service_image) {
+        formData.append(
+          `services[${index}][service_image_url]`,
+          form.service_image
+        );
+      }
+    });
+
+    ServiceHandler.handleServices(formData);
   }
 }
 

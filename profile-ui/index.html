@@ -14,6 +14,8 @@
     <script src="./js/management/managementHandler.js" defer></script>
     <script src="./js/banner/bannerHandler.js" defer></script>
     <script src="./js/socialMediaForm/socialMediaHandler.js" defer></script>
+    <script src="./js/about/aboutHandler.js" defer></script>
+    <script src="./js/services/serviceHandler.js" defer></script>
     <!-- Import Alpine.js -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -148,6 +150,7 @@
           const locationViewCard = document.querySelector("location-section");
           const bannerSection = document.querySelector("banner-section");
           const aboutSection = document.querySelector("about-section");
+          const serviceSection = document.querySelector("service-section");
           const BreakingEditCard = document.querySelector("breaking-edit");
           const BreakingViewCard = document.querySelector("breaking-section");
           const licenseCard = document.querySelector("license-section")
@@ -198,7 +201,8 @@
               const licenseData=userData.data.user_licenses_permissions||[]
               const attachmentData=userData.data.user_attachments||[]
               const managementData=userData.data.managments||[]
-
+              const serviceData=userData.data.services ||[]
+   
               missionCard.dispatchEvent(
                 new CustomEvent("missionDataReceived", {
                   detail: missionData,
@@ -249,6 +253,11 @@
                managementCard.dispatchEvent(
                 new CustomEvent("managementDataReceived", {
                   detail: managementData,
+                })
+              );
+              serviceSection.dispatchEvent(
+                new CustomEvent("serviceDataReceived", {
+                  detail: serviceData,
                 })
               );
             })

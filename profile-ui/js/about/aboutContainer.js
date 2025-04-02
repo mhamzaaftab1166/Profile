@@ -38,7 +38,7 @@ class AboutSection extends HTMLElement {
           label: "Province/State",
           value: "Dubai",
           type: "select",
-          option: ["Dubai", "Ajman", "Sharjah", "Al Ain"],
+          option: ["Dubai", "Ajman", "Ajman Emirate", "Sharjah", "Al Ain"],
         },
         {
           label: "City",
@@ -129,7 +129,7 @@ class AboutSection extends HTMLElement {
           item.value = this.aboutData.business.country;
         }
         if (
-          item.label.toLowerCase() === "province/state" &&
+          item.label.toLowerCase().includes("province") &&
           this.aboutData.business.state
         ) {
           item.value = this.aboutData.business.state;
@@ -141,7 +141,7 @@ class AboutSection extends HTMLElement {
           item.value = this.aboutData.business.city;
         }
         if (
-          item.label.toLowerCase() === "postal/zip code" &&
+          item.label.toLowerCase().includes("postal") &&
           this.aboutData.business.postal_zip_code
         ) {
           item.value = this.aboutData.business.postal_zip_code;
@@ -155,6 +155,71 @@ class AboutSection extends HTMLElement {
       });
       this.render();
     });
+    // Add event listener for Save button
+    this.addEventListener("click", async (event) => {
+      if (event.target.classList.contains("discard-button")) {
+        this.render();
+        return; // Stop further processing
+      }
+      
+      if (event.target.classList.contains("save-button")) {
+        const updatedData = {};
+        const allData = {};
+
+        const inputs = this.querySelectorAll(
+          ".about-input-content, .about-select"
+        );
+
+        inputs.forEach((input) => {
+          const fieldName = input.name.replace(/_/g, " ");
+          const existingField = this.aboutProfile.find(
+            (profileItem) => profileItem.label.toLowerCase() === fieldName
+          );
+
+          allData[input.name] = input.value;
+
+          if (existingField && existingField.value !== input.value) {
+            updatedData[input.name] = input.value;
+          }
+        });
+
+        const descriptionInput = this.querySelector(".about-input-description");
+        const updatedDescription = descriptionInput
+          ? descriptionInput.value
+          : this.aboutData.business.description;
+
+        const payload = JSON.stringify({
+          business_address: allData.address,
+          business_city: allData.city,
+          business_contactno: allData.phone_number,
+          business_country: allData.country,
+          business_description: updatedDescription,
+          business_email: allData.email,
+          business_latitude: this.aboutData.business.latitude,
+          business_license_number: allData.license_number,
+          business_longitude: this.aboutData.business.longitude,
+          business_name: this.aboutData.business.name,
+          business_other: allData.other,
+          business_permissions: allData.permissions,
+          business_postal_zip_code: allData["postal/zip_code"],
+          business_state: allData["province/state"],
+          business_website: allData.website,
+          date_of_birth: allData.date_of_birth,
+          expiry_date: allData.expiry_date,
+          gender: allData.gender,
+          national_id_number: allData.national_id_number,
+          nationality: allData.nationality,
+        });
+
+        console.log(payload, "payload");
+
+        const businessId = this.aboutData?.business_id || 1;
+
+        await AboutHandler.handleAbout(businessId, payload);
+      }
+    });
+
+    this.render();
   }
   render() {
     const aboutDescription =
