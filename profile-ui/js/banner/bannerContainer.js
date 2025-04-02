@@ -32,12 +32,36 @@ class BannerSection extends HTMLElement {
     const code = this.userData.business.code;
     const socialMedia = this.userData.socials;
 
+    const socialData = socialMedia.map((social) => ({
+      platform_name: social.platform_name,
+      icon: `assets/icons/${social.platform_name}.png`,
+      hasPhone: !!social.phone_number,
+      linkPlaceholder: social.phone_number
+        ? `Enter ${social.platform_name} Number`
+        : `Enter ${social.platform_name} link`,
+      country_code: social.country_code || "",
+      platform_link: social.platform_link || "",
+      phone_number: social.phone_number || "",
+      nonEditAble: false,
+    }));
+
+    socialData.unshift({
+      "platform_name": "AddMail",
+      "icon": "assets/icons/addMail.png",
+      "nonEditAble": true,
+      "linkPlaceholder": "Default Generating"
+    });
+
+    console.log(socialData, "Updated social-data");
+
     this.innerHTML = `
      <section 
        x-data="{ 
           businessId: '${id}',
           coverImage: '${coverImg}', 
           profileImage: '${profileImg}',
+          coverFile: null,
+          profileFile: null,
           profileName: '${name}',
           profileType: '${userType}',
           profileDescription: '${description}',
@@ -49,12 +73,14 @@ class BannerSection extends HTMLElement {
           previewCoverImage(event) {
            const file = event.target.files[0];
            if (file) {
+             this.coverFile = file;
              this.coverImage = URL.createObjectURL(file);
            }
          },
          previewProfileImage(event) {
            const file = event.target.files[0];
            if (file) {
+             this.profileFile = file;
              this.profileImage = URL.createObjectURL(file);
            }
          },
@@ -62,7 +88,7 @@ class BannerSection extends HTMLElement {
           // Use current reactive state values
           BannerHandler.handleCoverPicture(
             this.businessId,
-            this.coverImage,
+            this.coverFile,
             this.profileName,
             this.profileDescription, 
             this.profileLatitude,
@@ -74,7 +100,7 @@ class BannerSection extends HTMLElement {
           // Use current reactive state values
           BannerHandler.handleProfilePicture(
             this.businessId,
-            this.profileImage,
+            this.profileFile,
             this.profileName,
             this.profileDescription, 
             this.profileLatitude,
@@ -136,26 +162,12 @@ class BannerSection extends HTMLElement {
                   .join("")}
                   <a class="add-mail-icon"><img class="socialIcons" src="assets/icons/addMail.png" alt="Add Mail" /></a>
                 </div>
-                <social-form class="isSocialFormEdit" social-data='[
-                  {"platform_name": "AddMail", "icon": "assets/icons/addMail.png", "nonEditAble": true, "linkPlaceholder": "Default Generating"},
-                  {"platform_name": "WhatsApp", "icon": "assets/icons/WhatsApp.png", "hasPhone": true},
-                  {"platform_name": "Facebook", "icon": "assets/icons/Facebook.png", "nonEditAble": false, "linkPlaceholder": "Enter Facebook link"},
-                  {"platform_name": "Instagram", "icon": "assets/icons/Instagram.png", "nonEditAble": false, "linkPlaceholder": "Enter Instagram link"},
-                  {"platform_name": "X", "icon": "assets/icons/X.png", "nonEditAble": false, "linkPlaceholder": "Enter X link"},
-                  {"platform_name": "YouTube", "icon": "assets/icons/YouTube.png", "nonEditAble": false, "linkPlaceholder": "Enter Youtube link"},
-                  {"platform_name": "WeChat", "icon": "assets/icons/WeChat.png", "nonEditAble": false, "linkPlaceholder": "Enter We Chat link"},
-                  {"platform_name": "Telegram", "icon": "assets/icons/Telegram.png", "hasPhone": true}
-                ]'></social-form>
-                 <social-privacy class="isSocialMediaPrivacy" social-data='[
-                  {"platform_name": "AddMail", "icon": "assets/icons/addMail.png", "nonEditAble": true, "linkPlaceholder": "Default Generating"},
-                  {"platform_name": "WhatsApp", "icon": "assets/icons/WhatsApp.png", "hasPhone": true, "linkPlaceholder": "Enter WhatsApp Number"},
-                  {"platform_name": "Facebook", "icon": "assets/icons/Facebook.png", "nonEditAble": false, "linkPlaceholder": "Enter Facebook link"},
-                  {"platform_name": "Instagram", "icon": "assets/icons/Instagram.png", "nonEditAble": false, "linkPlaceholder": "Enter Instagram link"},
-                  {"platform_name": "X", "icon": "assets/icons/X.png", "nonEditAble": false, "linkPlaceholder": "Enter X link"},
-                  {"platform_name": "YouTube", "icon": "assets/icons/YouTube.png", "nonEditAble": false, "linkPlaceholder": "Enter Youtube link"},
-                  {"platform_name": "WeChat", "icon": "assets/icons/WeChat.png", "nonEditAble": false, "linkPlaceholder": "Enter We Chat link"},
-                  {"platform_name": "Telegram", "icon": "assets/icons/Telegram.png", "hasPhone": true, "linkPlaceholder": "Enter Telegram Number"}
-                ]'></social-privacy>
+                <social-form class="isSocialFormEdit" social-data='${JSON.stringify(
+                  socialData
+                )}'></social-form>
+                 <social-privacy class="isSocialMediaPrivacy" social-data='${JSON.stringify(
+                  socialData
+                )}'></social-privacy>
               </div>
             </div>
           </div>
