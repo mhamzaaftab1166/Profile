@@ -156,6 +156,7 @@
           const licenseCard = document.querySelector("license-section")
           const attachmentCard=document.querySelector("attachment-section")
           const managementCard=document.querySelector("management-section")
+          const productCard=document.querySelector("product-section")
 
           // Prepare both fetch calls
           const userDataPromise = fetch(
@@ -202,6 +203,12 @@
               const attachmentData=userData.data.user_attachments||[]
               const managementData=userData.data.managments||[]
               const serviceData=userData.data.services ||[]
+              const productData=userData.data.categories ||[]
+              const productMenusData=userData.data.categories.flatMap(category => category.menus) ||[]
+              console.log(productData, 'productData');
+              console.log(productMenusData, 'productMenusData');
+              
+              
    
               missionCard.dispatchEvent(
                 new CustomEvent("missionDataReceived", {
@@ -258,6 +265,11 @@
               serviceSection.dispatchEvent(
                 new CustomEvent("serviceDataReceived", {
                   detail: serviceData,
+                })
+              );
+              productCard.dispatchEvent(
+                new CustomEvent("productDataReceived", {
+                  detail: {products: productData, menus: productMenusData}
                 })
               );
             })

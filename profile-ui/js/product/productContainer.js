@@ -1,55 +1,35 @@
 class ProductSection extends HTMLElement {
+  static get observedAttributes() {
+    return ["products", "menus"];
+  }
+
   constructor() {
     super();
     this.menuTabs = [{ name: "Exclusive" }, { name: "Menu Items" }];
-    this.activeTab = "Exclusive"; // Default active tab
-    this.products = [
-      {
-        product_image: "assets/profile/product1.png",
-        product_name: "Bar BBQ",
-        product_count: 5,
-        product_description:
-          "BBQ chicken, seasoned with an easy brown sugar rub",
-        reference: "KARACBAR",
-        status: "active",
-      },
-      {
-        product_image: "assets/profile/product2.jpg",
-        product_name: "Burgers and Sandwiche",
-        product_count: 4,
-        product_description: "Burgers and Sandwiche",
-        reference: "KARACBAR",
-        status: "active",
-      },
-      {
-        product_image: "assets/profile/product3.jpg",
-        product_name: "Moctail",
-        product_count: 4,
-        product_description: "Moctail",
-        reference: "KARACBAR",
-        status: "active",
-      },
-      {
-        product_image: "assets/profile/product4.jpg",
-        product_name: "Main Menu",
-        product_count: 3,
-        product_description: "Main Menu",
-        reference: "KARACBAR",
-        status: "active",
-      },
-    ];
+    this.activeTab = "Exclusive";
+    this.products = [];
+    this.menus = [];
   }
 
   setActiveTab(tabName) {
     this.activeTab = tabName;
-    this.render(); // Re-render when the active tab changes
-  }
-
-  connectedCallback() {
     this.render();
   }
 
+  connectedCallback() {
+    this.addEventListener("productDataReceived", (event) => {
+      this.products = event.detail.products;
+      this.menus = event.detail.menus;
+      console.log(this.products, 'products');
+      console.log(this.menus, 'menussssssss');
+      
+      
+      this.render();
+    });
+  }
+
   render() {
+    const filterListing = this.activeTab === "Exclusive" ? this.products : this.menus;
     this.innerHTML = `
             <div class="position-relative product-card">
                 <div class="d-flex justify-content-between align-items-center">
@@ -81,49 +61,51 @@ class ProductSection extends HTMLElement {
                     
                     <div class="menu-wrapper">
                         <div class="menu-grid">
-                            ${this.products
+                            ${filterListing
                               .map(
                                 (product, index) => `
                                       <div key="${index}">
                                         <div class="property-card">
                                             <div class="relative">
-                                                <img src="${
-                                                  product.product_image
-                                                }" alt="Property Image" class="property-image" />
+                                                <img src="${ product?.menu_image ? `${product.menu_image}` : `https://api.servehere.com/api/storage/image?path=${product.image}`}" alt="Property Image" class="property-image" />
+                                                ${product?.status === "active" ? `
                                                 <div class="menu-tag-wrapper">
                                                     <div class="relative">
                                                         <img class="menu-tag menu-tag-purple" src="assets/icons/tagline-purple.png" alt="Tag Two" />
                                                         <p class="tag-content-purple">${
-                                                          product?.status ===
+                                                         product?.menu_status || product?.status ===
                                                           "active"
                                                             ? "Active"
                                                             : ""
                                                         }</p>
                                                     </div>
                                                 </div>
+                                               ` : ''}
                                             </div>
                                             <div>
                                                 <div class="menu-details">
                                                     <h3 class="menu-title">${
-                                                      product?.product_name
+                                                     product?.menu_name || product?.name
                                                     }</h3>
                                                     <div class="description-flex">
                                                         <p class="menu-decription">${
-                                                          product?.product_description
+                                                          product?.menu_description || product?.description
                                                         }</p>
                                                     </div>
+                                                    ${product?.menus_count ? `
                                                     <p class="menu-price">${
-                                                      product?.product_count
+                                                      product?.menus_count
                                                     } Menu/s available</p>
+                                                     `:`
+                                                    <p class="menu-price">AED ${ product?.menu_price}</p>
+                                                    `}
                                                  
                                                 </div>
                                                 <div class="product-separator-line"></div>
                                                 <div class="addMail-wrapper">
                                                     <div class="addMail-inner-wrapper">
                                                         <img src="assets/icons/addMail.png" />
-                                                        <span>${
-                                                          product?.reference
-                                                        }</span>
+                                                        <span>KARACBAR</span>
                                                     </div>
                                                 </div>
                                             </div>
