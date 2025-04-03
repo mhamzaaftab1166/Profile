@@ -75,6 +75,33 @@ const managementHandler = {
       console.error("🚨 Error in handleManagement:", error);
     }
   },
+  async changemanagementStatus({ id, payload }) {
+    const url = `https://api.servehere.com/api/managments/${id}/activate`;
+    console.log("🚀 Changing management status with payload:", payload, id);
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        document.dispatchEvent(new CustomEvent("profileDataSaved"));
+        console.log("✅ management status updated successfully.");
+      } else {
+        console.error(
+          "❌ Failed to update management status:",
+          response.statusText
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  },
 };
 
 window.managementHandler = managementHandler;

@@ -121,161 +121,165 @@
       <attachment-section></attachment-section>
     </div>
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const componentEdits = document.querySelectorAll(".isComponentEdit");
-        const componentView = document.querySelectorAll(".isComponentView");
-        componentEdits.forEach((el) => (el.style.display = "none"));
-        componentView.forEach((el) => (el.style.display = "flex"));
-
-        window.addEventListener("actionChange", function (event) {
-          const { isEdit } = event.detail;
-          if (isEdit) {
-            componentEdits.forEach((el) => (el.style.display = "flex"));
-            componentView.forEach((el) => (el.style.display = "none"));
-          } else {
-            componentEdits.forEach((el) => (el.style.display = "none"));
-            componentView.forEach((el) => (el.style.display = "flex"));
-          }
-        });
-
-        function fetchUserData() {
-          const token =
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiN2YyYjExMmU0MWEwMTE0NzM1ODkzODY3NmE3YmJiMThjMjUyM2YwYmU1NDcyNjZiMDY4MzgyMWIxMDdjZDdhNzJhZmNhYjk0ODQxMDQ0OWEiLCJpYXQiOjE3NDI5NjkwMjAuNjYwNzMsIm5iZiI6MTc0Mjk2OTAyMC42NjA3MzMsImV4cCI6MTc3NDUwNTAyMC42NTI4MTEsInN1YiI6IjEiLCJzY29wZXMiOltdfQ.2HFXunKrOa_UqgXT4CeHnihASrbZUS_VGzghHlFvUne1GZJkeYM8Ct8DC9LxYJqZqvBlnx7MaV3X3zhZ8rU2_cCm8QuCl3p3bSti2Z30fMGhxr3YqTgLYgluBFWHJ65-7nwPqH7ycniDLs_0vhlgiNenia-6bd_mofT7iFZwjZHFVGD-v9BOoCgYgz0DiTbNZIQfrrlliatpIvmWUJ6bjWR8paJFe1sXrLSoSqmMw71fBfsp1yEH3HNyn4hwLNiqYNNIK3DUAblCI4pVzG8oTWl8yqn6bvhXQqqk912q66ZqG2-8E6apgdhZBRWs9baV1kRG7UoqrMGrJqX4-s78NNh-xpLH8bafdYGTGZJcwfZyzQnCY7gU2JeDhCAvL6N1aXtDzuovCogOvX1kx_fmf3wgSmmbXM71bdveyLNVldkMyYKAuu04-3WvIwlinlydjSMMYUibu9ZGZPpQPjg3KslGCrNwb6C4DN1rrr39XnGjkLsZz0CshWca7e9_HPYiOFi2m4_wx_A_Nckj_8OUlaftMxnLq7ktkg8vqWVc-8FB2YBGXvNUcYs-FQqdiuusDC_CwT0KS2EpxZP2Y-yDetFWMKBKlZ3YXuNtjPpTd7-9xQIsR2U6I6MhDhErCc-WE4Argg8qKrnApQDUUK-z5YqQ0k46KsbvNapEr3hrTf4";
-
-          // DOM element selectors
-          const missionCard = document.querySelector("mission-card");
-          const locationEditCard = document.querySelector("location-edit");
-          const locationViewCard = document.querySelector("location-section");
-          const bannerSection = document.querySelector("banner-section");
-          const aboutSection = document.querySelector("about-section");
-          const BreakingEditCard = document.querySelector("breaking-edit");
-          const BreakingViewCard = document.querySelector("breaking-section");
-          const licenseCard = document.querySelector("license-section")
-          const attachmentCard=document.querySelector("attachment-section")
-          const managementCard=document.querySelector("management-section")
-
-          // Prepare both fetch calls
-          const userDataPromise = fetch(
-            "https://api.servehere.com/api/auth/user",
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-            }
-          ).then((response) => {
-            if (!response.ok) {
-              throw new Error("User request failed: " + response.statusText);
-            }
-            return response.json();
-          });
-
-          const businessDataPromise = fetch(
-            "https://api.servehere.com/api/business/1",
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-            }
-          ).then((response) => {
-            if (!response.ok) {
-              throw new Error(
-                "Business request failed: " + response.statusText
-              );
-            }
-            return response.json();
-          });
-
-          // Execute both requests concurrently
-          Promise.all([userDataPromise, businessDataPromise])
-            .then(([userData, businessData]) => {
-              const missionData = userData.data.user_mission || {};
-              const locationData = userData.data.userLocations || {};
-              const breakingData = userData.data.breaking_news || {};
-              const licenseData=userData.data.user_licenses_permissions||[]
-              const attachmentData=userData.data.user_attachments||[]
-              const managementData=userData.data.managments||[]
-
-              missionCard.dispatchEvent(
-                new CustomEvent("missionDataReceived", {
-                  detail: missionData,
-                })
-              );
-              locationViewCard.dispatchEvent(
-                new CustomEvent("locationDataReceived", {
-                  detail: locationData,
-                })
-              );
-              locationEditCard.dispatchEvent(
-                new CustomEvent("locationDataReceived", {
-                  detail: locationData,
-                })
-              );
-
-              bannerSection.dispatchEvent(
-                new CustomEvent("bannerDataReceived", {
-                  detail: { ...userData.data, business: businessData.data },
-                })
-              );
-
-              aboutSection.dispatchEvent(
-                new CustomEvent("aboutDataReceived", {
-                  detail: { ...userData.data, business: businessData.data },
-                })
-              );
-              BreakingEditCard.dispatchEvent(
-                new CustomEvent("breakingDataReceived", {
-                  detail: breakingData,
-                })
-              );
-              BreakingViewCard.dispatchEvent(
-                new CustomEvent("breakingDataReceived", {
-                  detail: breakingData,
-                })
-              );
-              licenseCard.dispatchEvent(
-                new CustomEvent("licenseDataReceived", {
-                  detail: licenseData,
-                })
-              );
-               attachmentCard.dispatchEvent(
-                new CustomEvent("attachmentDataReceived", {
-                  detail: attachmentData,
-                })
-              );
-               managementCard.dispatchEvent(
-                new CustomEvent("managementDataReceived", {
-                  detail: managementData,
-                })
-              );
-            })
-
-            .catch((error) => {
-              console.error("Error fetching data:", error);
-            });
-        }
-
-        fetchUserData();
-        document.addEventListener("profileDataSaved", async () => {
-          console.log("User saved successfully, re-fetching user data...");
-          await fetchUserData();
-          const activeBtn = document.querySelector(".action-button--active");
-          console.log(activeBtn, "activeBtn");
-          if (activeBtn) {
-          const action = activeBtn.dataset.action;
-          const isEdit = action === "edit";
-          const isPrivacy = action === "privacy";
-          console.log(isEdit, "isEdit",isPrivacy,"isPrivacy");
-
-          window.dispatchEvent(
-            new CustomEvent("actionChange", { detail: { isEdit, isPrivacy } })
-          );}
-
-        });
+            window.addEventListener("actionChange", (event) => {
+        const {print} = event.detail;
+        if(print)window.print();
       });
+            document.addEventListener("DOMContentLoaded", function () {
+              const componentEdits = document.querySelectorAll(".isComponentEdit");
+              const componentView = document.querySelectorAll(".isComponentView");
+              componentEdits.forEach((el) => (el.style.display = "none"));
+              componentView.forEach((el) => (el.style.display = "flex"));
+
+              window.addEventListener("actionChange", function (event) {
+                const { isEdit } = event.detail;
+                if (isEdit) {
+                  componentEdits.forEach((el) => (el.style.display = "flex"));
+                  componentView.forEach((el) => (el.style.display = "none"));
+                } else {
+                  componentEdits.forEach((el) => (el.style.display = "none"));
+                  componentView.forEach((el) => (el.style.display = "flex"));
+                }
+              });
+
+              function fetchUserData() {
+                const token =
+                  "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiN2YyYjExMmU0MWEwMTE0NzM1ODkzODY3NmE3YmJiMThjMjUyM2YwYmU1NDcyNjZiMDY4MzgyMWIxMDdjZDdhNzJhZmNhYjk0ODQxMDQ0OWEiLCJpYXQiOjE3NDI5NjkwMjAuNjYwNzMsIm5iZiI6MTc0Mjk2OTAyMC42NjA3MzMsImV4cCI6MTc3NDUwNTAyMC42NTI4MTEsInN1YiI6IjEiLCJzY29wZXMiOltdfQ.2HFXunKrOa_UqgXT4CeHnihASrbZUS_VGzghHlFvUne1GZJkeYM8Ct8DC9LxYJqZqvBlnx7MaV3X3zhZ8rU2_cCm8QuCl3p3bSti2Z30fMGhxr3YqTgLYgluBFWHJ65-7nwPqH7ycniDLs_0vhlgiNenia-6bd_mofT7iFZwjZHFVGD-v9BOoCgYgz0DiTbNZIQfrrlliatpIvmWUJ6bjWR8paJFe1sXrLSoSqmMw71fBfsp1yEH3HNyn4hwLNiqYNNIK3DUAblCI4pVzG8oTWl8yqn6bvhXQqqk912q66ZqG2-8E6apgdhZBRWs9baV1kRG7UoqrMGrJqX4-s78NNh-xpLH8bafdYGTGZJcwfZyzQnCY7gU2JeDhCAvL6N1aXtDzuovCogOvX1kx_fmf3wgSmmbXM71bdveyLNVldkMyYKAuu04-3WvIwlinlydjSMMYUibu9ZGZPpQPjg3KslGCrNwb6C4DN1rrr39XnGjkLsZz0CshWca7e9_HPYiOFi2m4_wx_A_Nckj_8OUlaftMxnLq7ktkg8vqWVc-8FB2YBGXvNUcYs-FQqdiuusDC_CwT0KS2EpxZP2Y-yDetFWMKBKlZ3YXuNtjPpTd7-9xQIsR2U6I6MhDhErCc-WE4Argg8qKrnApQDUUK-z5YqQ0k46KsbvNapEr3hrTf4";
+
+                // DOM element selectors
+                const missionCard = document.querySelector("mission-card");
+                const locationEditCard = document.querySelector("location-edit");
+                const locationViewCard = document.querySelector("location-section");
+                const bannerSection = document.querySelector("banner-section");
+                const aboutSection = document.querySelector("about-section");
+                const BreakingEditCard = document.querySelector("breaking-edit");
+                const BreakingViewCard = document.querySelector("breaking-section");
+                const licenseCard = document.querySelector("license-section")
+                const attachmentCard=document.querySelector("attachment-section")
+                const managementCard=document.querySelector("management-section")
+
+                // Prepare both fetch calls
+                const userDataPromise = fetch(
+                  "https://api.servehere.com/api/auth/user",
+                  {
+                    method: "GET",
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                      "Content-Type": "application/json",
+                    },
+                  }
+                ).then((response) => {
+                  if (!response.ok) {
+                    throw new Error("User request failed: " + response.statusText);
+                  }
+                  return response.json();
+                });
+
+                const businessDataPromise = fetch(
+                  "https://api.servehere.com/api/business/1",
+                  {
+                    method: "GET",
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                      "Content-Type": "application/json",
+                    },
+                  }
+                ).then((response) => {
+                  if (!response.ok) {
+                    throw new Error(
+                      "Business request failed: " + response.statusText
+                    );
+                  }
+                  return response.json();
+                });
+
+                // Execute both requests concurrently
+                Promise.all([userDataPromise, businessDataPromise])
+                  .then(([userData, businessData]) => {
+                    const missionData = userData.data.user_mission || {};
+                    const locationData = userData.data.userLocations || {};
+                    const breakingData = userData.data.breaking_news || {};
+                    const licenseData=userData.data.user_licenses_permissions||[]
+                    const attachmentData=userData.data.user_attachments||[]
+                    const managementData=userData.data.managments||[]
+
+                    missionCard.dispatchEvent(
+                      new CustomEvent("missionDataReceived", {
+                        detail: missionData,
+                      })
+                    );
+                    locationViewCard.dispatchEvent(
+                      new CustomEvent("locationDataReceived", {
+                        detail: locationData,
+                      })
+                    );
+                    locationEditCard.dispatchEvent(
+                      new CustomEvent("locationDataReceived", {
+                        detail: locationData,
+                      })
+                    );
+
+                    bannerSection.dispatchEvent(
+                      new CustomEvent("bannerDataReceived", {
+                        detail: { ...userData.data, business: businessData.data },
+                      })
+                    );
+
+                    aboutSection.dispatchEvent(
+                      new CustomEvent("aboutDataReceived", {
+                        detail: { ...userData.data, business: businessData.data },
+                      })
+                    );
+                    BreakingEditCard.dispatchEvent(
+                      new CustomEvent("breakingDataReceived", {
+                        detail: breakingData,
+                      })
+                    );
+                    BreakingViewCard.dispatchEvent(
+                      new CustomEvent("breakingDataReceived", {
+                        detail: breakingData,
+                      })
+                    );
+                    licenseCard.dispatchEvent(
+                      new CustomEvent("licenseDataReceived", {
+                        detail: licenseData,
+                      })
+                    );
+                     attachmentCard.dispatchEvent(
+                      new CustomEvent("attachmentDataReceived", {
+                        detail: attachmentData,
+                      })
+                    );
+                     managementCard.dispatchEvent(
+                      new CustomEvent("managementDataReceived", {
+                        detail: managementData,
+                      })
+                    );
+                  })
+
+                  .catch((error) => {
+                    console.error("Error fetching data:", error);
+                  });
+              }
+
+              fetchUserData();
+              document.addEventListener("profileDataSaved", async () => {
+                console.log("User saved successfully, re-fetching user data...");
+                await fetchUserData();
+                const activeBtn = document.querySelector(".action-button--active");
+                console.log(activeBtn, "activeBtn");
+                if (activeBtn) {
+                const action = activeBtn.dataset.action;
+                const isEdit = action === "edit";
+                const isPrivacy = action === "privacy";
+                console.log(isEdit, "isEdit",isPrivacy,"isPrivacy");
+
+                window.dispatchEvent(
+                  new CustomEvent("actionChange", { detail: { isEdit, isPrivacy } })
+                );}
+
+              });
+            });
     </script>
   </body>
 </html>

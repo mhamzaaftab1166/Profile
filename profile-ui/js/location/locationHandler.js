@@ -1,7 +1,7 @@
 const locationHandler = {
   async handleLocation(data) {
     console.log(data);
-    
+
     try {
       // Ensure data is an array
       const parsedData = typeof data === "string" ? JSON.parse(data) : data;
@@ -93,6 +93,33 @@ const locationHandler = {
       }
     } catch (error) {
       console.error("Error in handleLocation:", error);
+    }
+  },
+  async changeLocationStatus({ id, payload }) {
+    const url = `https://api.servehere.com/api/locations/${id}/activate`;
+    console.log("🚀 Changing location status with payload:", payload, id);
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        document.dispatchEvent(new CustomEvent("profileDataSaved"));
+        console.log("✅ location status updated successfully.");
+      } else {
+        console.error(
+          "❌ Failed to update location status:",
+          response.statusText
+        );
+      }
+    } catch (error) {
+      console.error(error);
     }
   },
 };

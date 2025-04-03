@@ -24,9 +24,10 @@ class ActionBarSection extends HTMLElement {
     const action = event.target.dataset.action;
     const isEdit = action === "edit";
     const isPrivacy = action === "privacy";
+    const print = action === "print";
 
     window.dispatchEvent(
-      new CustomEvent("actionChange", { detail: { isEdit, isPrivacy } })
+      new CustomEvent("actionChange", { detail: { isEdit, isPrivacy, print } })
     );
   }
 }

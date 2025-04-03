@@ -6,13 +6,20 @@ class LocationSection extends HTMLElement {
   constructor() {
     super();
     this.locationData = {};
+    this.currentMode = { isEdit: false, isPrivacy: false };
   }
 
   connectedCallback() {
     this.addEventListener("locationDataReceived", (event) => {
       this.locationData = event.detail;
-      console.log(this.locationData);
+      this.render();
+    });
 
+    window.addEventListener("actionChange", (event) => {
+      this.updateSection(event.detail);
+    });
+
+    window.addEventListener("profileDataSaved", () => {
       this.render();
     });
   }
@@ -24,7 +31,14 @@ class LocationSection extends HTMLElement {
     <section class="locations-container" x-data='{ 
       locations: ${locationsJson}, 
       checked: false, 
-      togglePrivacy(){ console.log("Privacy checked value:", this.checked) } 
+      togglePrivacy(location) {
+        const newStatus = location.is_active ? 0 : 1;
+        console.log("Toggled:", newStatus);
+        locationHandler.changeLocationStatus({
+          id: location.id,
+          payload: { is_active: newStatus }
+        });
+      }
     }'>
       <div class="locations-card">
         <div class="d-flex justify-content-between align-items-center">
@@ -73,10 +87,10 @@ class LocationSection extends HTMLElement {
                       class="toggle-track"
                       role="switch"
                       tabindex="0"
-                      :aria-checked="checked.toString()"
                       aria-label="Privacy toggle switch"
-                      :data-checked="checked ? '1' : '0'"
-                      @click="checked = !checked; togglePrivacy()"
+                      :aria-checked="location.is_active.toString()"
+                      :data-checked="location.is_active ? '1' : '0'"
+                      @click="togglePrivacy(location)"
                     >
                       <div class="toggle-handle"></div>
                     </div>
@@ -95,31 +109,52 @@ class LocationSection extends HTMLElement {
     </section>
   `;
 
-    // Optional: Hide toggles and add a MutationObserver, as in your original code.
-    const hideToggles = () => {
-      this.querySelectorAll(".isLocationPrivacy").forEach((el) => {
-        el.style.display = "none";
-      });
-    };
+    setTimeout(() => {
+      this.toggleSwitches = this.querySelectorAll(".isLocationPrivacy");
 
-    hideToggles();
-    const observer = new MutationObserver(() => hideToggles());
-    observer.observe(this, { childList: true, subtree: true });
-
-    window.addEventListener("actionChange", (event) =>
-      this.updateSection(event.detail)
-    );
+      if (this.currentMode.isEdit) {
+        this.toggleSwitches.forEach((el) => (el.style.display = "none"));
+        this._toggleLocationEntries(true);
+      } else if (this.currentMode.isPrivacy) {
+        this.toggleSwitches.forEach((el) => (el.style.display = "flex"));
+        this._toggleLocationEntries(true);
+      } else {
+        this.toggleSwitches.forEach((el) => (el.style.display = "none"));
+        this._toggleLocationEntries(false);
+      }
+    }, 0);
   }
 
   updateSection({ isEdit, isPrivacy }) {
-    const toggles = this.querySelectorAll(".isLocationPrivacy");
+    this.currentMode.isEdit = isEdit;
+    this.currentMode.isPrivacy = isPrivacy;
+
     if (isEdit) {
-      toggles.forEach((el) => (el.style.display = "none"));
+      this.toggleSwitches.forEach((el) => (el.style.display = "none"));
+      this._toggleLocationEntries(true);
     } else if (isPrivacy) {
-      toggles.forEach((el) => (el.style.display = "flex"));
+      this.toggleSwitches.forEach((el) => (el.style.display = "flex"));
+      this._toggleLocationEntries(true);
     } else {
-      toggles.forEach((el) => (el.style.display = "none"));
+      this.toggleSwitches.forEach((el) => (el.style.display = "none"));
+      this._toggleLocationEntries(false);
     }
+  }
+
+  _toggleLocationEntries(showAll) {
+    // Instead of targeting the location-item directly,
+    // hide the parent container to remove any empty space.
+    const cardContainers = this.querySelectorAll(".col-12.col-lg-6.mb-4");
+    cardContainers.forEach((container) => {
+      const card = container.querySelector(".location-item");
+      const toggle = card ? card.querySelector(".toggle-track") : null;
+      const isActive = toggle ? toggle.getAttribute("data-checked") : "0";
+      if (showAll || isActive === "0") {
+        container.style.display = "";
+      } else {
+        container.style.display = "none";
+      }
+    });
   }
 }
 

@@ -6,12 +6,27 @@ class ManagementSection extends HTMLElement {
   constructor() {
     super();
     this.managementData = [];
+    // Explicitly store the current mode state to persist privacy mode.
+    this.currentMode = { isEdit: false, isPrivacy: false };
   }
 
   connectedCallback() {
     this.addEventListener("managementDataReceived", (event) => {
       this.managementData = event.detail;
       this.render();
+    });
+
+    // Listen for profile data saved event.
+    window.addEventListener("profileDataSaved", () => {
+      this.render();
+      // Ensure privacy mode remains after profile data is saved.
+      if (this.currentMode.isPrivacy) {
+        this.updateSection({ isEdit: false, isPrivacy: true });
+      }
+    });
+
+    window.addEventListener("actionChange", (event) => {
+      this.updateSection(event.detail);
     });
   }
 
@@ -23,7 +38,7 @@ class ManagementSection extends HTMLElement {
       profile_image: `${baseUrl}${item.profile_image}`,
     }));
 
-    // Create a combined list by adding an empty object at the end for new entries
+    // Create a combined list by adding empty objects at the end for new entries
     const combinedMngList = [
       ...transformedManagements,
       {
@@ -46,13 +61,14 @@ class ManagementSection extends HTMLElement {
     const contactsJSON = JSON.stringify(combinedMngList);
     const viewOnlyContactsJSON = JSON.stringify(transformedManagements);
 
-    // Use single quotes for the x-data attribute so the JSON strings (which use double quotes) work properly
+    // Include a new privacyMode property in Alpine's data.
     this.innerHTML = `
     <section
       class="aamanagement-card"
       x-data='{
         contacts: ${contactsJSON},
         viewOnlyContacts: ${viewOnlyContactsJSON},
+        privacyMode: ${this.currentMode.isPrivacy},
         updateImage(event, index) {
           const file = event.target.files[0];
           if (file) {
@@ -70,7 +86,15 @@ class ManagementSection extends HTMLElement {
           })));
         },
         discardContacts() {
-          this.contacts =${contactsJSON}
+          this.contacts = ${contactsJSON};
+        },
+        togglePrivacy(contact) {
+          const newStatus = contact.is_active ? 0 : 1;
+          console.log("Toggled:", newStatus);
+          managementHandler.changemanagementStatus({
+            id: contact.id,
+            payload: { is_active: newStatus }
+          });
         }
       }'
     >
@@ -129,20 +153,34 @@ class ManagementSection extends HTMLElement {
         <div class="aacard-content isViewOnly pb-3">
           <div class="aamain-layout">
             <div class="aamanagement-section row">
-                <template x-for="contact in viewOnlyContacts" :key="contact.name">
-                  <div class="aasecondary-contact-column col-md-4">
-                    <div class="aasecondary-contact text-center">
-                      <img
-                        :src="contact.profile_image ? contact.profile_image : 'assets/profile/managplace.png'"
-                        class="aaprofile-image"
-                        alt="Profile Image"
-                      />
+              <template x-for="contact in (privacyMode ? viewOnlyContacts : viewOnlyContacts.filter(contact => contact.is_active == 0))" :key="contact.name">
+                <div class="aasecondary-contact-column col-md-4">
+                  <div class="aasecondary-contact text-center" style="position: relative;">
+                    <img
+                      :src="contact.profile_image ? contact.profile_image : 'assets/profile/managplace.png'"
+                      class="aaprofile-image"
+                      alt="Profile Image"
+                    />
                     <p style="color: black; margin-top: 11px; font-size: 17px; font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif; font-weight: 600; margin-bottom: 0;" x-text="contact.name"></p>
-                    <p style="font-size: 10px; font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif; font-weight: 400;  margin-bottom: 0; color: black;"  x-text="contact.role_name"></p>
+                    <p style="font-size: 10px; font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif; font-weight: 400;  margin-bottom: 0; color: black;" x-text="contact.role_name"></p>
                     <p style="font-size: 10px; font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif; font-weight: 400; margin-bottom: 0; color: black;" x-text="contact.phone_number"></p>
+                    <!-- Privacy toggle: displayed only in privacy mode -->
+                    <div
+                      class="isManagementPrivacy toggle-track"
+                      role="switch"
+                      tabindex="0"
+                      x-show="privacyMode"
+                      :aria-checked="contact.is_active.toString()"
+                      :data-checked="contact.is_active ? '1' : '0'"
+                      @click="togglePrivacy(contact)"
+                      aria-label="Privacy toggle switch"
+                      style="position: absolute; bottom: 0px; right: 10px;"
+                    >
+                      <div class="toggle-handle"></div>
                     </div>
                   </div>
-              </div>
+                </div>
+              </template>
             </div>
           </div>
         </div>
@@ -150,30 +188,38 @@ class ManagementSection extends HTMLElement {
     </section>
     `;
 
+    // Set default display.
     this.managementEdits = this.querySelectorAll(".isManagementEdit");
     this.managementPrivacies = this.querySelectorAll(".isManagementPrivacy");
     this.viewOnlyTexts = this.querySelectorAll(".isViewOnly");
     this.ActionEdit = this.querySelectorAll(".isActionEdit");
 
-    // Initial state: Show only the view-only layout.
-    this.managementEdits.forEach((el) => (el.style.display = "none"));
-    this.viewOnlyTexts.forEach((el) => (el.style.display = "block"));
-    this.managementPrivacies.forEach((el) => (el.style.display = "none"));
-    this.ActionEdit.forEach((el) => (el.style.display = "none"));
-
-    window.addEventListener("actionChange", (event) =>
-      this.updateSection(event.detail)
-    );
+    // Update visibility based on mode.
+    this.updateSection(this.currentMode);
   }
 
   updateSection({ isEdit, isPrivacy }) {
+    this.currentMode = { isEdit, isPrivacy };
+
+    // Reapply Alpine's privacyMode property.
+    const cardElement = this.querySelector(".aamanagement-card");
+    if (cardElement && cardElement.__x && cardElement.__x.$data) {
+      cardElement.__x.$data.privacyMode = isPrivacy;
+    }
+
     if (isEdit) {
       this.managementEdits.forEach((el) => (el.style.display = "block"));
       this.viewOnlyTexts.forEach((el) => (el.style.display = "none"));
+      this.managementPrivacies.forEach((el) => (el.style.display = "none"));
       this.ActionEdit.forEach((el) => {
         el.style.display = "flex";
         el.style.justifyContent = "flex-end";
       });
+    } else if (isPrivacy) {
+      this.managementEdits.forEach((el) => (el.style.display = "none"));
+      this.viewOnlyTexts.forEach((el) => (el.style.display = "block"));
+      this.managementPrivacies.forEach((el) => (el.style.display = "block"));
+      this.ActionEdit.forEach((el) => (el.style.display = "none"));
     } else {
       this.managementEdits.forEach((el) => (el.style.display = "none"));
       this.viewOnlyTexts.forEach((el) => (el.style.display = "block"));
