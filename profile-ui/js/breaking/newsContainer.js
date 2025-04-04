@@ -38,6 +38,9 @@ class BreakingSection extends HTMLElement {
     this.innerHTML = `
   <article class="breakview-card-container" x-data="{
     cards: ${newsJson}, 
+    showAll: false,
+        isEdit: ${this.currentMode.isEdit},
+        isPrivacy: ${this.currentMode.isPrivacy},
     togglePrivacy(news) {
         const newStatus = news.is_active ? 0 : 1;
         console.log('Toggled:', newStatus);
@@ -54,8 +57,7 @@ class BreakingSection extends HTMLElement {
     <template x-if="cards.length === 0">
       <p class="no-records-message" style="text-align: center; font-size: 18px; color: gray;">No records found</p>
     </template>
-
-    <template x-for="(card, index) in cards" :key="index">
+      <template x-for="(card, index) in (showAll ? cards : cards.slice(0,1))" :key="card.id">
       <div class="breakview-card" style="display: flex; align-items: center; position: relative;">
         <header class="breakview-card-header">
           <img src="assets/profile/breakprofile.png" alt="Profile" class="breakview-profile-image" />
@@ -66,14 +68,16 @@ class BreakingSection extends HTMLElement {
         </header>
 
         <!-- Dot Menu and Toggle Switch -->
-        <div class="toggle-container" style="position: absolute; top: 20px; right: 20px;">
+        <div class="toggle-container" style="position: absolute; top: 20px; right: 20px;" >
           <img
+            x-show="!isPrivacy"
             src="assets/profile/dots.png"
             alt="Menu Dots"
             class="dot-icon"
             style="width: 24px; height: 5px; object-fit: contain; cursor: pointer;"
           />
           <div
+          x-show="isPrivacy"
             class="toggle-track isBreakingPrivacy"
             role="switch"
             tabindex="0"
@@ -99,7 +103,12 @@ class BreakingSection extends HTMLElement {
         </section>
       </div>
     </template>
-  </article>
+    <button class="browse-button" style="position: relative; z-index: 1; bottom:35px"  @click="showAll = !showAll">
+       <span class="browse-text" x-text="showAll ? 'Browse Less' : 'Browse All'"></span>
+      <span class="separator-line"></span>
+      <img src="assets/profile/rightArrow.png" class="arrow-icon" alt="Arrow" />
+    </button>
+    </article>
 `;
 
     // Ensure elements are available before modifying them.
@@ -151,6 +160,7 @@ class BreakingSection extends HTMLElement {
       this.toggleSwitches.forEach((toggle) => (toggle.style.display = "none"));
       this._toggleNewsEntries(false);
     }
+    this.render();
   }
 
   _toggleNewsEntries(showAll) {

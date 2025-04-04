@@ -36,6 +36,9 @@ class LicenseSection extends HTMLElement {
       uploads: [{ name: "", path: null, type: "license", is_active: 0 }],
       licenses: ${JSON.stringify(this.licenseData)},
       checked: false,
+       showAll: false,
+        isEdit: ${this.currentMode.isEdit},
+        isPrivacy: ${this.currentMode.isPrivacy},
       togglePrivacy(license) {  
         const newStatus = license.is_active ? 0 : 1;
         console.log("newStatus", newStatus);
@@ -72,7 +75,7 @@ class LicenseSection extends HTMLElement {
 
         <!-- Render license entries only if there are records -->
         <template x-if="licenses.length > 0">
-          <template x-for="(license, index) in licenses" :key="license.id">
+           <template x-for="(license, index) in (showAll ? licenses : licenses.slice(0,2))" :key="license.id">
             <div style="display: contents;">
               <div class="license-license-entry">
                 <div class="license-license-info">
@@ -80,7 +83,7 @@ class LicenseSection extends HTMLElement {
                   <time class="license-license-date" x-text="license.created_at"></time>
                 </div>
                 <div class="license-action-buttons">
-                  <div class="toggle-container isLicensePrivacy">
+                  <div class="toggle-container isLicensePrivacy" x-show="isPrivacy">
                     <div class="toggle-track" role="switch" tabindex="0"
                       :aria-checked="checked.toString()"
                       aria-label="Privacy toggle switch"
@@ -90,6 +93,7 @@ class LicenseSection extends HTMLElement {
                     </div>
                   </div>
                   <button class="isLicenseEdit license-btn license-btn-secondary" 
+                  x-show="isEdit"
                     @click="window.licenseHandler.deleteLicense(license.id)">Delete</button>
                   <button class="license-btn license-btn-secondary">View</button>
                   <button class="license-btn license-btn-download license-btn-secondary">Download</button>
@@ -130,8 +134,8 @@ class LicenseSection extends HTMLElement {
           </div>
         </template>
 
-        <button class="browse-button">
-          <span class="browse-text">Browse All</span>
+        <button class="browse-button" @click="showAll = !showAll">
+          <span class="browse-text" x-text="showAll ? 'Browse Less' : 'Browse All'"></span>
           <span class="separator-line"></span>
           <img src="assets/profile/rightArrow.png" class="arrow-icon" alt="Arrow" />
         </button>

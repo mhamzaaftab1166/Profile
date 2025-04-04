@@ -31,6 +31,9 @@ class LocationSection extends HTMLElement {
     <section class="locations-container" x-data='{ 
       locations: ${locationsJson}, 
       checked: false, 
+      showAll: false,
+        isEdit: ${this.currentMode.isEdit},
+        isPrivacy: ${this.currentMode.isPrivacy},
       togglePrivacy(location) {
         const newStatus = location.is_active ? 0 : 1;
         console.log("Toggled:", newStatus);
@@ -61,7 +64,7 @@ class LocationSection extends HTMLElement {
         <div class="locations-content">
           <div class="row">
             <!-- Loop through locations array -->
-            <template x-for="location in locations" :key="location.location_name">
+             <template x-for="(location, index) in (showAll ? locations : locations.slice(0,2))" :key="location.id">
               <div class="col-12 col-lg-6 mb-4">
                 <article class="location-item" style="display: flex; flex-direction: column; height: 100%;">
                   <div>
@@ -82,7 +85,12 @@ class LocationSection extends HTMLElement {
                       <img src="assets/profile/takeme.png" alt="Direction icon" class="action-icon-large" />
                     </a>
                   </div>
-                  <div class="ms-2 mt-2 toggle-container isMissionPrivacy isLocationPrivacy" style="display: flex; justify-content: flex-end; margin-right:20px;">
+                 <div 
+  class="ms-2 mt-2 toggle-container isMissionPrivacy isLocationPrivacy" 
+  x-show="isPrivacy" 
+  style="display: flex; justify-content: flex-end; margin-right:20px;"
+>
+
                     <div
                       class="toggle-track"
                       role="switch"
@@ -91,6 +99,7 @@ class LocationSection extends HTMLElement {
                       :aria-checked="location.is_active.toString()"
                       :data-checked="location.is_active ? '1' : '0'"
                       @click="togglePrivacy(location)"
+                    
                     >
                       <div class="toggle-handle"></div>
                     </div>
@@ -99,8 +108,8 @@ class LocationSection extends HTMLElement {
               </div>
             </template>
           </div>
-          <button class="browse-button">
-            <span class="browse-text">Load More</span>
+          <button class="browse-button" @click="showAll = !showAll">
+            <span class="browse-text" x-text="showAll ? 'Load Less' : 'Load More'"></span>
             <span class="separator-line"></span>
             <img src="assets/profile/rightArrow.png" class="arrow-icon" alt="Arrow" />
           </button>
@@ -139,6 +148,7 @@ class LocationSection extends HTMLElement {
       this.toggleSwitches.forEach((el) => (el.style.display = "none"));
       this._toggleLocationEntries(false);
     }
+    this.render(); 
   }
 
   _toggleLocationEntries(showAll) {
