@@ -7,60 +7,114 @@ class AboutSection extends HTMLElement {
     super();
     (this.aboutData = {}),
       (this.aboutProfile = [
-        { label: "Email", value: "thariq.salina@gmail.com", type: "email" },
-        { label: "Phone Number", value: "+971 556975051", type: "tel" },
-        { label: "Website", value: "salina-limited.com", type: "text" },
+        {
+          label: "Email",
+          value: "thariq.salina@gmail.com",
+          type: "email",
+          privacyLabel: "email",
+        },
+        {
+          label: "Phone Number",
+          value: "+971 556975051",
+          type: "tel",
+          privacyLabel: "phone_number",
+        },
+        {
+          label: "Website",
+          value: "salina-limited.com",
+          type: "text",
+          privacyLabel: "website",
+        },
         {
           label: "Gender",
           value: "Male",
           type: "select",
           option: ["Male", "Female"],
+          privacyLabel: "gender",
         },
-        { label: "Date Of Birth", value: "1990-01-01", type: "date" },
+        {
+          label: "Date Of Birth",
+          value: "1990-01-01",
+          type: "date",
+          privacyLabel: "date_of_birth",
+        },
         {
           label: "Nationality",
           value: "India",
           type: "select",
           option: ["India", "Pakistan", "United Arab Emirates"],
+          privacyLabel: "nationality",
         },
-        { label: "National ID Number", value: "1234567890", type: "text" },
-        { label: "License Number", value: "LIC-987654321", type: "text" },
-        { label: "Expiry Date", value: "2030-12-31", type: "date" },
-        { label: "Permissions", value: "Full Access", type: "text" },
-        { label: "Other", value: "N/A", type: "text" },
+        {
+          label: "National ID Number",
+          value: "1234567890",
+          type: "text",
+          privacyLabel: "national_id_number",
+        },
+        {
+          label: "License Number",
+          value: "LIC-987654321",
+          type: "text",
+          privacyLabel: "license_number",
+        },
+        {
+          label: "Expiry Date",
+          value: "2030-12-31",
+          type: "date",
+          privacyLabel: "expiry_date",
+        },
+        {
+          label: "Permissions",
+          value: "Full Access",
+          type: "text",
+          privacyLabel: "permissions",
+        },
+        { label: "Other", value: "N/A", type: "text", privacyLabel: "other" },
         {
           label: "Country",
           value: "United Arab Emirates",
           type: "select",
           option: ["India", "Pakistan", "United Arab Emirates"],
+          privacyLabel: "country",
         },
         {
           label: "Province/State",
           value: "Dubai",
           type: "select",
           option: ["Dubai", "Ajman", "Ajman Emirate", "Sharjah", "Al Ain"],
+          privacyLabel: "province_state",
         },
         {
           label: "City",
           value: "Dubai",
           type: "select",
           option: ["Dubai", "Ajman", "Sharjah", "Al Ain"],
+          privacyLabel: "city",
         },
-        { label: "Postal/Zip Code", value: "00000", type: "text" },
-        { label: "Address", value: "Downtown, Dubai, UAE", type: "text" },
+        {
+          label: "Postal/Zip Code",
+          value: "00000",
+          type: "text",
+          privacyLabel: "postal_zip_code",
+        },
+        {
+          label: "Address",
+          value: "Downtown, Dubai, UAE",
+          type: "text",
+          privacyLabel: "address",
+        },
       ]);
   }
 
   connectedCallback() {
     this.addEventListener("aboutDataReceived", (event) => {
       this.aboutData = event.detail;
-      console.log(this.aboutData, "aboutDaa");
       this.aboutProfile.forEach((item) => {
         if (
           item.label.toLowerCase() === "email" &&
-          this.aboutData.business.email
+          this.aboutData.business?.email
         ) {
-          item.value = this.aboutData.business.email;
+          item.value = this.aboutData.business?.email;
         }
         if (
           item.label.toLowerCase().includes("phone") &&
@@ -161,7 +215,7 @@ class AboutSection extends HTMLElement {
         this.render();
         return; // Stop further processing
       }
-      
+
       if (event.target.classList.contains("save-button")) {
         const updatedData = {};
         const allData = {};
@@ -210,11 +264,7 @@ class AboutSection extends HTMLElement {
           national_id_number: allData.national_id_number,
           nationality: allData.nationality,
         });
-
-        console.log(payload, "payload");
-
         const businessId = this.aboutData?.business_id || 1;
-
         await AboutHandler.handleAbout(businessId, payload);
       }
     });
@@ -225,7 +275,32 @@ class AboutSection extends HTMLElement {
     const aboutDescription =
       (this.aboutData.business && this.aboutData.business.description) || "";
     this.innerHTML = `
-      <section x-data='{ description: ${JSON.stringify(aboutDescription)} }'>
+      <section 
+         x-data='{ 
+         description: ${
+           this.aboutData?.settings?.about
+             ? JSON.stringify("No Description Found")
+             : JSON.stringify(aboutDescription)
+         },  
+         descriptionChecked: ${this.aboutData?.settings?.about},
+         fieldChecked: ${JSON.stringify(
+           Object.fromEntries(
+             Object.entries(this.aboutData?.settings || {}).map(
+               ([key, value]) => [key, !!value]
+             )
+           )
+         )},
+         togglePrivacy(label) {
+         this.fieldChecked[label] = !this.fieldChecked[label];
+         const payload = { [label.toLowerCase()]: this.fieldChecked[label] };
+         AboutHandler.handleAboutPrivacy(JSON.stringify(payload));
+         },
+
+         toggleDescriptionPrivacy() {
+         const payload = {about: this.descriptionChecked};
+         AboutHandler.handleAboutPrivacy(JSON.stringify(payload));
+         } 
+        }'>
       <div class="about-card">
         <header class="about-card-title">About Profile</header>
         <div class="about-separator"></div>
@@ -253,7 +328,19 @@ class AboutSection extends HTMLElement {
         </div>
         <div class="about-container isAboutView">
         <div class="about-inner-wrapper-privacy">
-         <privacy-button class="isAboutPrivacy"></privacy-button>
+        <div class="ms-2 toggle-container isAboutPrivacy">
+        <div
+        class="toggle-track"
+        role="switch"
+        tabindex="0"
+        :aria-checked="descriptionChecked ? '1' : '0'"
+        aria-label="Privacy toggle switch"
+        :data-checked="descriptionChecked ? '1' : '0'"
+        @click="descriptionChecked = !descriptionChecked; toggleDescriptionPrivacy()"
+        >
+        <div class="toggle-handle"></div>
+          </div>
+            </div>
           <label class="about-label col-5 isAboutPrivacy">About</label>
           </div>
           <p class="about-description" x-text="description"></p>
@@ -267,9 +354,30 @@ class AboutSection extends HTMLElement {
                   ? "about-inner-wrapper-privacy"
                   : "about-inner-wrapper"
               }">
-                <privacy-button class="isAboutPrivacy"></privacy-button>
-                <label class="about-label col-5">${detail.label}</label>
-                <p class="about-content col-10">${detail.value}</p>
+            <div class="ms-2 toggle-container isAboutPrivacy">
+              <div
+                class="toggle-track"
+                role="switch"
+                tabindex="0"
+                :aria-checked="fieldChecked['${
+                  detail.privacyLabel
+                }'] ? '1' : '0'"
+                :data-checked="fieldChecked['${
+                  detail.privacyLabel
+                }'] ? '1' : '0'"
+                @click="togglePrivacy('${detail.privacyLabel}')"
+              >
+              <div class="toggle-handle"></div>
+            </div>
+            </div>
+               <label class="about-label col-5">${detail.label}</label>
+               <p class="about-content col-10">${
+                 this.isPrivacy !== true &&
+                 this.aboutData?.settings[detail?.privacyLabel]
+                   ? "Not Provided"
+                   : detail.value
+               }</p>
+          
               </div>
             `
               )

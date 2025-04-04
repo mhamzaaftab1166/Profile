@@ -17,8 +17,6 @@ const BannerHandler = {
     formData.append("business_description", profileDescription);
     formData.append("business_country", profileCountry);
 
-    console.log(formData, "formData");
-
     try {
       const url = `https://api.servehere.com/api/business/${businessId}`;
 
@@ -54,8 +52,6 @@ const BannerHandler = {
     formData.append("business_description", profileDescription);
     formData.append("business_country", profileCountry);
 
-    console.log(formData, "formData");
-
     try {
       const url = `https://api.servehere.com/api/business/${businessId}`;
 
@@ -69,6 +65,44 @@ const BannerHandler = {
       document.dispatchEvent(new CustomEvent("profileDataSaved"));
     } catch (error) {
       console.error(error);
+    }
+  },
+
+  async handleCoverPicturePrivacy(data) {
+    try {
+      const url = `https://api.servehere.com/api/user-field-settings`;
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: data,
+      });
+    } catch (error) {
+      console.error(error);
+    }finally{
+      document.dispatchEvent(new CustomEvent("profileDataSaved"));
+    }
+  },
+
+  async handleProfilePicturePrivacy(data) {
+    try {
+      const url = `https://api.servehere.com/api/user-field-settings`;
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: data,
+      });
+    } catch (error) {
+      console.error(error);
+    }finally{
+      document.dispatchEvent(new CustomEvent("profileDataSaved"));
     }
   },
 };

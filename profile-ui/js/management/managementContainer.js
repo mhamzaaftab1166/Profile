@@ -33,14 +33,15 @@ class ManagementSection extends HTMLElement {
   render() {
     const baseUrl = "https://api.servehere.com/api/storage/image?path=";
     // Transform the management data so that profile_image is a complete URL
-    const transformedManagements = this.managementData.map((item) => ({
+    const transformedManagements = this.managementData.management?.map((item) => ({
       ...item,
       profile_image: `${baseUrl}${item.profile_image}`,
     }));
 
+    console.log(transformedManagements, 'transformedManagements');
+    
     // Create a combined list by adding empty objects at the end for new entries
     const combinedMngList = [
-      ...transformedManagements,
       {
         name: "",
         role_name: "",
@@ -55,11 +56,13 @@ class ManagementSection extends HTMLElement {
         profile_image: null,
         is_active: 0,
       },
+      ...transformedManagements
     ];
 
     // Convert arrays to JSON strings
     const contactsJSON = JSON.stringify(combinedMngList);
     const viewOnlyContactsJSON = JSON.stringify(transformedManagements);
+    
 
     // Include a new privacyMode property in Alpine's data.
     this.innerHTML = `
@@ -69,6 +72,7 @@ class ManagementSection extends HTMLElement {
         contacts: ${contactsJSON},
         viewOnlyContacts: ${viewOnlyContactsJSON},
         privacyMode: ${this.currentMode.isPrivacy},
+        managementChecked: ${this.managementData.settings?.management},
         updateImage(event, index) {
           const file = event.target.files[0];
           if (file) {
@@ -88,6 +92,7 @@ class ManagementSection extends HTMLElement {
         discardContacts() {
           this.contacts = ${contactsJSON};
         },
+
         togglePrivacy(contact) {
           const newStatus = contact.is_active ? 0 : 1;
           console.log("Toggled:", newStatus);
@@ -95,12 +100,33 @@ class ManagementSection extends HTMLElement {
             id: contact.id,
             payload: { is_active: newStatus }
           });
+        },
+
+        toggleManagementPrivacy() {
+         const payload = { management: this.managementChecked };
+         managementHandler.handleManagementPrivacy(JSON.stringify(payload));
         }
+
       }'
     >
       <div>
         <div style="position: relative;">
+        <div class="d-flex align-items-center">
+           <div class="ms-2 toggle-container isManagementPrivacy">
+              <div
+                class="toggle-track"
+                role="switch"
+                tabindex="0"
+                :aria-checked="managementChecked?.toString()"
+                aria-label="Privacy toggle switch"
+                :data-checked="managementChecked ? '1' : '0'"
+                @click="managementChecked = !managementChecked; toggleManagementPrivacy()"
+              >
+                <div class="toggle-handle"></div>
+              </div>
+            </div>
           <h2 class="aalicense-permissions-title mb-0">Managements</h2>
+        </div>
           <div
             style="width: 50%; height: 1px; margin-left: 0; background-color: #EFEFEF; margin-top: 15px; margin-bottom: 10px;"
           ></div>

@@ -11,6 +11,7 @@ class MissionCard extends HTMLElement {
   connectedCallback() {
     this.addEventListener("missionDataReceived", (event) => {
       this.missionData = event.detail;
+      this.settings = event.detail.settings
       this.render();
     });
   }
@@ -19,16 +20,41 @@ class MissionCard extends HTMLElement {
     const missionValue = this.missionData.mission || "";
     const visionValue = this.missionData.vision || "";
     const valuesValue = this.missionData.values || "";
+    const privacySettings =  this.settings;
+    
     this.innerHTML = `
       <section class="misson-description-card" x-data="{
        mission: '${missionValue}',
         vision: '${visionValue}',
         values: '${valuesValue}',
         id: false,
-        checked: false,
-         togglePrivacy() {
-        console.log('Privacy checked value:', this.checked);
+        missionSectionChecked: ${privacySettings?.mission_vision_values},
+        toggleMissionSectionPrivacy() {
+         const payload = { mission_vision_values: this.missionSectionChecked };
+         MissionHandler.handleMissionPrivacy(JSON.stringify(payload));
+        console.log('Privacy checked value:', this.missionSectionChecked);
       },
+        missionChecked: ${privacySettings?.mission},
+        toggleMissionPrivacy() {
+         const payload = { mission: this.missionChecked };
+         MissionHandler.handleMissionPrivacy(JSON.stringify(payload));
+        console.log('Privacy checked value:', this.missionChecked);
+      },
+
+       valueChecked: ${privacySettings?.value},
+        toggleValuePrivacy() {
+         const payload = { value: this.valueChecked };
+         MissionHandler.handleMissionPrivacy(JSON.stringify(payload));
+        console.log('Privacy checked value:', this.valueChecked);
+      },
+
+       visionChecked: ${privacySettings?.vision},
+        toggleVisionPrivacy() {
+         const payload = { vision: this.visionChecked };
+         MissionHandler.handleMissionPrivacy(JSON.stringify(payload));
+        console.log('Privacy checked value:', this.visionChecked);
+      },
+        
         updateMissionData(data) {
           console.log('Mission received:', data);
           // Update reactive properties
@@ -55,10 +81,10 @@ class MissionCard extends HTMLElement {
                 class="toggle-track"
                 role="switch"
                 tabindex="0"
-                :aria-checked="checked.toString()"
+                :aria-checked="missionSectionChecked?.toString()"
                 aria-label="Privacy toggle switch"
-                :data-checked="checked ? '1' : '0'"
-                @click="checked = !checked; togglePrivacy()"
+                :data-checked="missionSectionChecked ? '1' : '0'"
+                @click="missionSectionChecked = !missionSectionChecked; toggleMissionSectionPrivacy()"
               >
                 <div class="toggle-handle"></div>
               </div>
@@ -75,10 +101,10 @@ class MissionCard extends HTMLElement {
                 class="toggle-track"
                 role="switch"
                 tabindex="0"
-                :aria-checked="checked.toString()"
+                :aria-checked="missionChecked?.toString()"
                 aria-label="Privacy toggle switch"
-                :data-checked="checked ? '1' : '0'"
-                @click="checked = !checked; togglePrivacy()"
+                :data-checked="missionChecked ? '1' : '0'"
+                @click="missionChecked = !missionChecked; toggleMissionPrivacy()"
               >
                 <div class="toggle-handle"></div>
               </div>
@@ -98,10 +124,10 @@ class MissionCard extends HTMLElement {
                 class="toggle-track"
                 role="switch"
                 tabindex="0"
-                :aria-checked="checked.toString()"
+                :aria-checked="visionChecked?.toString()"
                 aria-label="Privacy toggle switch"
-                :data-checked="checked ? '1' : '0'"
-                @click="checked = !checked; togglePrivacy()"
+                :data-checked="visionChecked ? '1' : '0'"
+                @click="visionChecked = !visionChecked; toggleVisionPrivacy()"
               >
                 <div class="toggle-handle"></div>
               </div>
@@ -120,10 +146,10 @@ class MissionCard extends HTMLElement {
                 class="toggle-track"
                 role="switch"
                 tabindex="0"
-                :aria-checked="checked.toString()"
+                :aria-checked="valueChecked?.toString()"
                 aria-label="Privacy toggle switch"
-                :data-checked="checked ? '1' : '0'"
-                @click="checked = !checked; togglePrivacy()"
+                :data-checked="valueChecked ? '1' : '0'"
+                @click="valueChecked = !valueChecked; toggleValuePrivacy()"
               >
                 <div class="toggle-handle"></div>
               </div>

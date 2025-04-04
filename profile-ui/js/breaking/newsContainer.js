@@ -12,7 +12,7 @@ class BreakingSection extends HTMLElement {
 
   connectedCallback() {
     this.addEventListener("breakingDataReceived", (event) => {
-      this.breakingData = event.detail;
+      this.breakingData = event.detail;      
       this.render();
     });
 
@@ -27,8 +27,9 @@ class BreakingSection extends HTMLElement {
 
   render() {
     const baseUrl = "https://api.servehere.com/api/storage/image?path=";
-    const news = this.breakingData || [];
-    const transformedNews = news.map((item) => ({
+    const news = this.breakingData.breakingNews || [];
+    const privacySettings = this.breakingData?.settings;
+    const transformedNews = news?.map((item) => ({
       ...item,
       image: `${baseUrl}${item.image}`,
     }));
@@ -48,9 +49,27 @@ class BreakingSection extends HTMLElement {
           id: news.id,
           payload: { is_active: newStatus }
         });
-    }
+    },
+     breakingChecked: ${privacySettings?.breaking_news},
+     toggleBreakingPrivacy() {
+         const payload = { breaking_news: this.breakingChecked };
+         newsHandler.handleBreakingPrivacy(JSON.stringify(payload));
+        }
   }">
     <section class="edit-news-container mb-3">
+      <div class="ms-2 toggle-container isBreakingPrivacy">
+              <div
+                class="toggle-track"
+                role="switch"
+                tabindex="0"
+                :aria-checked="breakingChecked?.toString()"
+                aria-label="Privacy toggle switch"
+                :data-checked="breakingChecked ? '1' : '0'"
+                @click="breakingChecked = !breakingChecked; toggleBreakingPrivacy()"
+              >
+                <div class="toggle-handle"></div>
+              </div>
+            </div>
       <h2 class="edit-news-heading">Breaking News</h2>
     </section>
 
