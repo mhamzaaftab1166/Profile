@@ -112,7 +112,7 @@ class ManagementSection extends HTMLElement {
             <div class="aamanagement-section">
               <div class="aamanagement-layout row">
                 <template x-for="(contact, index) in contacts" :key="index">
-                  <div class="aasecondary-contact-column col-md-6">
+                  <div class="aasecondary-contacts-column col-md-6">
                     <div class="aasecondary-contact" style="position: relative;">
                       <img
                         :src="contact.profile_image ? (typeof contact.profile_image === 'string' ? contact.profile_image : URL.createObjectURL(contact.profile_image)) : 'assets/profile/managplace.png'"

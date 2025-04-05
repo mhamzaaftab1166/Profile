@@ -50,6 +50,8 @@ management-section {
     flex-grow: 1;
     display: flex;
     justify-content: center;
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
 @media (max-width: 991px) {
@@ -226,14 +228,27 @@ management-section {
     flex-direction: column;
     align-items: stretch;
     line-height: normal;
-    width: 160px;
+
 }
 
+
+.aasecondary-contacts-column {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    line-height: normal;
+    width: 160px;
+}
 
 @media (max-width: 991px) {
     .aasecondary-contact-column {
         width: 100%;
     }
+
+    .aasecondary-contacts-column {
+        width: 100%;
+    }
+
 }
 
 .aasecondary-contact {
@@ -270,6 +285,7 @@ management-section {
     right: 10px;
     cursor: pointer;
 }
+
 .aalicense-permissions-title {
     color: #000;
     font-family:
