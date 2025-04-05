@@ -13,7 +13,6 @@ const ServiceHandler = {
         },
         body: payload,
       });
-      document.dispatchEvent(new CustomEvent("profileDataSaved"));
     } catch (error) {
       console.error(error);
     }
@@ -33,8 +32,6 @@ const ServiceHandler = {
       });
     } catch (error) {
       console.error(error);
-    }finally{
-      document.dispatchEvent(new CustomEvent("profileDataSaved"));
     }
   },
 

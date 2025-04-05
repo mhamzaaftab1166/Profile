@@ -121,17 +121,25 @@
       <product-section id="Menus"></product-section>
       <license-section></license-section>
       <attachment-section></attachment-section>
-      <div id="toast-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
-<div id="loader" class="position-fixed top-50 start-50 translate-middle" style="z-index: 1050; display: none;">
-  <div class="spinner-border text-primary" role="status">
-    <span class="visually-hidden">Loading...</span>
-  </div>
-</div>
+      <div
+        id="toast-container"
+        class="position-fixed top-0 end-0 p-3"
+        style="z-index: 1050"
+      ></div>
+      <div
+        id="loader"
+        class="position-fixed top-50 start-50 translate-middle"
+        style="z-index: 1050; display: none"
+      >
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
     </div>
     <script>
       function showToast(message, type = "success") {
-    const toastId = "toast-" + Date.now();
-    const toastHTML = `
+        const toastId = "toast-" + Date.now();
+        const toastHTML = `
       <div id="${toastId}" class="toast align-items-center text-bg-${type} border-0" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
           <div class="toast-body">${message}</div>
@@ -139,22 +147,75 @@
         </div>
       </div>
     `;
-    const container = document.getElementById("toast-container");
-    container.insertAdjacentHTML("beforeend", toastHTML);
-    const toastElement = new bootstrap.Toast(document.getElementById(toastId));
-    toastElement.show();
-  }
+        const container = document.getElementById("toast-container");
+        container.insertAdjacentHTML("beforeend", toastHTML);
+        const toastElement = new bootstrap.Toast(
+          document.getElementById(toastId)
+        );
+        toastElement.show();
+      }
 
-  function showLoader() {
-    document.getElementById("loader").style.display = "block";
-  }
+      function showLoader() {
+        document.getElementById("loader").style.display = "block";
+      }
 
-  function hideLoader() {
-    document.getElementById("loader").style.display = "none";
-  }
-         window.addEventListener("actionChange", (event) => {
-        const {print} = event.detail;
-        if(print)window.print();})
+      function hideLoader() {
+        document.getElementById("loader").style.display = "none";
+      }
+
+      function toggleSections(privacySettings) {
+    // Check if we're in view mode (not edit or privacy)
+    const activeBtn = document.querySelector(".action-button--active");
+    const isViewMode = !activeBtn || 
+                      (activeBtn.dataset.action !== "edit" && 
+                       activeBtn.dataset.action !== "privacy");
+
+    if (!isViewMode) {
+        // If we're in edit or privacy mode, show all sections
+        return;
+    }
+
+    const sectionsMapping = {
+        about: ["about-section"],
+        mission: ["mission-card"],
+        management: ["management-section"],
+        breaking_news: ["breaking-section"],
+        services: ["service-section"],
+        locations: ["location-section"],
+        licenses_permissions: ["license-section"],
+        attachments: ["attachment-section"],
+    };
+
+    Object.entries(sectionsMapping).forEach(([key, selectors]) => {
+        selectors.forEach((selector) => {
+            const sectionEl = document.querySelector(selector);
+            if (sectionEl) {
+                sectionEl.style.display =
+                    privacySettings[key] === false ? "flex" : "none";
+            }
+        });
+    });
+}
+
+      window.addEventListener("actionChange", (event) => {
+        const { print } = event.detail;
+        if (print) window.print();
+      });
+
+      window.addEventListener("actionChange", function(event) {
+    const { isEdit, isPrivacy } = event.detail;
+    // Only apply privacy settings in view mode (when neither editing nor in privacy mode)
+    if (!isEdit && !isPrivacy) {
+        fetchUserData(); // This will re-fetch and apply privacy settings
+    } else {
+        // Show all sections in edit or privacy mode
+        const sections = document.querySelectorAll('.section-wrapper, mission-card, management-section, breaking-section, service-section, location-section, license-section, attachment-section');
+        sections.forEach(section => {
+            section.style.display = "flex";
+        });
+    }
+});
+
       document.addEventListener("DOMContentLoaded", function () {
         const componentEdits = document.querySelectorAll(".isComponentEdit");
         const componentView = document.querySelectorAll(".isComponentView");
@@ -185,11 +246,10 @@
           const serviceSection = document.querySelector("service-section");
           const BreakingEditCard = document.querySelector("breaking-edit");
           const BreakingViewCard = document.querySelector("breaking-section");
-          const licenseCard = document.querySelector("license-section")
-          const attachmentCard=document.querySelector("attachment-section")
-          const managementCard=document.querySelector("management-section")
-          const productCard=document.querySelector("product-section")
-        
+          const licenseCard = document.querySelector("license-section");
+          const attachmentCard = document.querySelector("attachment-section");
+          const managementCard = document.querySelector("management-section");
+          const productCard = document.querySelector("product-section");
 
           // Prepare both fetch calls
           const userDataPromise = fetch(
@@ -232,23 +292,28 @@
               const missionData = userData.data.user_mission || {};
               const locationData = userData.data.userLocations || {};
               const breakingData = userData.data.breaking_news || {};
-              const licenseData=userData.data.user_licenses_permissions||[];
-              const attachmentData=userData.data.user_attachments||[];
-              const managementData=userData.data.managments||[];
-              const serviceData=userData.data.services ||[];
-              const productData=userData.data.categories ||[];
-              const productMenusData=userData.data.categories.flatMap(category => category.menus) ||[];
-              const privacySettings=userData.data.settings
-              
-              
+              const licenseData = userData.data.user_licenses_permissions || [];
+              const attachmentData = userData.data.user_attachments || [];
+              const managementData = userData.data.managments || [];
+              const serviceData = userData.data.services || [];
+              const productData = userData.data.categories || [];
+              const productMenusData =
+                userData.data.categories.flatMap(
+                  (category) => category.menus
+                ) || [];
+              const privacySettings = userData.data.settings;
+
               missionCard.dispatchEvent(
                 new CustomEvent("missionDataReceived", {
-                  detail: {missionData, settings: privacySettings}
+                  detail: { missionData, settings: privacySettings },
                 })
               );
               locationViewCard.dispatchEvent(
                 new CustomEvent("locationDataReceived", {
-                  detail: {locations: locationData, settings: privacySettings}
+                  detail: {
+                    locations: locationData,
+                    settings: privacySettings,
+                  },
                 })
               );
               locationEditCard.dispatchEvent(
@@ -275,32 +340,204 @@
               );
               BreakingViewCard.dispatchEvent(
                 new CustomEvent("breakingDataReceived", {
-                  detail: {breakingNews: breakingData, settings: privacySettings }
+                  detail: {
+                    breakingNews: breakingData,
+                    settings: privacySettings,
+                  },
                 })
               );
               licenseCard.dispatchEvent(
                 new CustomEvent("licenseDataReceived", {
-                  detail: {licenses : licenseData, settings: privacySettings},
+                  detail: { licenses: licenseData, settings: privacySettings },
                 })
               );
-               attachmentCard.dispatchEvent(
+              attachmentCard.dispatchEvent(
                 new CustomEvent("attachmentDataReceived", {
-                  detail: {attachments: attachmentData, settings: privacySettings}
+                  detail: {
+                    attachments: attachmentData,
+                    settings: privacySettings,
+                  },
                 })
               );
-               managementCard.dispatchEvent(
+              managementCard.dispatchEvent(
                 new CustomEvent("managementDataReceived", {
-                  detail: {management: managementData, settings: privacySettings },
+                  detail: {
+                    management: managementData,
+                    settings: privacySettings,
+                  },
                 })
               );
               serviceSection.dispatchEvent(
                 new CustomEvent("serviceDataReceived", {
-                  detail: {services: serviceData, settings: privacySettings}
+                  detail: { services: serviceData, settings: privacySettings },
                 })
               );
               productCard.dispatchEvent(
                 new CustomEvent("productDataReceived", {
-                  detail: {products: productData, menus: productMenusData}
+                  detail: { products: productData, menus: productMenusData },
+                })
+              );
+              toggleSections(privacySettings);
+            })
+
+            .catch((error) => {
+              console.error("Error fetching data:", error);
+            });
+        }
+
+        fetchUserData();
+        document.addEventListener("profileDataSaved", async () => {
+          console.log("User saved successfully, re-fetching user data...");
+          await fetchUserData();
+          const activeBtn = document.querySelector(".action-button--active");
+          console.log(activeBtn, "activeBtn");
+          if (activeBtn) {
+            const action = activeBtn.dataset.action;
+            const isEdit = action === "edit";
+            const isPrivacy = action === "privacy";
+            console.log(isEdit, "isEdit", isPrivacy, "isPrivacy");
+
+            window.dispatchEvent(
+              new CustomEvent("actionChange", { detail: { isEdit, isPrivacy } })
+            );
+          }
+        });
+      });
+      document.addEventListener("DOMContentLoaded", function () {
+        const componentEdits = document.querySelectorAll(".isComponentEdit");
+        const componentView = document.querySelectorAll(".isComponentView");
+        componentEdits.forEach((el) => (el.style.display = "none"));
+        componentView.forEach((el) => (el.style.display = "flex"));
+
+        window.addEventListener("actionChange", function (event) {
+          const { isEdit } = event.detail;
+          if (isEdit) {
+            componentEdits.forEach((el) => (el.style.display = "flex"));
+            componentView.forEach((el) => (el.style.display = "none"));
+          } else {
+            componentEdits.forEach((el) => (el.style.display = "none"));
+            componentView.forEach((el) => (el.style.display = "flex"));
+          }
+        });
+
+        function fetchUserData() {
+          const token =
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYWJjMWVkODBhMjIyMjVmYjEzZjRkN2ZmOTE4ZWVlNmRmMWQ1MDBmNTY0YWY0Mzk4OTliZTM5MzMzOTBjOTRjYzZhOTg3Yzc4YmU5M2E2NWMiLCJpYXQiOjE3NDM4MjYyMzYuOTMyNDIzLCJuYmYiOjE3NDM4MjYyMzYuOTMyNDI2LCJleHAiOjE3NzUzNjIyMzYuOTIzNzA2LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.6bSmzdbWjxexzlBPi86fD7leym9SQ5Ho63E1tIWc1lwWakf0TXp-gFf4efP2R3qmFb598PzBHuxHC6RBYL_xqeAm1wai94b6nf5u61pPNjFMOq3FKQ6kFcRsr4EPwVXYqgwk6mgSXHxCxnpFWi1FwZa4jBIyqKL2t3oWK8zw9WhBNjOtIZp6eQcfGJUyYblbkWBZLfhT66TFTwMUE2KxP1XUwIl0P5CRP7eEwRDoZmZQKmF2KgKHkeXLjXvhuDcbbgIhEkAFyo5TQfWy20CXUMOw0XNItQQux0_SNiyUTt-4_rOPZW0dSiXTtrQmxIuc2i_kk3bNJxLflP-XpYWW-PsEayXnRPrf0iFLmj0QP_UR-3HcuwGjZmQLsKGUFpFFnO06MMPxgKzo2WYL7A3NSSvtj1-1w-fM06e34bHkrpxFv5QVHgUm0NO-qTeSMZeCnn6tY4XJ7I1A5wUKVQ1og1oBjoLxN9m7kolgyfbvpNc57_OLBNzXeb_F8ljeBw5ZDb7sboiZYIlzJPchgg_1Xs9Q7pegM3sMsjYn1sGJVtFR940h9CqJgfEFLe8vQAUuhzb6wmxreLJ-0nIfz0rUWylS25NJY82N4fGTs6zIbgCVSkWDhgLIyq6N665SJbFOpVnQGAzkbpcWqzeMk9Y1Nu6VM_2IH7yYl2ReJ07QbP8";
+
+          // DOM element selectors
+          const missionCard = document.querySelector("mission-card");
+          const locationEditCard = document.querySelector("location-edit");
+          const locationViewCard = document.querySelector("location-section");
+          const bannerSection = document.querySelector("banner-section");
+          const aboutSection = document.querySelector("about-section");
+          const BreakingEditCard = document.querySelector("breaking-edit");
+          const BreakingViewCard = document.querySelector("breaking-section");
+          const licenseCard = document.querySelector("license-section");
+          const attachmentCard = document.querySelector("attachment-section");
+          const managementCard = document.querySelector("management-section");
+
+          // Prepare both fetch calls
+          const userDataPromise = fetch(
+            "https://api.servehere.com/api/auth/user",
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          ).then((response) => {
+            if (!response.ok) {
+              throw new Error("User request failed: " + response.statusText);
+            }
+            return response.json();
+          });
+
+          const businessDataPromise = fetch(
+            "https://api.servehere.com/api/business/1",
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          ).then((response) => {
+            if (!response.ok) {
+              throw new Error(
+                "Business request failed: " + response.statusText
+              );
+            }
+            return response.json();
+          });
+
+          // Execute both requests concurrently
+          Promise.all([userDataPromise, businessDataPromise])
+            .then(([userData, businessData]) => {
+              const missionData = userData.data.user_mission || {};
+              const locationData = userData.data.userLocations || {};
+              const breakingData = userData.data.breaking_news || {};
+              const licenseData = userData.data.user_licenses_permissions || [];
+              const attachmentData = userData.data.user_attachments || [];
+              const managementData = userData.data.managments || [];
+              const privacySettings = userData.data.settings;
+
+              missionCard.dispatchEvent(
+                new CustomEvent("missionDataReceived", {
+                  detail: missionData,
+                })
+              );
+              locationViewCard.dispatchEvent(
+                new CustomEvent("locationDataReceived", {
+                  detail: {
+                    locations: locationData,
+                    settings: privacySettings,
+                  },
+                })
+              );
+              locationEditCard.dispatchEvent(
+                new CustomEvent("locationDataReceived", {
+                  detail: locationData,
+                })
+              );
+
+              bannerSection.dispatchEvent(
+                new CustomEvent("bannerDataReceived", {
+                  detail: { ...userData.data, business: businessData.data },
+                })
+              );
+
+              aboutSection.dispatchEvent(
+                new CustomEvent("aboutDataReceived", {
+                  detail: { ...userData.data, business: businessData.data },
+                })
+              );
+              BreakingEditCard.dispatchEvent(
+                new CustomEvent("breakingDataReceived", {
+                  detail: breakingData,
+                })
+              );
+              BreakingViewCard.dispatchEvent(
+                new CustomEvent("breakingDataReceived", {
+                  detail: breakingData,
+                })
+              );
+              licenseCard.dispatchEvent(
+                new CustomEvent("licenseDataReceived", {
+                  detail: { licenses: licenseData, settings: privacySettings },
+                })
+              );
+              attachmentCard.dispatchEvent(
+                new CustomEvent("attachmentDataReceived", {
+                  detail: {
+                    attachments: attachmentData,
+                    settings: privacySettings,
+                  },
+                })
+              );
+              managementCard.dispatchEvent(
+                new CustomEvent("managementDataReceived", {
+                  detail: managementData,
                 })
               );
             })
@@ -317,173 +554,17 @@
           const activeBtn = document.querySelector(".action-button--active");
           console.log(activeBtn, "activeBtn");
           if (activeBtn) {
-          const action = activeBtn.dataset.action;
-          const isEdit = action === "edit";
-          const isPrivacy = action === "privacy";
-          console.log(isEdit, "isEdit",isPrivacy,"isPrivacy");
+            const action = activeBtn.dataset.action;
+            const isEdit = action === "edit";
+            const isPrivacy = action === "privacy";
+            console.log(isEdit, "isEdit", isPrivacy, "isPrivacy");
 
-          window.dispatchEvent(
-            new CustomEvent("actionChange", { detail: { isEdit, isPrivacy } })
-          );}
-
+            window.dispatchEvent(
+              new CustomEvent("actionChange", { detail: { isEdit, isPrivacy } })
+            );
+          }
         });
       });
-            document.addEventListener("DOMContentLoaded", function () {
-              const componentEdits = document.querySelectorAll(".isComponentEdit");
-              const componentView = document.querySelectorAll(".isComponentView");
-              componentEdits.forEach((el) => (el.style.display = "none"));
-              componentView.forEach((el) => (el.style.display = "flex"));
-
-              window.addEventListener("actionChange", function (event) {
-                const { isEdit } = event.detail;
-                if (isEdit) {
-                  componentEdits.forEach((el) => (el.style.display = "flex"));
-                  componentView.forEach((el) => (el.style.display = "none"));
-                } else {
-                  componentEdits.forEach((el) => (el.style.display = "none"));
-                  componentView.forEach((el) => (el.style.display = "flex"));
-                }
-              });
-
-              function fetchUserData() {
-                const token =
-                  "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYWJjMWVkODBhMjIyMjVmYjEzZjRkN2ZmOTE4ZWVlNmRmMWQ1MDBmNTY0YWY0Mzk4OTliZTM5MzMzOTBjOTRjYzZhOTg3Yzc4YmU5M2E2NWMiLCJpYXQiOjE3NDM4MjYyMzYuOTMyNDIzLCJuYmYiOjE3NDM4MjYyMzYuOTMyNDI2LCJleHAiOjE3NzUzNjIyMzYuOTIzNzA2LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.6bSmzdbWjxexzlBPi86fD7leym9SQ5Ho63E1tIWc1lwWakf0TXp-gFf4efP2R3qmFb598PzBHuxHC6RBYL_xqeAm1wai94b6nf5u61pPNjFMOq3FKQ6kFcRsr4EPwVXYqgwk6mgSXHxCxnpFWi1FwZa4jBIyqKL2t3oWK8zw9WhBNjOtIZp6eQcfGJUyYblbkWBZLfhT66TFTwMUE2KxP1XUwIl0P5CRP7eEwRDoZmZQKmF2KgKHkeXLjXvhuDcbbgIhEkAFyo5TQfWy20CXUMOw0XNItQQux0_SNiyUTt-4_rOPZW0dSiXTtrQmxIuc2i_kk3bNJxLflP-XpYWW-PsEayXnRPrf0iFLmj0QP_UR-3HcuwGjZmQLsKGUFpFFnO06MMPxgKzo2WYL7A3NSSvtj1-1w-fM06e34bHkrpxFv5QVHgUm0NO-qTeSMZeCnn6tY4XJ7I1A5wUKVQ1og1oBjoLxN9m7kolgyfbvpNc57_OLBNzXeb_F8ljeBw5ZDb7sboiZYIlzJPchgg_1Xs9Q7pegM3sMsjYn1sGJVtFR940h9CqJgfEFLe8vQAUuhzb6wmxreLJ-0nIfz0rUWylS25NJY82N4fGTs6zIbgCVSkWDhgLIyq6N665SJbFOpVnQGAzkbpcWqzeMk9Y1Nu6VM_2IH7yYl2ReJ07QbP8";
-
-                // DOM element selectors
-                const missionCard = document.querySelector("mission-card");
-                const locationEditCard = document.querySelector("location-edit");
-                const locationViewCard = document.querySelector("location-section");
-                const bannerSection = document.querySelector("banner-section");
-                const aboutSection = document.querySelector("about-section");
-                const BreakingEditCard = document.querySelector("breaking-edit");
-                const BreakingViewCard = document.querySelector("breaking-section");
-                const licenseCard = document.querySelector("license-section")
-                const attachmentCard=document.querySelector("attachment-section")
-                const managementCard=document.querySelector("management-section")
-
-                // Prepare both fetch calls
-                const userDataPromise = fetch(
-                  "https://api.servehere.com/api/auth/user",
-                  {
-                    method: "GET",
-                    headers: {
-                      Authorization: `Bearer ${token}`,
-                      "Content-Type": "application/json",
-                    },
-                  }
-                ).then((response) => {
-                  if (!response.ok) {
-                    throw new Error("User request failed: " + response.statusText);
-                  }
-                  return response.json();
-                });
-
-                const businessDataPromise = fetch(
-                  "https://api.servehere.com/api/business/1",
-                  {
-                    method: "GET",
-                    headers: {
-                      Authorization: `Bearer ${token}`,
-                      "Content-Type": "application/json",
-                    },
-                  }
-                ).then((response) => {
-                  if (!response.ok) {
-                    throw new Error(
-                      "Business request failed: " + response.statusText
-                    );
-                  }
-                  return response.json();
-                });
-
-                // Execute both requests concurrently
-                Promise.all([userDataPromise, businessDataPromise])
-                  .then(([userData, businessData]) => {
-                    const missionData = userData.data.user_mission || {};
-                    const locationData = userData.data.userLocations || {};
-                    const breakingData = userData.data.breaking_news || {};
-                    const licenseData=userData.data.user_licenses_permissions||[]
-                    const attachmentData=userData.data.user_attachments||[]
-                    const managementData=userData.data.managments||[]
-                    const privacySettings=userData.data.settings
-
-                    missionCard.dispatchEvent(
-                      new CustomEvent("missionDataReceived", {
-                        detail: missionData,
-                      })
-                    );
-                    locationViewCard.dispatchEvent(
-                      new CustomEvent("locationDataReceived", {
-                        detail: {locations: locationData, settings: privacySettings}
-                      })
-                    );
-                    locationEditCard.dispatchEvent(
-                      new CustomEvent("locationDataReceived", {
-                        detail: locationData,
-                      })
-                    );
-
-                    bannerSection.dispatchEvent(
-                      new CustomEvent("bannerDataReceived", {
-                        detail: { ...userData.data, business: businessData.data },
-                      })
-                    );
-
-                    aboutSection.dispatchEvent(
-                      new CustomEvent("aboutDataReceived", {
-                        detail: { ...userData.data, business: businessData.data },
-                      })
-                    );
-                    BreakingEditCard.dispatchEvent(
-                      new CustomEvent("breakingDataReceived", {
-                        detail: breakingData,
-                      })
-                    );
-                    BreakingViewCard.dispatchEvent(
-                      new CustomEvent("breakingDataReceived", {
-                        detail: breakingData,
-                      })
-                    );
-                    licenseCard.dispatchEvent(
-                      new CustomEvent("licenseDataReceived", {
-                        detail: {licenses : licenseData, settings: privacySettings},
-                      })
-                    );
-                     attachmentCard.dispatchEvent(
-                      new CustomEvent("attachmentDataReceived", {
-                        detail: {attachments: attachmentData, settings: privacySettings}
-                      })
-                    );
-                     managementCard.dispatchEvent(
-                      new CustomEvent("managementDataReceived", {
-                        detail: managementData,
-                      })
-                    );
-                  })
-
-                  .catch((error) => {
-                    console.error("Error fetching data:", error);
-                  });
-              }
-
-              fetchUserData();
-              document.addEventListener("profileDataSaved", async () => {
-                console.log("User saved successfully, re-fetching user data...");
-                await fetchUserData();
-                const activeBtn = document.querySelector(".action-button--active");
-                console.log(activeBtn, "activeBtn");
-                if (activeBtn) {
-                const action = activeBtn.dataset.action;
-                const isEdit = action === "edit";
-                const isPrivacy = action === "privacy";
-                console.log(isEdit, "isEdit",isPrivacy,"isPrivacy");
-
-                window.dispatchEvent(
-                  new CustomEvent("actionChange", { detail: { isEdit, isPrivacy } })
-                );}
-
-              });
-            });
     </script>
   </body>
 </html>
