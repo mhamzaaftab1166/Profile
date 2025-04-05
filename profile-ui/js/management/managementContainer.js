@@ -42,6 +42,7 @@ class ManagementSection extends HTMLElement {
     
     // Create a combined list by adding empty objects at the end for new entries
     const combinedMngList = [
+       ...transformedManagements,
       {
         name: "",
         role_name: "",
@@ -56,7 +57,7 @@ class ManagementSection extends HTMLElement {
         profile_image: null,
         is_active: 0,
       },
-      ...transformedManagements
+     
     ];
 
     // Convert arrays to JSON strings

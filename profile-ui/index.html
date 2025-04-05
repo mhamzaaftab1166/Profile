@@ -121,8 +121,37 @@
       <product-section id="Menus"></product-section>
       <license-section></license-section>
       <attachment-section></attachment-section>
+      <div id="toast-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
+<div id="loader" class="position-fixed top-50 start-50 translate-middle" style="z-index: 1050; display: none;">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
     </div>
     <script>
+      function showToast(message, type = "success") {
+    const toastId = "toast-" + Date.now();
+    const toastHTML = `
+      <div id="${toastId}" class="toast align-items-center text-bg-${type} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body">${message}</div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    `;
+    const container = document.getElementById("toast-container");
+    container.insertAdjacentHTML("beforeend", toastHTML);
+    const toastElement = new bootstrap.Toast(document.getElementById(toastId));
+    toastElement.show();
+  }
+
+  function showLoader() {
+    document.getElementById("loader").style.display = "block";
+  }
+
+  function hideLoader() {
+    document.getElementById("loader").style.display = "none";
+  }
          window.addEventListener("actionChange", (event) => {
         const {print} = event.detail;
         if(print)window.print();})

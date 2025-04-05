@@ -1,16 +1,17 @@
 const managementHandler = {
   async handleManagement(data) {
     console.log(data, "🚀 Handling management data...");
+    showLoader();
 
     try {
       const parsedData = typeof data === "string" ? JSON.parse(data) : data;
 
       if (!Array.isArray(parsedData)) {
         console.error("❌ Data must be an array of manager objects.");
+        showToast("Invalid data format.", "danger");
         return;
       }
 
-      // Filter out invalid objects (remove objects with missing required fields)
       const validData = parsedData.filter(
         (manager) =>
           manager.name?.trim() &&
@@ -19,9 +20,8 @@ const managementHandler = {
           manager.profile_image
       );
 
-      // If no valid data remains, log an error and return
       if (validData.length === 0) {
-        console.error("❌ No valid manager data to save.");
+        showToast("No valid manager data to save.", "danger");
         return;
       }
 
@@ -32,32 +32,16 @@ const managementHandler = {
         }
         formData.append(`managers[${index}][name]`, manager.name);
         formData.append(`managers[${index}][role_name]`, manager.role_name);
-        formData.append(
-          `managers[${index}][phone_number]`,
-          manager.phone_number
-        );
-        formData.append(
-          `managers[${index}][is_active]`,
-          manager.is_active ? 1 : 0
-        );
+        formData.append(`managers[${index}][phone_number]`, manager.phone_number);
+        formData.append(`managers[${index}][is_active]`, manager.is_active ? 1 : 0);
 
-        // Append profile image separately
         if (manager.profile_image instanceof File) {
-          formData.append(
-            `managers[${index}][profile_image]`,
-            manager.profile_image
-          );
+          formData.append(`managers[${index}][profile_image]`, manager.profile_image);
         }
       });
 
       const url = "https://api.servehere.com/api/managments";
 
-      console.log("🚀 Sending FormData:");
-      for (let pair of formData.entries()) {
-        console.log(pair[0], ":", pair[1]);
-      }
-
-      // Send the request
       const response = await fetch(url, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
@@ -66,18 +50,23 @@ const managementHandler = {
 
       if (!response.ok) {
         console.error("❌ Failed to send manager data:", response.statusText);
+        showToast("Failed to update managers.", "danger");
       } else {
+        showToast("Manager data saved successfully!", "success");
         console.log("✅ Manager data sent successfully.");
+        document.dispatchEvent(new CustomEvent("profileDataSaved"));
       }
-
-      document.dispatchEvent(new CustomEvent("profileDataSaved"));
     } catch (error) {
       console.error("🚨 Error in handleManagement:", error);
+      showToast("Something went wrong.", "danger");
+    } finally {
+      hideLoader();
     }
   },
+
   async changemanagementStatus({ id, payload }) {
     const url = `https://api.servehere.com/api/managments/${id}/activate`;
-    console.log("🚀 Changing management status with payload:", payload, id);
+    showLoader();
 
     try {
       const response = await fetch(url, {
@@ -90,19 +79,22 @@ const managementHandler = {
       });
 
       if (response.ok) {
+        showToast("Management status updated!", "success");
         document.dispatchEvent(new CustomEvent("profileDataSaved"));
-        console.log("✅ management status updated successfully.");
       } else {
-        console.error(
-          "❌ Failed to update management status:",
-          response.statusText
-        );
+        showToast("Failed to update status.", "danger");
+        console.error("❌ Status update failed:", response.statusText);
       }
     } catch (error) {
       console.error(error);
+      showToast("Something went wrong.", "danger");
+    } finally {
+      hideLoader();
     }
   },
+
   async handleManagementPrivacy(data) {
+    showLoader();
     try {
       const url = `https://api.servehere.com/api/user-field-settings`;
 
@@ -114,12 +106,16 @@ const managementHandler = {
         },
         body: data,
       });
+
+      showToast("Privacy setting updated.", "success");
     } catch (error) {
       console.error(error);
-    }finally{
+      showToast("Failed to update privacy setting.", "danger");
+    } finally {
+      hideLoader();
       document.dispatchEvent(new CustomEvent("profileDataSaved"));
     }
-  }
+  },
 };
 
 window.managementHandler = managementHandler;

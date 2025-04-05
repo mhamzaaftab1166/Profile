@@ -1,9 +1,9 @@
 const locationHandler = {
   async handleLocation(data) {
     console.log(data);
+    showLoader();
 
     try {
-      // Ensure data is an array
       const parsedData = typeof data === "string" ? JSON.parse(data) : data;
       const filteredData = parsedData.filter(
         (obj) =>
@@ -33,7 +33,6 @@ const locationHandler = {
             console.log("🗺️ OpenStreetMap Link Detected");
             const hashParts = url.hash.split("/");
             if (hashParts.length >= 3) {
-              // For OpenStreetMap, index 1 is latitude, index 2 is longitude.
               lat = hashParts[1];
               long = hashParts[2];
               console.log(
@@ -69,13 +68,11 @@ const locationHandler = {
         formData.append(`locations[${index}][is_active]`, obj.is_active);
       });
 
-      // Log FormData entries for debugging using a for...of loop
       console.log("🚀 FormData Ready:");
       for (let pair of formData.entries()) {
         console.log(pair[0], ":", pair[1]);
       }
 
-      // Send FormData directly. Do NOT set "Content-Type" header.
       const url = "https://api.servehere.com/api/locations";
       const response = await fetch(url, {
         method: "POST",
@@ -88,16 +85,23 @@ const locationHandler = {
       if (response.ok) {
         document.dispatchEvent(new CustomEvent("profileDataSaved"));
         console.log("✅ FormData sent successfully.");
+        showToast("Locations saved successfully!", "success");
       } else {
-        console.error("Failed to send FormData", response.statusText);
+        console.error("❌ Failed to send FormData", response.statusText);
+        showToast("Failed to save locations.", "danger");
       }
     } catch (error) {
-      console.error("Error in handleLocation:", error);
+      console.error("🚨 Error in handleLocation:", error);
+      showToast("Something went wrong.", "danger");
+    } finally {
+      hideLoader();
     }
   },
+
   async changeLocationStatus({ id, payload }) {
     const url = `https://api.servehere.com/api/locations/${id}/activate`;
     console.log("🚀 Changing location status with payload:", payload, id);
+    showLoader();
 
     try {
       const response = await fetch(url, {
@@ -111,15 +115,20 @@ const locationHandler = {
 
       if (response.ok) {
         document.dispatchEvent(new CustomEvent("profileDataSaved"));
-        console.log("✅ location status updated successfully.");
+        console.log("✅ Location status updated successfully.");
+        showToast("Location status updated!", "success");
       } else {
         console.error(
           "❌ Failed to update location status:",
           response.statusText
         );
+        showToast("Failed to update location status.", "danger");
       }
     } catch (error) {
-      console.error(error);
+      console.error("🚨 Error in changeLocationStatus:", error);
+      showToast("Something went wrong.", "danger");
+    } finally {
+      hideLoader();
     }
   },
 };

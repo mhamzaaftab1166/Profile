@@ -148,7 +148,7 @@ class LocationSection extends HTMLElement {
       this.toggleSwitches.forEach((el) => (el.style.display = "none"));
       this._toggleLocationEntries(false);
     }
-    this.render(); 
+    this.render();
   }
 
   _toggleLocationEntries(showAll) {
