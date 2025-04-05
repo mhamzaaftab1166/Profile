@@ -6,6 +6,7 @@
     <title>Profile</title>
     <!-- Include your mission handling logic -->
     <script src="./js/missionHandler.js" defer></script>
+    <script src="./js/common.js" defer></script>
     <script src="./js/location/locationHandler.js" defer></script>
     <script src="./js/breaking/newsHandler.js" defer></script>
     <script src="./js/actionbar/actionBarHandler.js" defer></script>
@@ -156,6 +157,7 @@
         const {print} = event.detail;
         if(print)window.print();})
       document.addEventListener("DOMContentLoaded", function () {
+    
         const componentEdits = document.querySelectorAll(".isComponentEdit");
         const componentView = document.querySelectorAll(".isComponentView");
         componentEdits.forEach((el) => (el.style.display = "none"));

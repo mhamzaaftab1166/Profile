@@ -1,5 +1,6 @@
 const licenseHandler = {
   async handleLicense(data) {
+    const { baseUrl, token } = await getApiConfig();
     console.log(data, "🚀 Handling license data...");
     showLoader();
 
@@ -18,7 +19,7 @@ const licenseHandler = {
       formData.append("type", parsedData.type);
       formData.append("is_active", parsedData.is_active ? 1 : 0);
 
-      const url = "https://api.servehere.com/api/user-attachments";
+      const url = `${baseUrl}/user-attachments`;
 
       console.log("🚀 FormData Ready:");
       for (let pair of formData.entries()) {
@@ -50,6 +51,7 @@ const licenseHandler = {
   },
 
   async deleteLicense(id) {
+    const { baseUrl, token } = await getApiConfig();
     console.log("🚀 Deleting license with id:", id);
     showLoader();
 
@@ -60,7 +62,7 @@ const licenseHandler = {
         return;
       }
 
-      const url = `https://api.servehere.com/api/user-attachments/${id}`;
+      const url = `${baseUrl}/user-attachments/${id}`;
 
       const response = await fetch(url, {
         method: "DELETE",
@@ -86,8 +88,9 @@ const licenseHandler = {
   },
   
   async handleLicensePrivacy(data) {
+    const { baseUrl, token } = await getApiConfig();
     try {
-      const url = `https://api.servehere.com/api/user-field-settings`;
+      const url = `${baseUrl}/user-field-settings`;
 
       const response = await fetch(url, {
         method: "POST",

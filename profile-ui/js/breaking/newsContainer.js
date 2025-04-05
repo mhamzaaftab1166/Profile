@@ -169,7 +169,6 @@ class BreakingSection extends HTMLElement {
   }
 
   updateSection({ isEdit, isPrivacy }) {
-    // Save the current mode.
     this.currentMode.isEdit = isEdit;
     this.currentMode.isPrivacy = isPrivacy;
     if (isEdit) {
@@ -185,7 +184,7 @@ class BreakingSection extends HTMLElement {
       this.toggleSwitches.forEach((toggle) => (toggle.style.display = "none"));
       this._toggleNewsEntries(false);
     }
-    this.render();
+   
   }
 
   _toggleNewsEntries(showAll) {
