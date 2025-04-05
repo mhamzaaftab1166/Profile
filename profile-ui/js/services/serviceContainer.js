@@ -15,8 +15,8 @@ class ServiceSection extends HTMLElement {
   connectedCallback() {
     this.addEventListener("serviceDataReceived", (event) => {
       this.services = event.detail;
-      console.log(this.services.length, "services");
-      this.serviceForm = this.services.map((service) => ({
+      console.log(this.services, "services");
+      this.serviceForm = this.services.services.map((service) => ({
         id: service.id || null,
         service_image: service.service_image
           ? `https://api.servehere.com/api/storage/image?path=${service.service_image}`
@@ -32,7 +32,7 @@ class ServiceSection extends HTMLElement {
       if (event.target.matches(".save-button")) {
         this.saveServiceChanges();
       } else if (event.target.matches(".discard-button")) {
-        this.serviceForm = this.services.map((service) => ({
+        this.serviceForm = this.services.services.map((service) => ({
           id: service.id || null,
           service_image: service.service_image
             ? `https://api.servehere.com/api/storage/image?path=${service.service_image}`
@@ -48,7 +48,7 @@ class ServiceSection extends HTMLElement {
   }
 
   updateServiceForm() {
-    const nextServices = this.services.slice(this.currentIndex, this.currentIndex + 4);
+    const nextServices = this.services.services.slice(this.currentIndex, this.currentIndex + 4);
     this.services = nextServices.map((service) => ({
       id: service.id || null,
       service_image: service.service_image
@@ -61,7 +61,7 @@ class ServiceSection extends HTMLElement {
   }
 
   render() {
-    const remainingServices = this.services.length - this.currentIndex;
+    const remainingServices = this.services.services.length - this.currentIndex;
     const loadMoreButton = remainingServices > 0 ? 
     `<button class="service-browse-button browseButton">
           <span class="service-browse-text">Load More</span>
@@ -70,10 +70,30 @@ class ServiceSection extends HTMLElement {
      </button>`
          : '';
     this.innerHTML = `
+    <section
+    x-data="{
+    servicesSectionChecked: ${this.services?.settings?.services},
+    toggleServiceSectionPrivacy() {
+    const payload = { services: this.servicesSectionChecked };
+    ServiceHandler.handleServicePrivacy(JSON.stringify(payload));
+    console.log('Privacy checked value:', this.servicesSectionChecked);
+      },
+    }"
+    >
       <div class="position-relative service-card">
         <div class="d-flex justify-content-between align-items-center">
-          <div class="ms-2 mt-2 toggle-container isServicePrivacy">
-            <privacy-button></privacy-button>
+          <div class="ms-2 toggle-container isServicePrivacy">
+               <div
+                class="toggle-track"
+                role="switch"
+                tabindex="0"
+                :aria-checked="servicesSectionChecked?.toString()"
+                aria-label="Privacy toggle switch"
+                :data-checked="servicesSectionChecked ? '1' : '0'"
+                @click="servicesSectionChecked = !servicesSectionChecked; toggleServiceSectionPrivacy()"
+              >
+                <div class="toggle-handle"></div>
+              </div>
           </div>
           <header class="service-head-title">Services</header>
         </div>
@@ -82,7 +102,7 @@ class ServiceSection extends HTMLElement {
         <!-- View Mode -->
         <div class="services-wrapper isServiceView">
           <div class="services-grid">
-            ${this.services.slice(0, 4)
+            ${this.services.services.slice(0, 4)
               .map(
                 (service, index) => `
                   <div class="${
@@ -156,6 +176,7 @@ class ServiceSection extends HTMLElement {
 
           ${loadMoreButton}
       </div>
+      </section>
     `;
 
     this.serviceView = this.querySelector(".isServiceView");

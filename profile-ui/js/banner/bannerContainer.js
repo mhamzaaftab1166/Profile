@@ -10,18 +10,20 @@ class BannerSection extends HTMLElement {
 
   connectedCallback() {
     this.addEventListener("bannerDataReceived", (event) => {
-      this.userData = event.detail;
+      this.userData = event.detail;      
       this.render();
     });
   }
 
   render() {
     const coverImg =
-      `https://api.servehere.com/api/storage/image?path=${this.userData.business.cover_photo}` ||
-      "assets/profile/coverImage.png";
-    const profileImg =
-      `https://api.servehere.com/api/storage/image?path=${this.userData.business.logo}` ||
-      "assets/profile/profile.png";
+    this.userData.settings.cover_photo === false || this.isPrivacy
+      ? `https://api.servehere.com/api/storage/image?path=${this.userData.business.cover_photo}`
+      : "assets/profile/coverImage.png";
+      const profileImg =
+      this.userData.settings.profile_picture === false || this.isPrivacy
+        ? `https://api.servehere.com/api/storage/image?path=${this.userData.business.logo}`
+        : "assets/profile/profile.png";
     const id = this.userData.business.id;
     const name = this.userData.business.name;
     const userType = this.userData.user_type;
@@ -31,6 +33,7 @@ class BannerSection extends HTMLElement {
     const longitude = this.userData.business.longitude;
     const code = this.userData.business.code;
     const socialMedia = this.userData.socials;
+    const settings = this.userData.settings;
 
     const socialData = socialMedia.map((social) => ({
       platform_name: social.platform_name,
@@ -52,8 +55,6 @@ class BannerSection extends HTMLElement {
       "linkPlaceholder": "Default Generating"
     });
 
-    console.log(socialData, "Updated social-data");
-
     this.innerHTML = `
      <section 
        x-data="{ 
@@ -69,6 +70,20 @@ class BannerSection extends HTMLElement {
           profileLongitude: '${longitude}',
           profileCountry: '${country}',
           profileCode: '${code}',
+          profileChecked: ${this.userData.settings.profile_picture},
+          coverChecked: ${this.userData.settings.cover_photo},
+          
+          toggleCoverPrivacy() {
+          const payload = { cover_photo: this.coverChecked };
+          BannerHandler.handleCoverPicturePrivacy(JSON.stringify(payload));
+          console.log('Privacy checked value:', this.coverChecked);
+          },
+
+          toggleProfilePrivacy() {
+          const payload = { profile_picture: this.profileChecked };
+          BannerHandler.handleProfilePicturePrivacy(JSON.stringify(payload));
+          console.log('Privacy checked value:', this.profileChecked);
+          },
 
           previewCoverImage(event) {
            const file = event.target.files[0];
@@ -114,7 +129,19 @@ class BannerSection extends HTMLElement {
           <div class="profile-banner">
             <div class="position-relative">
               <img class="banner-image" :src="coverImage" alt="Banner" />
-              <privacy-button class="privacy-cover-batch isCoverPrivacy"></privacy-button>
+            <div class="me-1 ms-2 toggle-container privacy-cover-batch isCoverPrivacy">
+               <div
+                class="toggle-track"
+                role="switch"
+                tabindex="0"
+                :aria-checked="coverChecked ? '1' : '0'"
+                 aria-label="Privacy toggle switch"
+                :data-checked="coverChecked ? '1' : '0'"
+                @click="coverChecked = !coverChecked; toggleCoverPrivacy()"
+               >
+              <div class="toggle-handle"></div>
+             </div>
+            </div>
               <div class="uploadButton isCoverEdit">
                 <button class="add-button" @click="saveCover()">Add Profile Poster</button>
                 <input type="file" accept="image/*" class="coverFileInput" style="display: none" @change="previewCoverImage" />
@@ -128,7 +155,19 @@ class BannerSection extends HTMLElement {
               <input type="file" accept="image/*" class="profileFileInput" style="display: none" @change="previewProfileImage"/>
               <p class="file-upload profileFileUpload">Choose file</p>
               </div>
-              <privacy-button class="privacy-profile-batch isProfilePrivacy"></privacy-button>
+              <div class="me-1 ms-2 toggle-container privacy-profile-batch isProfilePrivacy">
+               <div
+                class="toggle-track"
+                role="switch"
+                tabindex="0"
+                :aria-checked="profileChecked ? '1' : '0'"
+                aria-label="Privacy toggle switch"
+                :data-checked="profileChecked ? '1' : '0'"
+                @click="profileChecked = !profileChecked; toggleProfilePrivacy()"
+               >
+              <div class="toggle-handle"></div>
+             </div>
+            </div>
                 <img class="avatar position-relative" :src="profileImage" alt="Profile" />
               </div>
               <div class="profile-info">
@@ -190,7 +229,7 @@ class BannerSection extends HTMLElement {
     this.querySelector(".profileFileUpload").addEventListener("click", () => {
       this.querySelector(".profileFileInput").click();
     });
-
+    
     this.coverInput.style.display = "none";
     this.profileInput.style.display = "none";
     this.coverPrivacy.style.visibility = "hidden";

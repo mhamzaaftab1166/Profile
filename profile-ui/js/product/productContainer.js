@@ -19,11 +19,7 @@ class ProductSection extends HTMLElement {
   connectedCallback() {
     this.addEventListener("productDataReceived", (event) => {
       this.products = event.detail.products;
-      this.menus = event.detail.menus;
-      console.log(this.products, 'products');
-      console.log(this.menus, 'menussssssss');
-      
-      
+      this.menus = event.detail.menus; 
       this.render();
     });
   }

@@ -159,6 +159,7 @@
           const attachmentCard=document.querySelector("attachment-section")
           const managementCard=document.querySelector("management-section")
           const productCard=document.querySelector("product-section")
+        
 
           // Prepare both fetch calls
           const userDataPromise = fetch(
@@ -201,20 +202,18 @@
               const missionData = userData.data.user_mission || {};
               const locationData = userData.data.userLocations || {};
               const breakingData = userData.data.breaking_news || {};
-              const licenseData=userData.data.user_licenses_permissions||[]
-              const attachmentData=userData.data.user_attachments||[]
-              const managementData=userData.data.managments||[]
-              const serviceData=userData.data.services ||[]
-              const productData=userData.data.categories ||[]
-              const productMenusData=userData.data.categories.flatMap(category => category.menus) ||[]
-              console.log(productData, 'productData');
-              console.log(productMenusData, 'productMenusData');
-
-
-
+              const licenseData=userData.data.user_licenses_permissions||[];
+              const attachmentData=userData.data.user_attachments||[];
+              const managementData=userData.data.managments||[];
+              const serviceData=userData.data.services ||[];
+              const productData=userData.data.categories ||[];
+              const productMenusData=userData.data.categories.flatMap(category => category.menus) ||[];
+              const privacySettings=userData.data.settings
+              
+              
               missionCard.dispatchEvent(
                 new CustomEvent("missionDataReceived", {
-                  detail: missionData,
+                  detail: {missionData, settings: privacySettings}
                 })
               );
               locationViewCard.dispatchEvent(
@@ -246,7 +245,7 @@
               );
               BreakingViewCard.dispatchEvent(
                 new CustomEvent("breakingDataReceived", {
-                  detail: breakingData,
+                  detail: {breakingNews: breakingData, settings: privacySettings }
                 })
               );
               licenseCard.dispatchEvent(
@@ -261,12 +260,12 @@
               );
                managementCard.dispatchEvent(
                 new CustomEvent("managementDataReceived", {
-                  detail: managementData,
+                  detail: {management: managementData, settings: privacySettings },
                 })
               );
               serviceSection.dispatchEvent(
                 new CustomEvent("serviceDataReceived", {
-                  detail: serviceData,
+                  detail: {services: serviceData, settings: privacySettings}
                 })
               );
               productCard.dispatchEvent(

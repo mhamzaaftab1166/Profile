@@ -30,6 +30,7 @@ class SocialMediaPrivacySection extends HTMLElement {
           border-radius: 10px;
           margin-top: 16.01px;
           padding: 10.45px 15px;
+          overflow: hidden;
         }
 
         .form-bottom {
