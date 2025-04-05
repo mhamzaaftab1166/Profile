@@ -14,6 +14,8 @@ class AttachmentSection extends HTMLElement {
     // Listen for new data
     this.addEventListener("attachmentDataReceived", (event) => {
       this.attachmentData = event.detail;
+      console.log(this.attachmentData, 'this.attachmentData');
+      
       this.render();
     });
 
@@ -29,8 +31,8 @@ class AttachmentSection extends HTMLElement {
   }
 
   render() {
-    const safeData = Array.isArray(this.attachmentData)
-      ? this.attachmentData.map((item) => ({
+    const safeData = Array.isArray(this.attachmentData.attachments)
+      ? this.attachmentData.attachments.map((item) => ({
           id: item.id,
           name: item.name,
           path: item.path,
@@ -39,13 +41,18 @@ class AttachmentSection extends HTMLElement {
           created_at: item.created_at,
         }))
       : [];
+    const attachmentsPrivacy = this.attachmentData.settings || {};
     console.log(safeData, "Safe Attachment Data");
+    console.log(attachmentsPrivacy, 'attachmentsPrivacy');
+    
+    
 
     // Render each attachment entry and its divider
     this.innerHTML = `
     <section class="license-permissions-container" x-data='{
       uploads: [{ name: "", path: null, type: "document", is_active: 0 }],
       licenses: ${JSON.stringify(safeData)},
+      parentChecked: ${attachmentsPrivacy.attachments},
       checked: false,
        showAll: false,
        isEdit: ${this.currentMode.isEdit},
@@ -57,16 +64,20 @@ class AttachmentSection extends HTMLElement {
           id: license.id,
           payload: { is_active: newStatus }
         });
-      }
+      },
+         toggleAttachmentsSectionPrivacy() {
+    const payload = { attachments: this.parentChecked };
+    attachHandler.handleAttachementsPrivacy(JSON.stringify(payload));
+  }
     }'>
       <article class="license-permissions-card">
         <div class="d-flex justify-content-between align-items-center">
           <div class="ms-2 toggle-container isLicensePrivacy">
             <div class="toggle-track" role="switch" tabindex="0"
-              :aria-checked="checked.toString()"
+              :aria-checked="parentChecked.toString()"
               aria-label="Privacy toggle switch"
-              :data-checked="checked ? '1' : '0'"
-              @click="checked = !checked; togglePrivacy()">
+              :data-checked="parentChecked ? '1' : '0'"
+              @click="parentChecked = !parentChecked; toggleAttachmentsSectionPrivacy()">
               <div class="toggle-handle"></div>
             </div>
           </div>

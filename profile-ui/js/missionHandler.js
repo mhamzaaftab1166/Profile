@@ -32,7 +32,6 @@ const MissionHandler = {
         },
         body: JSON.stringify({ mission, vision, values }),
       });
-      document.dispatchEvent(new CustomEvent("profileDataSaved"));
     } catch (error) {
       console.error(error);
     }
@@ -52,8 +51,6 @@ const MissionHandler = {
       });
     } catch (error) {
       console.error(error);
-    }finally{
-      document.dispatchEvent(new CustomEvent("profileDataSaved"));
     }
   }
 };

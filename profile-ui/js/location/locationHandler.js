@@ -131,6 +131,22 @@ const locationHandler = {
       hideLoader();
     }
   },
+  async handleLocationPrivacy(data) {
+    try {
+      const url = `https://api.servehere.com/api/user-field-settings`;
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: data,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  },
 };
 
 window.locationHandler = locationHandler;

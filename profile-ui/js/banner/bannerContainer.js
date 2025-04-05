@@ -35,6 +35,9 @@ class BannerSection extends HTMLElement {
     const socialMedia = this.userData.socials;
     const settings = this.userData.settings;
 
+    console.log(socialMedia, 'socialMedia');
+    
+
     const socialData = socialMedia.map((social) => ({
       platform_name: social.platform_name,
       icon: `assets/icons/${social.platform_name}.png`,
@@ -46,6 +49,7 @@ class BannerSection extends HTMLElement {
       platform_link: social.platform_link || "",
       phone_number: social.phone_number || "",
       nonEditAble: false,
+      privacyName: social.platform_name.toLowerCase()
     }));
 
     socialData.unshift({
@@ -180,7 +184,7 @@ class BannerSection extends HTMLElement {
                   <span class="sub-tag" x-text="profileType"></span>
                 </div>
                 <div class="social-icons issocialIcon">
-                ${socialMedia
+                ${socialMedia.filter(social => social.platform_name === "X" ? settings.twitter === false :  settings[social.platform_name.toLowerCase()] === false)
                   .map(
                     (social) => `
                   <a href=${
@@ -199,14 +203,16 @@ class BannerSection extends HTMLElement {
                   `
                   )
                   .join("")}
-                  <a class="add-mail-icon"><img class="socialIcons" src="assets/icons/addMail.png" alt="Add Mail" /></a>
+                  ${settings?.add_mail === false ?
+                    `<a class="add-mail-icon"><img class="socialIcons" src="assets/icons/addMail.png" alt="Add Mail" /></a>`: ""
+                  }
                 </div>
                 <social-form class="isSocialFormEdit" social-data='${JSON.stringify(
                   socialData
                 )}'></social-form>
                  <social-privacy class="isSocialMediaPrivacy" social-data='${JSON.stringify(
                   socialData
-                )}'></social-privacy>
+                )}' privacy-settings='${JSON.stringify(settings)}'></social-privacy>
               </div>
             </div>
           </div>

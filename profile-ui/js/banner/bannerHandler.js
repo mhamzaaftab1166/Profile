@@ -28,7 +28,7 @@ const BannerHandler = {
         body: formData,
       });
 
-      document.dispatchEvent(new CustomEvent("profileDataSaved"));
+      
     } catch (error) {
       console.error(error);
     }
@@ -62,7 +62,7 @@ const BannerHandler = {
         },
         body: formData,
       });
-      document.dispatchEvent(new CustomEvent("profileDataSaved"));
+      
     } catch (error) {
       console.error(error);
     }
@@ -82,8 +82,6 @@ const BannerHandler = {
       });
     } catch (error) {
       console.error(error);
-    }finally{
-      document.dispatchEvent(new CustomEvent("profileDataSaved"));
     }
   },
 
@@ -101,8 +99,6 @@ const BannerHandler = {
       });
     } catch (error) {
       console.error(error);
-    }finally{
-      document.dispatchEvent(new CustomEvent("profileDataSaved"));
     }
   },
 };
