@@ -30,11 +30,13 @@ class LicenseSection extends HTMLElement {
 
   render() {
     console.log(this.licenseData, "License Data");
+    const licensePrivacy = this.licenseData.settings || {};
 
     this.innerHTML = `
     <section class="license-permissions-container" x-data='{
       uploads: [{ name: "", path: null, type: "license", is_active: 0 }],
-      licenses: ${JSON.stringify(this.licenseData)},
+      licenses: ${JSON.stringify(this.licenseData.licenses)},
+      parentChecked: ${licensePrivacy.licenses_permissions},
       checked: false,
        showAll: false,
         isEdit: ${this.currentMode.isEdit},
@@ -46,16 +48,20 @@ class LicenseSection extends HTMLElement {
           id: license.id,
           payload: { is_active: newStatus }
         });
-      }
+      },
+      toggleLicenseSectionPrivacy() {
+    const payload = { licenses_permissions: this.parentChecked };
+    licenseHandler.handleLicensePrivacy(JSON.stringify(payload));
+  }
     }'>
       <article class="license-permissions-card">
         <div class="d-flex justify-content-between align-items-center">
           <div class="ms-2 toggle-container isLicensePrivacy">
             <div class="toggle-track" role="switch" tabindex="0"
-              :aria-checked="checked.toString()"
+              :aria-checked="parentChecked.toString()"
               aria-label="Privacy toggle switch"
-              :data-checked="checked ? '1' : '0'"
-              @click="checked = !checked; togglePrivacy()">
+              :data-checked="parentChecked ? '1' : '0'"
+              @click="parentChecked = !parentChecked; toggleLicenseSectionPrivacy()">
               <div class="toggle-handle"></div>
             </div>
           </div>

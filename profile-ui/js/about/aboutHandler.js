@@ -13,7 +13,6 @@ const AboutHandler = {
           body: payload,
         });
   
-        document.dispatchEvent(new CustomEvent("profileDataSaved"));
       } catch (error) {
         console.error(error);
       }
@@ -32,8 +31,6 @@ const AboutHandler = {
         });
       } catch (error) {
         console.error(error);
-      }finally{
-        document.dispatchEvent(new CustomEvent("profileDataSaved"));
       }
     }
   };

@@ -15,7 +15,6 @@ class ServiceSection extends HTMLElement {
   connectedCallback() {
     this.addEventListener("serviceDataReceived", (event) => {
       this.services = event.detail;
-      console.log(this.services, "services");
       this.serviceForm = this.services.services.map((service) => ({
         id: service.id || null,
         service_image: service.service_image
@@ -42,6 +41,12 @@ class ServiceSection extends HTMLElement {
           is_active: service.is_active || 0,
         }));
         this.updateSection({ isEdit: false, isPrivacy: false });
+        this.addEventListener("filterChange", () => {
+          // Update your custom element state if necessary
+          // For example, if the privacy flag affects the filtered list:
+          // (Make sure that any new data or filter changes are updated before re-rendering)
+          this.render();
+        });
         this.render();
       }
     });
@@ -61,7 +66,14 @@ class ServiceSection extends HTMLElement {
   }
 
   render() {
+    const serviceData = this.services.services;
     const remainingServices = this.services.services.length - this.currentIndex;
+    const allServices = this.services.services || [];
+    // Use servicesSectionChecked or this.isPrivacy to determine which services to display.
+    // For instance, if privacy mode is off, filter to show only inactive services.
+    const filteredServices = (this.isPrivacy || this.servicesSectionChecked)
+      ? allServices
+      : allServices.filter(service => service.is_active === 0);
     const loadMoreButton = remainingServices > 0 ? 
     `<button class="service-browse-button browseButton">
           <span class="service-browse-text">Load More</span>
@@ -71,14 +83,26 @@ class ServiceSection extends HTMLElement {
          : '';
     this.innerHTML = `
     <section
-    x-data="{
+    x-data='{
     servicesSectionChecked: ${this.services?.settings?.services},
-    toggleServiceSectionPrivacy() {
+    checked: ${JSON.stringify(filteredServices)},
+
+    toggleServiceSectionPrivacy: function() {
     const payload = { services: this.servicesSectionChecked };
     ServiceHandler.handleServicePrivacy(JSON.stringify(payload));
-    console.log('Privacy checked value:', this.servicesSectionChecked);
-      },
-    }"
+    $el.dispatchEvent(new CustomEvent("filterChange", { bubbles: true }));
+  },
+
+  togglePrivacy: function(index) {
+    const service = this.checked[index];
+    const newStatus = service.is_active ? 1 : 0;
+    ServiceHandler.changeServiceStatus({
+      id: service.id,
+      payload: { is_active: newStatus }
+    });
+    $el.dispatchEvent(new CustomEvent("filterChange", { bubbles: true }));
+  }
+    }'
     >
       <div class="position-relative service-card">
         <div class="d-flex justify-content-between align-items-center">
@@ -102,8 +126,7 @@ class ServiceSection extends HTMLElement {
         <!-- View Mode -->
         <div class="services-wrapper isServiceView">
           <div class="services-grid">
-            ${this.services.services.slice(0, 4)
-              .map(
+            ${filteredServices.map(
                 (service, index) => `
                   <div class="${
                     this.isPrivacy
@@ -125,7 +148,18 @@ class ServiceSection extends HTMLElement {
                       </div>
                     </div>
                     <div class="service-privacy-button isServicePrivacy">
-                      <privacy-button></privacy-button>
+                    <div class="ms-2 toggle-container">
+                    <div
+                     class="toggle-track service-toggle"
+                     role="switch"
+                     tabindex="0"
+                     :aria-checked="checked[${index}].is_active.toString()"
+                     :data-checked="checked[${index}].is_active ? '1' : '0'"
+                     @click="checked[${index}].is_active = !checked[${index}].is_active; togglePrivacy(${index})"
+                    >
+                <div class="toggle-handle"></div>
+              </div>
+              </div>
                     </div>
                   </div>
                 `
@@ -178,6 +212,7 @@ class ServiceSection extends HTMLElement {
       </div>
       </section>
     `;
+  
 
     this.serviceView = this.querySelector(".isServiceView");
     this.serviceEdit = this.querySelector(".isServiceEdit");

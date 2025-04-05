@@ -36,7 +36,24 @@ const ServiceHandler = {
     }finally{
       document.dispatchEvent(new CustomEvent("profileDataSaved"));
     }
-  }
+  },
+
+  async changeServiceStatus({ id, payload }) {
+    try {
+      const url = `https://api.servehere.com/api/services/${id}/activate`;
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  },
 };
 
 window.ServiceHandler = ServiceHandler;

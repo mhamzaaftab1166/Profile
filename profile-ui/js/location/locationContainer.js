@@ -12,6 +12,7 @@ class LocationSection extends HTMLElement {
   connectedCallback() {
     this.addEventListener("locationDataReceived", (event) => {
       this.locationData = event.detail;
+      
       this.render();
     });
 
@@ -25,11 +26,14 @@ class LocationSection extends HTMLElement {
   }
 
   render() {
-    const locations = this.locationData || [];
+    const locations = this.locationData.locations || [];
+    const locationPrivacy = this.locationData.settings || {};
+    
     const locationsJson = JSON.stringify(locations);
     this.innerHTML = `
     <section class="locations-container" x-data='{ 
       locations: ${locationsJson}, 
+      parentChecked: ${locationPrivacy.locations},
       checked: false, 
       showAll: false,
         isEdit: ${this.currentMode.isEdit},
@@ -41,7 +45,11 @@ class LocationSection extends HTMLElement {
           id: location.id,
           payload: { is_active: newStatus }
         });
-      }
+      },
+       toggleLocationsSectionPrivacy() {
+    const payload = { locations: this.parentChecked };
+    locationHandler.handleLocationPrivacy(JSON.stringify(payload));
+  } 
     }'>
       <div class="locations-card">
         <div class="d-flex justify-content-between align-items-center">
@@ -50,10 +58,10 @@ class LocationSection extends HTMLElement {
               class="toggle-track"
               role="switch"
               tabindex="0"
-              :aria-checked="checked.toString()"
+              :aria-checked="parentChecked.toString()"
               aria-label="Privacy toggle switch"
-              :data-checked="checked ? '1' : '0'"
-              @click="checked = !checked; togglePrivacy()"
+              :data-checked="parentChecked ? '1' : '0'"
+              @click="parentChecked = !parentChecked; toggleLocationsSectionPrivacy()"
             >
               <div class="toggle-handle"></div>
             </div>
