@@ -1,4 +1,5 @@
 const BannerHandler = {
+  
   async handleCoverPicture(
     businessId,
     coverFile,
@@ -8,6 +9,7 @@ const BannerHandler = {
     profileLongitude,
     profileCountry
   ) {
+    const { baseUrl, token } = await getApiConfig();
     const formData = new FormData();
     formData.append("_method", "PATCH");
     formData.append("business_cover_photo", coverFile);
@@ -18,7 +20,7 @@ const BannerHandler = {
     formData.append("business_country", profileCountry);
 
     try {
-      const url = `https://api.servehere.com/api/business/${businessId}`;
+      const url = `${baseUrl}/business/${businessId}`;
 
       const response = await fetch(url, {
         method: "POST",
@@ -43,6 +45,7 @@ const BannerHandler = {
     profileLongitude,
     profileCountry
   ) {
+    const { baseUrl, token } = await getApiConfig();
     const formData = new FormData();
     formData.append("_method", "PATCH");
     formData.append("business_logo", profileFile);
@@ -53,7 +56,7 @@ const BannerHandler = {
     formData.append("business_country", profileCountry);
 
     try {
-      const url = `https://api.servehere.com/api/business/${businessId}`;
+      const url = `${baseUrl}/business/${businessId}`;
 
       const response = await fetch(url, {
         method: "POST",
@@ -70,7 +73,9 @@ const BannerHandler = {
 
   async handleCoverPicturePrivacy(data) {
     try {
-      const url = `https://api.servehere.com/api/user-field-settings`;
+    const { baseUrl, token } = await getApiConfig();
+
+      const url = `${baseUrl}/user-field-settings`;
 
       const response = await fetch(url, {
         method: "POST",
@@ -87,7 +92,9 @@ const BannerHandler = {
 
   async handleProfilePicturePrivacy(data) {
     try {
-      const url = `https://api.servehere.com/api/user-field-settings`;
+    const { baseUrl, token } = await getApiConfig();
+
+      const url = `${baseUrl}/user-field-settings`;
 
       const response = await fetch(url, {
         method: "POST",

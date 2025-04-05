@@ -2,9 +2,11 @@
 const ServiceHandler = {
 
   async handleServices(payload) {
+    const { baseUrl, token } = await getApiConfig();
+
     console.log("Payload received in handleServices:", payload);
     try {
-      const url = "https://api.servehere.com/api/services";
+      const url = `${baseUrl}/services`;
 
       const response = await fetch(url, {
         method: "POST",
@@ -19,8 +21,10 @@ const ServiceHandler = {
   },
 
   async handleServicePrivacy(data) {
+    const { baseUrl, token } = await getApiConfig();
+    
     try {
-      const url = `https://api.servehere.com/api/user-field-settings`;
+      const url = `${baseUrl}/user-field-settings`;
 
       const response = await fetch(url, {
         method: "POST",
@@ -36,8 +40,10 @@ const ServiceHandler = {
   },
 
   async changeServiceStatus({ id, payload }) {
+    const { baseUrl, token } = await getApiConfig();
+
     try {
-      const url = `https://api.servehere.com/api/services/${id}/activate`;
+      const url = `${baseUrl}/services/${id}/activate`;
 
       const response = await fetch(url, {
         method: "POST",

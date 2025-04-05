@@ -40,7 +40,9 @@ const managementHandler = {
         }
       });
 
-      const url = "https://api.servehere.com/api/managments";
+      const { baseUrl, token } = await getApiConfig();
+
+      const url = `${baseUrl}/managments`;
 
       const response = await fetch(url, {
         method: "POST",
@@ -65,7 +67,9 @@ const managementHandler = {
   },
 
   async changemanagementStatus({ id, payload }) {
-    const url = `https://api.servehere.com/api/managments/${id}/activate`;
+    const { baseUrl, token } = await getApiConfig();
+
+    const url = `${baseUrl}/managments/${id}/activate`;
     showLoader();
 
     try {
@@ -95,8 +99,10 @@ const managementHandler = {
 
   async handleManagementPrivacy(data) {
     showLoader();
+    const { baseUrl, token } = await getApiConfig();
+
     try {
-      const url = `https://api.servehere.com/api/user-field-settings`;
+      const url = `${baseUrl}/user-field-settings`;
 
       const response = await fetch(url, {
         method: "POST",

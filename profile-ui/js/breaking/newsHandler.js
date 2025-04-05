@@ -21,10 +21,11 @@ const newsHandler = {
       }
 
       formData.append("is_active", parsedData.is_active ? 1 : 0);
+      const { baseUrl, token } = await getApiConfig();
 
       const url = parsedData.id
-        ? `https://api.servehere.com/api/update-breaking-news/${parsedData.id}`
-        : "https://api.servehere.com/api/save-breaking-news";
+        ? `${baseUrl}/update-breaking-news/${parsedData.id}`
+        : `${baseUrl}/save-breaking-news`;
 
       console.log("🚀 FormData Ready:");
       for (let pair of formData.entries()) {
@@ -56,7 +57,9 @@ const newsHandler = {
   },
 
   async changeNewsStatus({ id, payload }) {
-    const url = `https://api.servehere.com/api/save-breaking-news/${id}/activate`;
+    const { baseUrl, token } = await getApiConfig();
+
+    const url = `${baseUrl}/save-breaking-news/${id}/activate`;
     console.log("🚀 Changing news status with payload:", payload, id);
     showLoader();
 
@@ -88,9 +91,10 @@ const newsHandler = {
 
   async handleBreakingPrivacy(data) {
     showLoader();
+    const { baseUrl, token } = await getApiConfig();
 
     try {
-      const url = `https://api.servehere.com/api/user-field-settings`;
+      const url = `${baseUrl}/user-field-settings`;
 
       const response = await fetch(url, {
         method: "POST",

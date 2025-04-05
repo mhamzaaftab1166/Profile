@@ -1,8 +1,10 @@
 const AboutHandler = {
     async handleAbout(businessId, payload) {
+    const { baseUrl, token } = await getApiConfig();
+
   
       try {
-        const url = `https://api.servehere.com/api/business/${businessId}`;
+        const url = `${baseUrl}/business/${businessId}`;
   
         const response = await fetch(url, {
           method: "PUT",
@@ -18,8 +20,10 @@ const AboutHandler = {
       }
     },
     async handleAboutPrivacy(data) {
+    const { baseUrl, token } = await getApiConfig();
+
       try {
-        const url = `https://api.servehere.com/api/user-field-settings`;
+        const url = `${baseUrl}/user-field-settings`;
   
         const response = await fetch(url, {
           method: "POST",

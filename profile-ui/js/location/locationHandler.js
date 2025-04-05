@@ -73,7 +73,9 @@ const locationHandler = {
         console.log(pair[0], ":", pair[1]);
       }
 
-      const url = "https://api.servehere.com/api/locations";
+
+      const { baseUrl, token } = await getApiConfig();
+      const url = `${baseUrl}/locations`;
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -99,7 +101,8 @@ const locationHandler = {
   },
 
   async changeLocationStatus({ id, payload }) {
-    const url = `https://api.servehere.com/api/locations/${id}/activate`;
+    const { baseUrl, token } = await getApiConfig();
+    const url = `${baseUrl}/locations/${id}/activate`;
     console.log("🚀 Changing location status with payload:", payload, id);
     showLoader();
 
@@ -132,8 +135,10 @@ const locationHandler = {
     }
   },
   async handleLocationPrivacy(data) {
+    const { baseUrl, token } = await getApiConfig();
+
     try {
-      const url = `https://api.servehere.com/api/user-field-settings`;
+      const url = `${baseUrl}/user-field-settings`;
 
       const response = await fetch(url, {
         method: "POST",

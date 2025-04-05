@@ -2,9 +2,11 @@
 
 const SocialMediaHandler = {
     async handleSocialMedia(social_media) {
+    const { baseUrl, token } = await getApiConfig();
+
   
       try {
-        const url = `https://api.servehere.com/api/save-socials`;
+        const url = `${baseUrl}/save-socials`;
   
         const response = await fetch(url, {
           method: "POST",
@@ -22,8 +24,10 @@ const SocialMediaHandler = {
     },
 
     async handleSocialMediaPrivacy(data) {
+    const { baseUrl, token } = await getApiConfig();
+
       try {
-        const url = `https://api.servehere.com/api/user-field-settings`;
+        const url = `${baseUrl}/user-field-settings`;
   
         const response = await fetch(url, {
           method: "POST",
