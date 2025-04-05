@@ -76,7 +76,13 @@ class BreakingSection extends HTMLElement {
     <template x-if="cards.length === 0">
       <p class="no-records-message" style="text-align: center; font-size: 18px; color: gray;">No records found</p>
     </template>
-      <template x-for="(card, index) in (showAll ? cards : cards.slice(0,1))" :key="card.id">
+      <template 
+  x-for="(card, index) in (showAll 
+    ? (isPrivacy || isEdit ? cards : cards.filter(c => c.is_active === 0)) 
+    : (isPrivacy || isEdit ? cards.slice(0, 1) : cards.filter(c => c.is_active === 0).slice(0,1))
+  )" 
+  :key="card.id">
+
       <div class="breakview-card" style="display: flex; align-items: center; position: relative;">
         <header class="breakview-card-header">
           <img src="assets/profile/breakprofile.png" alt="Profile" class="breakview-profile-image" />

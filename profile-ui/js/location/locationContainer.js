@@ -64,7 +64,12 @@ class LocationSection extends HTMLElement {
         <div class="locations-content">
           <div class="row">
             <!-- Loop through locations array -->
-             <template x-for="(location, index) in (showAll ? locations : locations.slice(0,2))" :key="location.id">
+              <template 
+  x-for="(location, index) in (showAll 
+    ? (isPrivacy || isEdit ? locations : locations.filter(c => c.is_active === 0)) 
+    : (isPrivacy || isEdit ? locations.slice(0, 2) : locations.filter(c => c.is_active === 0).slice(0,2))
+  )" 
+  :key="location.id">
               <div class="col-12 col-lg-6 mb-4">
                 <article class="location-item" style="display: flex; flex-direction: column; height: 100%;">
                   <div>

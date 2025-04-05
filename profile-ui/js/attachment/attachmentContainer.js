@@ -173,6 +173,7 @@ class AttachmentSection extends HTMLElement {
     // Update the stored mode state.
     this.currentMode.isEdit = isEdit;
     this.currentMode.isPrivacy = isPrivacy;
+     this.render();
     this.applyMode();
   }
 

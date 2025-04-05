@@ -161,6 +161,7 @@ class LicenseSection extends HTMLElement {
     // Update the stored mode.
     this.currentMode.isEdit = isEdit;
     this.currentMode.isPrivacy = isPrivacy;
+    this.render();
     // Reapply mode changes.
     this.applyMode();
   }
@@ -186,6 +187,7 @@ class LicenseSection extends HTMLElement {
       // In view mode, only display license entries with is_active == 0.
       this._toggleLicenseEntries(false);
     }
+
   }
 
   _toggleLicenseEntries(showAll) {

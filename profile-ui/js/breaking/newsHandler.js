@@ -1,14 +1,14 @@
 const newsHandler = {
   async handleNews(data) {
     console.log(data, "🚀 Handling news data...");
+    showLoader();
 
     try {
       const parsedData = typeof data === "string" ? JSON.parse(data) : data;
 
       if (!parsedData.title?.trim() || !parsedData.description?.trim()) {
-        console.error(
-          "❌ Missing required fields: title, image, or description"
-        );
+        console.error("❌ Missing required fields: title or description");
+        showToast("Missing required fields: title or description", "danger");
         return;
       }
 
@@ -22,7 +22,6 @@ const newsHandler = {
 
       formData.append("is_active", parsedData.is_active ? 1 : 0);
 
-      // If an id exists, use it in the URL and do not append it to formData.
       const url = parsedData.id
         ? `https://api.servehere.com/api/update-breaking-news/${parsedData.id}`
         : "https://api.servehere.com/api/save-breaking-news";
@@ -43,16 +42,23 @@ const newsHandler = {
       if (response.ok) {
         document.dispatchEvent(new CustomEvent("profileDataSaved"));
         console.log("✅ News data sent successfully.");
+        showToast("News saved successfully!", "success");
       } else {
         console.error("❌ Failed to send news data:", response.statusText);
+        showToast("Failed to save news.", "danger");
       }
     } catch (error) {
       console.error("🚨 Error in handleNews:", error);
+      showToast("Something went wrong while saving news.", "danger");
+    } finally {
+      hideLoader();
     }
   },
+
   async changeNewsStatus({ id, payload }) {
     const url = `https://api.servehere.com/api/save-breaking-news/${id}/activate`;
     console.log("🚀 Changing news status with payload:", payload, id);
+    showLoader();
 
     try {
       const response = await fetch(url, {
@@ -67,15 +73,22 @@ const newsHandler = {
       if (response.ok) {
         document.dispatchEvent(new CustomEvent("profileDataSaved"));
         console.log("✅ News status updated successfully.");
+        showToast("News status updated!", "success");
       } else {
         console.error("❌ Failed to update News status:", response.statusText);
+        showToast("Failed to update news status.", "danger");
       }
     } catch (error) {
       console.error(error);
+      showToast("Error updating news status.", "danger");
+    } finally {
+      hideLoader();
     }
   },
 
   async handleBreakingPrivacy(data) {
+    showLoader();
+
     try {
       const url = `https://api.servehere.com/api/user-field-settings`;
 
@@ -87,12 +100,20 @@ const newsHandler = {
         },
         body: data,
       });
+
+      if (response.ok) {
+        showToast("Privacy setting saved!", "success");
+      } else {
+        showToast("Failed to update privacy setting.", "danger");
+      }
     } catch (error) {
       console.error(error);
-    }finally{
+      showToast("Error updating privacy setting.", "danger");
+    } finally {
       document.dispatchEvent(new CustomEvent("profileDataSaved"));
+      hideLoader();
     }
-  }
+  },
 };
 
 window.newsHandler = newsHandler;
