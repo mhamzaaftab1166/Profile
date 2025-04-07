@@ -17,9 +17,11 @@ class MissionCard extends HTMLElement {
   }
 
   render() {
-    const missionValue = this.missionData.mission || "";
-    const visionValue = this.missionData.vision || "";
-    const valuesValue = this.missionData.values || "";
+    console.log(this.missionData,"jjjjjjjjjjjjjjjjjj");
+    
+    const missionValue = this.missionData?.missionData.mission || "";
+    const visionValue = this.missionData?.missionData.vision || "";
+    const valuesValue = this.missionData?.missionData.values || "";
     const privacySettings =  this.settings;
     
     this.innerHTML = `
