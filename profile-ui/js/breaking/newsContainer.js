@@ -28,7 +28,7 @@ class BreakingSection extends HTMLElement {
   render() {
     const baseUrl = "https://api.servehere.com/api/storage/image?path=";
     const news = this.breakingData || [];
-    const transformedNews = news.map((item) => ({
+    const transformedNews = news?.breakingNews.map((item) => ({
       ...item,
       image: `${baseUrl}${item.image}`,
     }));
