@@ -1,7 +1,7 @@
 const locationHandler = {
   async handleLocation(data) {
     console.log(data);
-    showLoader();
+    // showLoader();
 
     try {
       const parsedData = typeof data === "string" ? JSON.parse(data) : data;
@@ -73,81 +73,69 @@ const locationHandler = {
         console.log(pair[0], ":", pair[1]);
       }
 
+      const url = `/locations`;
 
-      const { baseUrl, token } = await getApiConfig();
-      const url = `${baseUrl}/locations`;
-      const response = await fetch(url, {
+      const response = await apiFetch(url, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        contentType: "multipart/form-data",
         body: formData,
       });
 
       if (response.ok) {
         document.dispatchEvent(new CustomEvent("profileDataSaved"));
         console.log("✅ FormData sent successfully.");
-        showToast("Locations saved successfully!", "success");
+        // showToast("Locations saved successfully!", "success");
       } else {
         console.error("❌ Failed to send FormData", response.statusText);
-        showToast("Failed to save locations.", "danger");
+        // showToast("Failed to save locations.", "danger");
       }
     } catch (error) {
       console.error("🚨 Error in handleLocation:", error);
-      showToast("Something went wrong.", "danger");
+      // showToast("Something went wrong.", "danger");
     } finally {
       hideLoader();
     }
   },
 
   async changeLocationStatus({ id, payload }) {
-    const { baseUrl, token } = await getApiConfig();
-    const url = `${baseUrl}/locations/${id}/activate`;
+    const url = `/locations/${id}/activate`;
     console.log("🚀 Changing location status with payload:", payload, id);
-    showLoader();
+    // showLoader();
 
     try {
-      const response = await fetch(url, {
+      const response = await apiFetch(url, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify(payload),
       });
 
       if (response.ok) {
         document.dispatchEvent(new CustomEvent("profileDataSaved"));
         console.log("✅ Location status updated successfully.");
-        showToast("Location status updated!", "success");
+        // showToast("Location status updated!", "success");
       } else {
         console.error(
           "❌ Failed to update location status:",
           response.statusText
         );
-        showToast("Failed to update location status.", "danger");
+        // showToast("Failed to update location status.", "danger");
       }
     } catch (error) {
       console.error("🚨 Error in changeLocationStatus:", error);
-      showToast("Something went wrong.", "danger");
+      // showToast("Something went wrong.", "danger");
     } finally {
       hideLoader();
     }
   },
   async handleLocationPrivacy(data) {
-    const { baseUrl, token } = await getApiConfig();
 
     try {
-      const url = `${baseUrl}/user-field-settings`;
+      const url = `/user-field-settings`;
 
-      const response = await fetch(url, {
+      const response = await apiFetch(url, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
         body: data,
       });
+      
     } catch (error) {
       console.error(error);
     }

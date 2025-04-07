@@ -10,6 +10,7 @@ class ServiceSection extends HTMLElement {
     this.serviceForm = [];
     this.isPrivacy = false;
     this.currentIndex = 0;
+    this.isEditMode = false; // Track edit mode state
   }
 
   connectedCallback() {
@@ -40,14 +41,13 @@ class ServiceSection extends HTMLElement {
           service_description: service.service_description || "",
           is_active: service.is_active || 0,
         }));
-        this.updateSection({ isEdit: false, isPrivacy: false });
-        this.addEventListener("filterChange", () => {
-          // Update your custom element state if necessary
-          // For example, if the privacy flag affects the filtered list:
-          // (Make sure that any new data or filter changes are updated before re-rendering)
-          this.render();
-        });
-        this.render();
+        // this.updateSection({ isEdit: false, isPrivacy: false });
+        // this.addEventListener("filterChange", () => {
+        //   this.render();
+        // });
+        // this.render();
+        this.isEditMode = true; // Ensure we stay in edit mode
+        this.render(); // Re-render while maintaining edit mode
       }
     });
   }
@@ -69,8 +69,6 @@ class ServiceSection extends HTMLElement {
     const serviceData = this.services.services;
     const remainingServices = this.services.services.length - this.currentIndex;
     const allServices = this.services.services || [];
-    // Use servicesSectionChecked or this.isPrivacy to determine which services to display.
-    // For instance, if privacy mode is off, filter to show only inactive services.
     const filteredServices = (this.isPrivacy || this.servicesSectionChecked)
       ? allServices
       : allServices.filter(service => service.is_active === 0);
@@ -220,11 +218,18 @@ class ServiceSection extends HTMLElement {
     this.addMoreButton = this.querySelector(".service-add-button");
     this.browseButton = this.querySelector(".service-browse-button");
 
-    this.serviceView.style.display = "block";
-    this.serviceEdit.style.display = "none";
-    this.servicePrivacy.style.display = "none";
-    this.addMoreButton.style.display = "none";
-    this.browseButton.style.display = "flex";
+    // Maintain current mode when rendering
+    if (this.isEditMode) {
+      this.serviceView.style.display = "none";
+      this.serviceEdit.style.display = "block";
+      this.addMoreButton.style.display = "block";
+      this.browseButton.style.display = "none";
+    } else {
+      this.serviceView.style.display = "block";
+      this.serviceEdit.style.display = "none";
+      this.addMoreButton.style.display = "none";
+      this.browseButton.style.display = "flex";
+    }
 
     this.querySelector(".load-more-button")?.addEventListener("click", () => {
       this.currentIndex += 4;
@@ -259,12 +264,14 @@ class ServiceSection extends HTMLElement {
     if (this.addMoreButton) {
       this.addMoreButton.addEventListener("click", () => {
         this.serviceForm.push({
+          id: null,
           service_image: "",
           service_name: "",
           service_description: "",
           is_active: 0,
         });
-        this.render();
+        this.isEditMode = true; // Ensure we stay in edit mode
+        this.render(); // Re-render while maintaining edit mode
       });
     }
 
@@ -294,6 +301,7 @@ class ServiceSection extends HTMLElement {
   }
 
   updateSection({ isEdit, isPrivacy }) {
+    this.isEditMode = isEdit; // Track edit mode state
     this.isPrivacy = isPrivacy;
 
     if (isEdit) {

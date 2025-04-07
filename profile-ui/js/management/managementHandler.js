@@ -1,7 +1,7 @@
 const managementHandler = {
   async handleManagement(data) {
     console.log(data, "🚀 Handling management data...");
-    showLoader();
+    // showLoader();
 
     try {
       const parsedData = typeof data === "string" ? JSON.parse(data) : data;
@@ -40,83 +40,70 @@ const managementHandler = {
         }
       });
 
-      const { baseUrl, token } = await getApiConfig();
 
-      const url = `${baseUrl}/managments`;
-
-      const response = await fetch(url, {
+      const endpoint = `/managments`;
+      const response =   await apiFetch(endpoint, {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
+        contentType: "multipart/form-data",
         body: formData,
       });
 
       if (!response.ok) {
         console.error("❌ Failed to send manager data:", response.statusText);
-        showToast("Failed to update managers.", "danger");
+        // showToast("Failed to update managers.", "danger");
       } else {
-        showToast("Manager data saved successfully!", "success");
+        // showToast("Manager data saved successfully!", "success");
         console.log("✅ Manager data sent successfully.");
         document.dispatchEvent(new CustomEvent("profileDataSaved"));
       }
     } catch (error) {
       console.error("🚨 Error in handleManagement:", error);
-      showToast("Something went wrong.", "danger");
+      // showToast("Something went wrong.", "danger");
     } finally {
       hideLoader();
     }
   },
 
   async changemanagementStatus({ id, payload }) {
-    const { baseUrl, token } = await getApiConfig();
-
-    const url = `${baseUrl}/managments/${id}/activate`;
-    showLoader();
+    // showLoader();
 
     try {
-      const response = await fetch(url, {
+      const endpoint = `/managments/${id}/activate`;
+      const response =   await apiFetch(endpoint, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify(payload),
       });
 
       if (response.ok) {
-        showToast("Management status updated!", "success");
+        // showToast("Management status updated!", "success");
         document.dispatchEvent(new CustomEvent("profileDataSaved"));
       } else {
-        showToast("Failed to update status.", "danger");
+        // showToast("Failed to update status.", "danger");
         console.error("❌ Status update failed:", response.statusText);
       }
     } catch (error) {
       console.error(error);
-      showToast("Something went wrong.", "danger");
+      // showToast("Something went wrong.", "danger");
     } finally {
       hideLoader();
     }
   },
 
   async handleManagementPrivacy(data) {
-    showLoader();
-    const { baseUrl, token } = await getApiConfig();
+    // showLoader();
 
     try {
-      const url = `${baseUrl}/user-field-settings`;
 
-      const response = await fetch(url, {
+      const endpoint = `/user-field-settings`;
+      const response =   await apiFetch(endpoint, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
         body: data,
       });
 
-      showToast("Privacy setting updated.", "success");
+      // showToast("Privacy setting updated.", "success");
     } catch (error) {
       console.error(error);
-      showToast("Failed to update privacy setting.", "danger");
+      // showToast("Failed to update privacy setting.", "danger");
     } finally {
       hideLoader();
       document.dispatchEvent(new CustomEvent("profileDataSaved"));

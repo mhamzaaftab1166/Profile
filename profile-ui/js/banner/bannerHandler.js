@@ -9,7 +9,6 @@ const BannerHandler = {
     profileLongitude,
     profileCountry
   ) {
-    const { baseUrl, token } = await getApiConfig();
     const formData = new FormData();
     formData.append("_method", "PATCH");
     formData.append("business_cover_photo", coverFile);
@@ -20,16 +19,12 @@ const BannerHandler = {
     formData.append("business_country", profileCountry);
 
     try {
-      const url = `${baseUrl}/business/${businessId}`;
-
-      const response = await fetch(url, {
+      const endpoint = `/business/${businessId}`;
+      return await apiFetch(endpoint, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        contentType: "multipart/form-data",
         body: formData,
       });
-
       
     } catch (error) {
       console.error(error);
@@ -45,7 +40,6 @@ const BannerHandler = {
     profileLongitude,
     profileCountry
   ) {
-    const { baseUrl, token } = await getApiConfig();
     const formData = new FormData();
     formData.append("_method", "PATCH");
     formData.append("business_logo", profileFile);
@@ -56,13 +50,10 @@ const BannerHandler = {
     formData.append("business_country", profileCountry);
 
     try {
-      const url = `${baseUrl}/business/${businessId}`;
-
-      const response = await fetch(url, {
+      const endpoint = `/business/${businessId}`;
+      return await apiFetch(endpoint, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        contentType: "multipart/form-data",
         body: formData,
       });
       
@@ -73,18 +64,12 @@ const BannerHandler = {
 
   async handleCoverPicturePrivacy(data) {
     try {
-    const { baseUrl, token } = await getApiConfig();
-
-      const url = `${baseUrl}/user-field-settings`;
-
-      const response = await fetch(url, {
+      const endpoint = `/user-field-settings`;
+      return await apiFetch(endpoint, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
         body: data,
       });
+
     } catch (error) {
       console.error(error);
     }
@@ -92,16 +77,9 @@ const BannerHandler = {
 
   async handleProfilePicturePrivacy(data) {
     try {
-    const { baseUrl, token } = await getApiConfig();
-
-      const url = `${baseUrl}/user-field-settings`;
-
-      const response = await fetch(url, {
+     const endpoint = `/user-field-settings`;
+      return await apiFetch(endpoint, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
         body: data,
       });
     } catch (error) {

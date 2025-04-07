@@ -2,17 +2,11 @@
 const ServiceHandler = {
 
   async handleServices(payload) {
-    const { baseUrl, token } = await getApiConfig();
-
-    console.log("Payload received in handleServices:", payload);
     try {
-      const url = `${baseUrl}/services`;
-
-      const response = await fetch(url, {
+      const endpoint = "/services";
+      return await apiFetch(endpoint, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        contentType: "multipart/form-data",
         body: payload,
       });
     } catch (error) {
@@ -20,18 +14,11 @@ const ServiceHandler = {
     }
   },
 
-  async handleServicePrivacy(data) {
-    const { baseUrl, token } = await getApiConfig();
-    
+  async handleServicePrivacy(data) {    
     try {
-      const url = `${baseUrl}/user-field-settings`;
-
-      const response = await fetch(url, {
+      const endpoint = "/user-field-settings";
+      return await apiFetch(endpoint, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
         body: data,
       });
     } catch (error) {
@@ -40,17 +27,10 @@ const ServiceHandler = {
   },
 
   async changeServiceStatus({ id, payload }) {
-    const { baseUrl, token } = await getApiConfig();
-
     try {
-      const url = `${baseUrl}/services/${id}/activate`;
-
-      const response = await fetch(url, {
+      const endpoint = `/services/${id}/activate`;
+      return await apiFetch(endpoint, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify(payload),
       });
     } catch (error) {

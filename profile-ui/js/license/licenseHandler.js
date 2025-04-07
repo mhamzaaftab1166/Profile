@@ -1,15 +1,14 @@
 const licenseHandler = {
   async handleLicense(data) {
-    const { baseUrl, token } = await getApiConfig();
     console.log(data, "🚀 Handling license data...");
-    showLoader();
+    // showLoader();
 
     try {
       const parsedData = typeof data === "string" ? JSON.parse(data) : data;
 
       if (!parsedData.name?.trim() || !parsedData.path || !parsedData.type) {
         console.error("❌ Missing required fields: name, path, or type");
-        showToast("Missing required fields", "danger");
+        // showToast("Missing required fields", "danger");
         return;
       }
 
@@ -19,85 +18,75 @@ const licenseHandler = {
       formData.append("type", parsedData.type);
       formData.append("is_active", parsedData.is_active ? 1 : 0);
 
-      const url = `${baseUrl}/user-attachments`;
+      const url = `/user-attachments`;
 
       console.log("🚀 FormData Ready:");
       for (let pair of formData.entries()) {
         console.log(pair[0], ":", pair[1]);
       }
 
-      const response = await fetch(url, {
+      
+      const response = await apiFetch(url, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        contentType: "multipart/form-data",
         body: formData,
       });
 
       if (response.ok) {
         document.dispatchEvent(new CustomEvent("profileDataSaved"));
         console.log("✅ License data sent successfully.");
-        showToast("License saved successfully!", "success");
+        // showToast("License saved successfully!", "success");
       } else {
         console.error("❌ Failed to send license data:", response.statusText);
-        showToast("Failed to save license.", "danger");
+        // showToast("Failed to save license.", "danger");
       }
     } catch (error) {
       console.error("🚨 Error in handleLicense:", error);
-      showToast("Something went wrong while saving license.", "danger");
+      // showToast("Something went wrong while saving license.", "danger");
     } finally {
       hideLoader();
     }
   },
 
   async deleteLicense(id) {
-    const { baseUrl, token } = await getApiConfig();
     console.log("🚀 Deleting license with id:", id);
-    showLoader();
+    // showLoader();
 
     try {
       if (!id) {
         console.error("❌ License id is required for deletion.");
-        showToast("License ID is missing", "danger");
+        // showToast("License ID is missing", "danger");
         return;
       }
 
-      const url = `${baseUrl}/user-attachments/${id}`;
+      const url = `/user-attachments/${id}`;
 
-      const response = await fetch(url, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const response = await apiFetch(url, {
+        method: "DELETE"
       });
 
       if (response.ok) {
         document.dispatchEvent(new CustomEvent("profileDataSaved"));
         console.log("✅ License deleted successfully.");
-        showToast("License deleted!", "success");
+        // showToast("License deleted!", "success");
       } else {
         console.error("❌ Failed to delete license:", response.statusText);
-        showToast("Failed to delete license.", "danger");
+        // showToast("Failed to delete license.", "danger");
       }
     } catch (error) {
       console.error("🚨 Error in deleteLicense:", error);
-      showToast("Something went wrong while deleting license.", "danger");
+      // showToast("Something went wrong while deleting license.", "danger");
     } finally {
       hideLoader();
     }
   },
   
   async handleLicensePrivacy(data) {
-    const { baseUrl, token } = await getApiConfig();
     try {
-      const url = `${baseUrl}/user-field-settings`;
+      const url = `/user-field-settings`;
 
-      const response = await fetch(url, {
+      return await apiFetch(url, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
         body: data,
       });
     } catch (error) {

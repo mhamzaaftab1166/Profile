@@ -1,14 +1,11 @@
 const MissionHandler = {
   async fetchMission(updateState) {
-    const { baseUrl, token } = await getApiConfig();
 
     try {
-      const response = await fetch(`${baseUrl}/missions`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Using the manual token
-        },
-      });
+      const endpoint = `/missions`;
+        const response =  await apiFetch(endpoint, {
+          method: "GET",
+        });
 
       const data = await response.json();
       if (data.length > 0) {
@@ -21,17 +18,11 @@ const MissionHandler = {
 
   async handleMission(mission, vision, values,  updateState, myProp) {
     console.log("ID received in handleMission:", myProp);
-    const { baseUrl, token } = await getApiConfig();
 
     try {
-      const url = `${baseUrl}/save-mission`;
-
-      const response = await fetch(url, {
+      const endpoint = `/save-mission`;
+      return await apiFetch(endpoint, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({ mission, vision, values }),
       });
     } catch (error) {
@@ -40,19 +31,14 @@ const MissionHandler = {
   },
 
   async handleMissionPrivacy(data) {
-    const { baseUrl, token } = await getApiConfig();
 
     try {
-      const url = `${baseUrl}/user-field-settings`;
-
-      const response = await fetch(url, {
+      const endpoint = `/user-field-settings`;
+      return await apiFetch(endpoint, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
         body: data,
       });
+
     } catch (error) {
       console.error(error);
     }

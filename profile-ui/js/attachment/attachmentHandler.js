@@ -1,15 +1,14 @@
 const attachHandler = {
   async handleAttach(data) {
-     const { baseUrl, token } = await getApiConfig();
     console.log(data, "🚀 Handling attach data...");
-    showLoader();
+    // showLoader();
 
     try {
       const parsedData = typeof data === "string" ? JSON.parse(data) : data;
 
       if (!parsedData.name?.trim() || !parsedData.path || !parsedData.type) {
         console.error("❌ Missing required fields: name, path, or type");
-        showToast("Missing required fields", "danger");
+        // showToast("Missing required fields", "danger");
         return;
       }
 
@@ -19,84 +18,74 @@ const attachHandler = {
       formData.append("type", parsedData.type);
       formData.append("is_active", parsedData.is_active ? 1 : 0);
 
-      const url = `${baseUrl}/user-attachments`;
+      const url = `/user-attachments`;
 
       console.log("🚀 FormData Ready:");
       for (let pair of formData.entries()) {
         console.log(pair[0], ":", pair[1]);
       }
 
-      const response = await fetch(url, {
+      const response =  await apiFetch(url, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        contentType: "multipart/form-data",
         body: formData,
       });
+
 
       if (response.ok) {
         document.dispatchEvent(new CustomEvent("profileDataSaved"));
         console.log("✅ License data sent successfully.");
-        showToast("Attachment saved successfully!", "success");
+        // showToast("Attachment saved successfully!", "success");
       } else {
         console.error("❌ Failed to send license data:", response.statusText);
-        showToast("Failed to save attachment.", "danger");
+        // showToast("Failed to save attachment.", "danger");
       }
     } catch (error) {
       console.error("🚨 Error in handleLicense:", error);
-      showToast("Something went wrong.", "danger");
+      // showToast("Something went wrong.", "danger");
     } finally {
       hideLoader();
     }
   },
 
   async changeAttachmentStatus({ id, payload }) {
-    const { baseUrl, token } = await getApiConfig();
     
-    const url = `${baseUrl}/user-attachments/${id}/activate`;
+    const url = `/user-attachments/${id}/activate`;
     console.log("🚀 Changing attachment status with payload:", payload, id);
-    showLoader();
+    // showLoader();
 
     try {
-      const response = await fetch(url, {
+      const response = await apiFetch(url, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify(payload),
       });
+
 
       if (response.ok) {
         document.dispatchEvent(new CustomEvent("profileDataSaved"));
         console.log("✅ Attachment status updated successfully.");
-        showToast("Attachment status updated!", "success");
+        // showToast("Attachment status updated!", "success");
       } else {
         console.error(
           "❌ Failed to update attachment status:",
           response.statusText
         );
-        showToast("Failed to update attachment status.", "danger");
+        // showToast("Failed to update attachment status.", "danger");
       }
     } catch (error) {
       console.error("🚨 Error in changeAttachmentStatus:", error);
-      showToast("Something went wrong.", "danger");
+      // showToast("Something went wrong.", "danger");
     } finally {
       hideLoader();
     }
   },
 
   async handleAttachementsPrivacy(data) {
-    const { baseUrl, token } = await getApiConfig();
     try {
-      const url = `${baseUrl}/user-field-settings`;
-
-      const response = await fetch(url, {
+      const url = `/user-field-settings`;
+      
+      return await apiFetch(url, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
         body: data,
       });
     } catch (error) {

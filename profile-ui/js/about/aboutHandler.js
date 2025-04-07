@@ -1,17 +1,10 @@
 const AboutHandler = {
     async handleAbout(businessId, payload) {
-    const { baseUrl, token } = await getApiConfig();
-
   
       try {
-        const url = `${baseUrl}/business/${businessId}`;
-  
-        const response = await fetch(url, {
+        const endpoint = `/business/${businessId}`;
+        return await apiFetch(endpoint, {
           method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
           body: payload,
         });
   
@@ -20,17 +13,10 @@ const AboutHandler = {
       }
     },
     async handleAboutPrivacy(data) {
-    const { baseUrl, token } = await getApiConfig();
-
       try {
-        const url = `${baseUrl}/user-field-settings`;
-  
-        const response = await fetch(url, {
+        const endpoint = `/user-field-settings`;
+        return await apiFetch(endpoint, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
           body: data,
         });
       } catch (error) {
