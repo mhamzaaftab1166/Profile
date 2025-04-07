@@ -34,26 +34,36 @@ class LicenseSection extends HTMLElement {
 
     this.innerHTML = `
     <section class="license-permissions-container" x-data='{
-      uploads: [{ name: "", path: null, type: "license", is_active: 0 }],
-      licenses: ${JSON.stringify(this.licenseData.licenses)},
-      parentChecked: ${licensePrivacy.licenses_permissions},
-      checked: false,
-       showAll: false,
-        isEdit: ${this.currentMode.isEdit},
-        isPrivacy: ${this.currentMode.isPrivacy},
-      togglePrivacy(license) {  
-        const newStatus = license.is_active ? 0 : 1;
-        console.log("newStatus", newStatus);
-        attachHandler.changeAttachmentStatus({
-          id: license.id,
-          payload: { is_active: newStatus }
-        });
-      },
-      toggleLicenseSectionPrivacy() {
+  uploads: [{ name: "", path: null, type: "license", is_active: 0 }],
+  licenses: ${JSON.stringify(this.licenseData.licenses)},
+  parentChecked: ${licensePrivacy.licenses_permissions},
+  checked: false,
+  showAll: false,
+  isEdit: ${this.currentMode.isEdit},
+  isPrivacy: ${this.currentMode.isPrivacy},
+  togglePrivacy(license) {  
+    const newStatus = license.is_active ? 0 : 1;
+    console.log("newStatus", newStatus);
+    attachHandler.changeAttachmentStatus({
+      id: license.id,
+      payload: { is_active: newStatus }
+    });
+  },
+  toggleLicenseSectionPrivacy() {
     const payload = { licenses_permissions: this.parentChecked };
     licenseHandler.handleLicensePrivacy(JSON.stringify(payload));
+  },
+  handleFileChange(event, upload) {
+  const file = event.target.files[0];
+  if (file) {
+    upload.path = file;
+    // Remove the file extension (e.g., ".png", ".jpg") from the file name.
+    const nameWithoutExtension = file.name.replace(/\.[^/.]+$/, "");
+    upload.name = nameWithoutExtension;
   }
-    }'>
+}
+
+}'>
       <article class="license-permissions-card">
         <div class="d-flex justify-content-between align-items-center">
           <div class="ms-2 toggle-container isLicensePrivacy">
@@ -111,34 +121,34 @@ class LicenseSection extends HTMLElement {
         </template>
 
         <!-- Upload Section for adding new licenses -->
-        <template x-for="(upload, index) in uploads" :key="index">
-          <div class="license-upload-section mb-3 isLicenseEdit">
-            <input 
-              type="text" 
-              class="license-file-name-input" 
-              x-model="upload.name" 
-              placeholder="Type File Name Here" 
-            />
-            <input 
-              type="file" 
-              x-ref="fileInput" 
-              class="d-none" 
-              @change="upload.path = $event.target.files[0]" 
-            />
-            <div class="license-action-buttons">
-              <button 
-                class="license-btn license-btn-secondary" 
-                @click="$refs.fileInput.click()">
-                Choose File
-              </button>
-              <button 
-                class="license-btn license-btn-secondary" 
-                @click="licenseHandler.handleLicense({ name: upload.name, path: upload.path, active: upload.is_active, type: upload.type })">
-                Upload
-              </button>
-            </div>
-          </div>
-        </template>
+ <template x-for="(upload, index) in uploads" :key="index">
+    <div class="license-upload-section mb-3 isLicenseEdit">
+      <input 
+        type="text" 
+        class="license-file-name-input" 
+        x-model="upload.name" 
+        placeholder="Type File Name Here" 
+      />
+      <input 
+        type="file" 
+        x-ref="fileInput" 
+        class="d-none" 
+        @change="handleFileChange($event, upload)" 
+      />
+      <div class="license-action-buttons">
+        <button 
+          class="license-btn license-btn-secondary" 
+          @click="$refs.fileInput.click()">
+          Choose File
+        </button>
+        <button 
+          class="license-btn license-btn-secondary" 
+          @click="licenseHandler.handleLicense({ name: upload.name, path: upload.path, active: upload.is_active, type: upload.type })">
+          Upload
+        </button>
+      </div>
+    </div>
+  </template>
 
         <button class="browse-button" @click="showAll = !showAll">
           <span class="browse-text" x-text="showAll ? 'Browse Less' : 'Browse All'"></span>

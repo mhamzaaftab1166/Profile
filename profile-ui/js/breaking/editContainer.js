@@ -32,16 +32,19 @@ class BreakingEditSection extends HTMLElement {
       return news;
     });
 
-    const combinedNewsList = [
-      {
-        title: "",
-        description: "",
-        imagePreview: "./assets/profile/breakBg.png",
-        image: null,
-        is_active: 0,
-      },
-      ...processedNewsList,
-    ];
+    const combinedNewsList =
+      processedNewsList.length === 0
+        ? [
+            {
+              title: "",
+              description: "",
+              imagePreview: "./assets/profile/breakBg.png",
+              image: null,
+              is_active: 0,
+            },
+          ]
+        : [...processedNewsList];
+
 
     this.innerHTML = `
     <article
@@ -50,7 +53,7 @@ class BreakingEditSection extends HTMLElement {
         newsList: ${JSON.stringify(combinedNewsList)},
 
         addNewsCard() {
-          this.newsList.push({ title: "", description: "", imagePreview: "./assets/profile/breakBg.png", image: null, is_active: 0 });
+          this.newsList.unshift({ title: "", description: "", imagePreview: "./assets/profile/breakBg.png", image: null, is_active: 0 });
         },
 
         selectImage(event, index) {

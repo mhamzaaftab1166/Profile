@@ -39,7 +39,7 @@ class LocationEditSection extends HTMLElement {
     const locationsJson = JSON.stringify(combinedLocations);
 
     this.innerHTML = `
-    <section
+<section
       class="locedit-locations-container"
       x-data='{
         locations: ${locationsJson},
@@ -61,6 +61,13 @@ class LocationEditSection extends HTMLElement {
         toggleDefault(index) {
           this.locations[index].is_default = !this.locations[index].is_default;
         },
+        confirmLocation() {
+          if (this.selectedLat && this.selectedLng) {
+            this.locations[this.currentIndex].link =
+              "https://www.openstreetmap.org/#map=18/" + this.selectedLat + "/" + this.selectedLng;
+          }
+          this.closeModal();
+        },
         openMapModal(index) {
           this.currentIndex = index;
           this.modalOpen = true;
@@ -78,11 +85,30 @@ class LocationEditSection extends HTMLElement {
                 } else {
                   this.marker = L.marker(e.latlng).addTo(this.map);
                 }
-                this.locations[this.currentIndex].link = "https://www.openstreetmap.org/#map=18/" + this.selectedLat + "/" + this.selectedLng;
-                this.closeModal();
               });
             } else {
               this.map.invalidateSize();
+            }
+            // Check if the location already has a valid link and display marker accordingly
+            const existingLink = this.locations[index].link;
+            const match = existingLink.match(/#map=\\d+\\/([\\-\\d.]+)\\/([\\-\\d.]+)/);
+            if (match) {
+              const lat = parseFloat(match[1]);
+              const lng = parseFloat(match[2]);
+              this.selectedLat = lat;
+              this.selectedLng = lng;
+              this.map.setView([lat, lng], 13);
+              if (this.marker) {
+                this.marker.setLatLng([lat, lng]);
+              } else {
+                this.marker = L.marker([lat, lng]).addTo(this.map);
+              }
+            } else {
+              this.map.setView([51.505, -0.09], 13);
+              if (this.marker) {
+                this.map.removeLayer(this.marker);
+                this.marker = null;
+              }
             }
           });
         },
@@ -152,7 +178,7 @@ class LocationEditSection extends HTMLElement {
                       />
                       <span
                         class="locedit-link-placeholder"
-                        x-text="location.link"
+                        x-text="location.link||'Enter Link Here'"
                         style="display: inline-block; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
                       ></span>
                     </div>
@@ -176,18 +202,23 @@ class LocationEditSection extends HTMLElement {
           </div>
         </div>
       </section>
-      <div
-        class="modal-overlay"
-        x-show="modalOpen"
-        x-transition
-        style="display: none;"
-      >
-        <div class="modal-content">
-          <span class="modal-close" @click="closeModal()">×</span>
-          <h4>Select a Location</h4>
-          <div id="map"></div>
-        </div>
-      </div>
+     <div
+  class="modal-overlay"
+  x-show="modalOpen"
+  x-transition
+  style="display: none;"
+>
+  <div class="modal-content">
+    <span class="modal-close" @click="closeModal()">×</span>
+    <h4>Select a Location</h4>
+    <div id="map" style="height: 300px;"></div>
+    <div class="modal-footer" style="margin-top: 10px; text-align: right;">
+      <button class="btn btn-secondary me-2" @click="closeModal()">Cancel</button>
+      <button class="btn" style="background-color: #6E55FF;color:white;" @click="confirmLocation()">Save</button>
+    </div>
+  </div>
+</div>
+
     </section>
   `;
   }

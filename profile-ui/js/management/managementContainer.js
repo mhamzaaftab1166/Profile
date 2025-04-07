@@ -32,40 +32,38 @@ class ManagementSection extends HTMLElement {
 
   render() {
     const baseUrl = "https://api.servehere.com/api/storage/image?path=";
-    // Transform the management data so that profile_image is a complete URL
-    const transformedManagements = this.managementData.management?.map((item) => ({
-      ...item,
-      profile_image: `${baseUrl}${item.profile_image}`,
-    }));
+    const transformedManagements = this.managementData.management?.map(
+      (item) => ({
+        ...item,
+        profile_image: `${baseUrl}${item.profile_image}`,
+      })
+    );
 
-    console.log(transformedManagements, 'transformedManagements');
-    
-    // Create a combined list by adding empty objects at the end for new entries
-    const combinedMngList = [
-       ...transformedManagements,
-      {
-        name: "",
-        role_name: "",
-        phone_number: "",
-        profile_image: null,
-        is_active: 0,
-      },
-      {
-        name: "",
-        role_name: "",
-        phone_number: "",
-        profile_image: null,
-        is_active: 0,
-      },
-     
-    ];
+    console.log(transformedManagements, "transformedManagements");
 
-    // Convert arrays to JSON strings
+   const combinedMngList =
+     transformedManagements.length === 0
+       ? [
+           {
+             name: "",
+             role_name: "",
+             phone_number: "",
+             profile_image: null,
+             is_active: 0,
+           },
+           {
+             name: "",
+             role_name: "",
+             phone_number: "",
+             profile_image: null,
+             is_active: 0,
+           },
+         ]
+       : transformedManagements;
+
     const contactsJSON = JSON.stringify(combinedMngList);
     const viewOnlyContactsJSON = JSON.stringify(transformedManagements);
-    
 
-    // Include a new privacyMode property in Alpine's data.
     this.innerHTML = `
     <section
       class="aamanagement-card"
@@ -167,7 +165,7 @@ class ManagementSection extends HTMLElement {
                 </template>
               </div>
             </div>
-            <button class="aaadd-more-button" @click="contacts.push({ name: '', role_name: '', phone_number: '', profile_image: null, is_active: 0 })">
+            <button class="aaadd-more-button" @click="contacts.unshift({ name: '', role_name: '', phone_number: '', profile_image: null, is_active: 0 })">
               + Add More
             </button>
           </div>
